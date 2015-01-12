@@ -23,6 +23,10 @@ public class B2DSprite  {
 	
 			}
 	
+	public B2DSprite() {
+		animation = new Animation();
+	}
+
 	public void setAnimation(TextureRegion reg, float delay) {
 
 		setAnimation(new TextureRegion[] { reg }, delay);
@@ -42,8 +46,8 @@ public class B2DSprite  {
 	
 	public void render(SpriteBatch sb) {
 	
-		int pozX=(int)(body.getPosition().x * B2DVars.PPM - width / 2);
-		int pozY=(int) (body.getPosition().y * B2DVars.PPM - height / 2);
+		int pozX=(int)(getBody().getPosition().x * B2DVars.PPM - width / 2);
+		int pozY=(int) (getBody().getPosition().y * B2DVars.PPM - height / 2);
 		sb.begin();
 		sb.draw(animation.getFrame(),pozX ,pozY );
 		sb.end();
@@ -53,7 +57,7 @@ public class B2DSprite  {
 	}
 	
 	public Body getBody() { return body; }
-	public Vector2 getPosition() { return body.getPosition(); }
+	public Vector2 getPosition() { return getBody().getPosition(); }
 	public float getWidth() { return width; }
 	public float getHeight() { return height; }
 }

@@ -50,7 +50,7 @@ public class Play extends GameState {
 	private Array<Teleport> teleports;
 	private Array<Collectibles> collectibles;
 	private Array<Door> doors;
-	private static Array<SmallEnemy> smalEnemy;
+	private static Array<Enemy> enemy;
 	private EnemyDirection ed;
 	private HUD hud;
 	private BodyMover bm;
@@ -66,7 +66,7 @@ public class Play extends GameState {
 	public static float getLastClickY() {return lastClickY;}
 	public static Player getPlayer() {return player;}
 	public static boolean isMoving() {return isMoving;}
-	public static Array<SmallEnemy> getSmalEnemy() {return smalEnemy;}
+	public static Array<Enemy> getEnemy() {return enemy;}
 	private static float lastClickX;
 	private static float lastClickY;
 	public static boolean isMoving = false;
@@ -115,6 +115,9 @@ public class Play extends GameState {
 		
 	}
 
+	public static World getWorld() {
+		return world;
+	}
 	private void createCoin(float posX,float  posY) {
 	
 		Collectibles colle = new Collectibles(new Coins(world, posX, posY).getBody(), "coins");
@@ -122,16 +125,17 @@ public class Play extends GameState {
 		colle.getBody().setUserData(colle);
 	}
 	private void createEnemy(int iletenmy) {
-		smalEnemy = new Array<SmallEnemy>();
+		enemy = new Array<Enemy>();
 
 		for (int i = 0; i < iletenmy; i++) {
 
 			Random random = new Random();
-			SmallEnemy sm = new SmallEnemy(new Enemy(world, 300, 300).getBody());
+			SmallEnemy sm = new SmallEnemy(300, 300);
+		
 			float x = random.nextFloat();
 			float y = random.nextFloat();
 			sm.getBody().setLinearVelocity(x, y);
-			smalEnemy.add(sm);
+			enemy.add(sm);
 			sm.getBody().setUserData(sm);
 
 		}
@@ -181,10 +185,10 @@ public class Play extends GameState {
 		}
 
 		// if(Enemy.getSmallEnemys()!=null){
-		for (int i = 0; i < smalEnemy.size; i++) {
+		for (int i = 0; i < enemy.size; i++) {
 			ed.directionChecker(i);
 
-			smalEnemy.get(i).update(dt);
+			enemy.get(i).update(dt);
 		}
 		// }
 
@@ -222,9 +226,9 @@ public class Play extends GameState {
 		}
 		
 		
-		for (int j = 0; j < smalEnemy.size; j++) {
+		for (int j = 0; j < enemy.size; j++) {
 
-			smalEnemy.get(j).render(sb);
+			enemy.get(j).render(sb);
 
 		}
 
@@ -292,7 +296,7 @@ public class Play extends GameState {
 						
 						
 						((SmallEnemy) b.getUserData()).getHp().getSkinAtlas().dispose();
-						smalEnemy.removeValue((SmallEnemy) b.getUserData(),false);
+						enemy.removeValue((SmallEnemy) b.getUserData(),false);
 						world.destroyBody(b);
 					}
 				}

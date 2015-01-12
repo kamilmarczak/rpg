@@ -8,9 +8,9 @@ public class EnemyDirection {
 
 	public void directionChecker(int i) {
 
-		float firstX = Play.getSmalEnemy().get(i).getBody().getLinearVelocity().x * 10;
-		float firstY = Play.getSmalEnemy().get(i).getBody().getLinearVelocity().y * 10;
-		boolean isFighting = Play.getSmalEnemy().get(i).isFighting();
+		float firstX = Play.getEnemy().get(i).getBody().getLinearVelocity().x * 10;
+		float firstY = Play.getEnemy().get(i).getBody().getLinearVelocity().y * 10;
+		boolean isFighting = Play.getEnemy().get(i).isFighting();
 	//	System.out.println("isFa   "+isFighting);
 
 		if ((int) firstX > 0 && (int) firstY > 0 && !isFighting) {
@@ -66,8 +66,8 @@ public class EnemyDirection {
 
 	private void anienemChecker(int j, int i) {
 
-		if(Play.getSmalEnemy().get(i).getAnimationRow()!=j){
-			Play.getSmalEnemy().get(i).playAnimation(j);
+		if(Play.getEnemy().get(i).getAnimationRow()!=j){
+			Play.getEnemy().get(i).playAnimation(j);
 		}
 			
 			
