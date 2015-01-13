@@ -6,7 +6,6 @@ import java.util.Stack;
 import com.rpg.game.AdultGame;
 import com.rpg.game.state.GameState;
 import com.rpg.game.state.Play;
-import com.rpg.game.state.PlayMap2;
 import com.rpg.game.state.Wormhole;
 
 
@@ -42,7 +41,7 @@ public class GameStateManager {
 	private GameState getState(int state) {
 		if(state == WORMHOLE) return new Wormhole(this);
 		if(state == PLAY) return new Play(this);
-		if(state == PLAYMAP2) return new PlayMap2(this);
+
 	//	if(state == LEVEL_SELECT) return new LevelSelect(this);
 	//	if(state == HOUSE) return new House(this);
 		return null;

@@ -8,7 +8,7 @@ import com.rpg.game.AdultGame;
 
 public class HUD {
 	
-	private Player player;
+	private Player2 player;
 	
 	private TextureRegion container;
 	//private TextureRegion[] blocks;
@@ -16,9 +16,9 @@ public class HUD {
 	private TextureRegion[] font;
 	private HealthBar hp;
 	
-	public HUD(Player player) {
+	public HUD(Player2 player2) {
 		hp= new HealthBar();
-		this.player = player;
+		this.player = player2;
 		
 		Texture tex = AdultGame.res.getTexture("hud");
 		

@@ -34,24 +34,33 @@ public class Enemy extends B2DSprite{
 	private HealthBar hp;
 	private MyTimer timer;
 	private int enemyHitPower=1;
-
+	int posX, posY;
+	private String textureName;
 
 	
 
+
+
+	public String getEnemyTextureName() {
+		return textureName;
+	}
 
 
 	public Enemy() {
 		super();
 
 		world=Play.getWorld();
-		playAnimation(animationRow);
+		
 		hp= new HealthBar();
 		timer= new MyTimer(1);
 		timer.start();
 	}
 	
 
-	public void enemycreator(int posX,int posY){
+	public void enemycreator(int posX,int posY, String bodyTAG,short categoryBit ,int i){
+this.posX= posX;
+this.posX =posX;
+
 
 		// Def initializing
 		bdef = new BodyDef();
@@ -72,24 +81,27 @@ public class Enemy extends B2DSprite{
 		fdef.shape = shapeEnemy;
 	
 	
-		fdef.filter.categoryBits= B2DVars.BIT_ENEMY;
-		fdef.filter.maskBits= B2DVars.BIT_PLAYER;
+		fdef.filter.categoryBits= categoryBit;
+		fdef.filter.maskBits= (short) i;
 		//fdef.filter.maskBits= B2DVars.BIT_PLAYER |B2DVars.BIT_ENEMY;
-		body.createFixture(fdef).setUserData("enemy");
+		body.createFixture(fdef).setUserData(bodyTAG);
 
 		// Player's sensor
 		sensroShape.setRadius(200/PPM);
 		fdef.shape = sensroShape;
-		fdef.filter.categoryBits= B2DVars.BIT_ENEMY;
-		 fdef.filter.maskBits= B2DVars.BIT_PLAYER;
+		fdef.filter.categoryBits= (short) i;
+		 fdef.filter.maskBits= categoryBit;
 		 fdef.density= 0.1f;
 		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("sensorEnemy");
+		//body.createFixture(fdef).setUserData("sensorEnemy");
 		shapeEnemy.dispose();
 		sensroShape.dispose();
 		
 	}
-	public void attack(Player player)
+
+
+
+/*	public void attack()
 	{
 
 		if(Player.getPlayerHp()>6 && timer.hasCompleted()){
@@ -99,12 +111,12 @@ public class Enemy extends B2DSprite{
 				
 
 		}
-	}
-	public void playAnimation(int animationRow) {
-		
+	}*/
+	public void playAnimation(int animationRow, String textureName) {
+		this.textureName=textureName;
 		this.animationRow = animationRow;
 
-		Texture tex = AdultGame.res.getTexture("enemySmall");
+		Texture tex = AdultGame.res.getTexture(textureName);
 		TextureRegion[] sprites = new TextureRegion[9];
 
 		for (int i = 0; i < sprites.length; i++) {
@@ -143,7 +155,8 @@ public class Enemy extends B2DSprite{
 	public void setAnimationRow(int animationRow) {	this.animationRow = animationRow;}
 	public boolean isFighting() {return isFighting;}
 	public void setFighting(boolean isFighting) {this.isFighting = isFighting;}
-
+	public int getPosX() {return posX;}
+	public int getPosY() {return posY;}
 
 	public void setEnemyHitPower(int enemyHitPower) {this.enemyHitPower = enemyHitPower;}
 

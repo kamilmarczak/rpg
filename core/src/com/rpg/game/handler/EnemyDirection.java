@@ -1,5 +1,6 @@
 package com.rpg.game.handler;
 
+import com.rpg.game.entities.SmallEnemy;
 import com.rpg.game.state.Play;
 
 public class EnemyDirection {
@@ -67,7 +68,8 @@ public class EnemyDirection {
 	private void anienemChecker(int j, int i) {
 
 		if(Play.getEnemy().get(i).getAnimationRow()!=j){
-			Play.getEnemy().get(i).playAnimation(j);
+			Play.getEnemy().get(i).playAnimation(j, Play.getEnemy().get(i).getEnemyTextureName());
+			
 		}
 			
 			

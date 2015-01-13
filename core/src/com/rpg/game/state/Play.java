@@ -28,6 +28,7 @@ import com.rpg.game.entities.Door;
 import com.rpg.game.entities.Enemy;
 import com.rpg.game.entities.HUD;
 import com.rpg.game.entities.Player;
+import com.rpg.game.entities.Player2;
 import com.rpg.game.entities.SmallEnemy;
 import com.rpg.game.entities.Teleport;
 import com.rpg.game.handler.B2DVars;
@@ -45,7 +46,8 @@ public class Play extends GameState {
 	private Box2DDebugRenderer b2dRenderer;
 	private MyContactListener cl;
 	public static World world;
-	public static Player player;
+	//public static Player player;
+	public static Player2 player2;
 	private Body body;
 	private Array<Teleport> teleports;
 	private Array<Collectibles> collectibles;
@@ -64,7 +66,8 @@ public class Play extends GameState {
 	public static float getPlayerPositionY() {return playerPositionY;}
 	public static float getLastClickX() {return lastClickX;}
 	public static float getLastClickY() {return lastClickY;}
-	public static Player getPlayer() {return player;}
+//	public static Player getPlayer() {return player;}
+	public static Player2 getPlayer() {return player2;}
 	public static boolean isMoving() {return isMoving;}
 	public static Array<Enemy> getEnemy() {return enemy;}
 	private static float lastClickX;
@@ -93,9 +96,12 @@ public class Play extends GameState {
 
 		// create player
 		createPlayer();
-		lastClickX = player.getBody().getPosition().x;
-		lastClickY = player.getBody().getPosition().y;
+		
 
+		
+		lastClickX = player2.getBody().getPosition().x;
+		lastClickY = player2.getBody().getPosition().y;
+		
 		// create portal
 		creatPortal();
 
@@ -107,7 +113,7 @@ public class Play extends GameState {
 				(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM, 0,
 				(gameMap.getHeightInTiles() * GameMaps.getTileSize()) / PPM);
 		// Set up HUD
-		hud = new HUD(player);
+		hud = new HUD(player2);
 		
 		
 		
@@ -137,6 +143,7 @@ public class Play extends GameState {
 			sm.getBody().setLinearVelocity(x, y);
 			enemy.add(sm);
 			sm.getBody().setUserData(sm);
+			
 
 		}
 
@@ -144,11 +151,11 @@ public class Play extends GameState {
 
 	public void handleInput() {
 
-		playerPositionX = player.getBody().getPosition().x;
-		playerPositionY = player.getBody().getPosition().y;
+		playerPositionX = player2.getBody().getPosition().x;
+		playerPositionY = player2.getBody().getPosition().y;
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			player.getBody().setLinearVelocity(0, 0);
+			player2.getBody().setLinearVelocity(0, 0);
 			lastClickX = cam.position.x / PPM - (cam.viewportWidth / 2 / PPM)
 					+ Gdx.input.getX() / PPM;
 			lastClickY = cam.position.y / PPM - (cam.viewportHeight / 2 / PPM)
@@ -171,7 +178,7 @@ public class Play extends GameState {
 		world.step(AdultGame.STEP, 6, 2);
 		damage();
 
-		player.update(dt);
+		player2.update(dt);
 
 		for (int i = 0; i < teleports.size; i++) {
 			teleports.get(i).update(dt);
@@ -201,7 +208,7 @@ public class Play extends GameState {
 	public void render() {
 	
 		// camera follow player
-		cam.setPosition(player.getPosition().x * PPM, player.getPosition().y
+		cam.setPosition(player2.getPosition().x * PPM, player2.getPosition().y
 				* PPM);
 		cam.update();
 		coinColector();
@@ -264,7 +271,8 @@ public class Play extends GameState {
 	public void drawPlayer() {
 
 		sb.setProjectionMatrix(cam.combined);
-		player.render(sb);
+		//player.render(sb);
+		player2.render(sb);
 
 	}
 	private void damage() {
@@ -277,14 +285,14 @@ public class Play extends GameState {
 			
 			bm= new BodyMover(((SmallEnemy) b.getUserData()).getPosition().x, ((SmallEnemy) b.getUserData()).getPosition().y,playerPositionX, playerPositionY, 1);
 			((SmallEnemy) b.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementX());
-			((SmallEnemy) b.getUserData()).attack(player);
+		//	((SmallEnemy) b.getUserData()).attack();
 		
 	
 			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			playerIsAttacking= true;
 				if (((SmallEnemy) b.getUserData()) != null) {
 					//player.attack((SmallEnemy) b.getUserData());
-					player.attack((SmallEnemy) b.getUserData());
+				//	player.attack((SmallEnemy) b.getUserData());
 				//System.out.println(((Enemy)b.getUserData()).getBody());	
 					
 					//((SmallEnemy) b.getUserData()).setHitPoint(((SmallEnemy) b.getUserData()).getHitPoint() - 0.5f);
@@ -373,8 +381,9 @@ public class Play extends GameState {
 
 		// create Player
 
-		player = new Player(body);
-		player.playAnimation(4);
+		//player = new Player(body);
+		player2 = new Player2(650, 650);
+		player2.playAnimation(4,player2.getEnemyTextureName());
 		body.setUserData("player");
 		shape.dispose();
 	}
@@ -516,7 +525,7 @@ public class Play extends GameState {
 	// dont start animation over and over again
 	public static void aniChecker(int i) {
 		if (numerAnimacii != i) {
-			player.playAnimation(i);
+			player2.playAnimation(i,player2.getEnemyTextureName());
 			numerAnimacii = i;
 		}
 	}
