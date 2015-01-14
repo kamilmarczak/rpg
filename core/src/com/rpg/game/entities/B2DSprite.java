@@ -46,8 +46,9 @@ public class B2DSprite  {
 	
 	public void render(SpriteBatch sb) {
 	
-		int pozX=(int)(getBody().getPosition().x * B2DVars.PPM - width / 2);
-		int pozY=(int) (getBody().getPosition().y * B2DVars.PPM - height / 2);
+		int pozX=(int)(getPosition().x * B2DVars.PPM - width / 2);
+		int pozY=(int) (getPosition().y * B2DVars.PPM - height / 2);
+		
 		sb.begin();
 		sb.draw(animation.getFrame(),pozX ,pozY );
 		sb.end();

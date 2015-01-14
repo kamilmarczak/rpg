@@ -1,6 +1,5 @@
 package com.rpg.game.handler;
 
-import com.rpg.game.entities.SmallEnemy;
 import com.rpg.game.state.Play;
 
 public class EnemyDirection {

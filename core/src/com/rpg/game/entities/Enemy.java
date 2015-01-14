@@ -13,13 +13,11 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.rpg.game.AdultGame;
-import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.MyTimer;
 import com.rpg.game.state.Play;
 
-public class Enemy extends B2DSprite{
+public class Enemy{
 
 
 	private World world = null;
@@ -27,7 +25,7 @@ public class Enemy extends B2DSprite{
 	private FixtureDef fdef;
 	private PolygonShape shapeEnemy;
 	private CircleShape sensroShape;
-	private  Body body;
+	//private  Body body;
 	private boolean isFighting= false;
 	private int animationRow =0;
 	private float hitPoint= 1;
@@ -36,7 +34,8 @@ public class Enemy extends B2DSprite{
 	private int enemyHitPower=1;
 	int posX, posY;
 	private String textureName;
-
+	private Body body;
+	protected B2DSprite sprite;
 	
 
 
@@ -47,17 +46,19 @@ public class Enemy extends B2DSprite{
 
 
 	public Enemy() {
-		super();
+		
 
 		world=Play.getWorld();
 		
 		hp= new HealthBar();
 		timer= new MyTimer(1);
 		timer.start();
+		
 	}
 	
 
-	public void enemycreator(int posX,int posY, String bodyTAG,short categoryBit ,int i){
+	public void enemycreator(int posX,int posY, String bodyTAG,short categoryBit ,short maskBits, int i){
+		
 this.posX= posX;
 this.posX =posX;
 
@@ -74,7 +75,7 @@ this.posX =posX;
 		bdef.fixedRotation = true;
 		
 
-		body = world.createBody(bdef);
+		 body = world.createBody(bdef);
 
 		// fixtureDef
 		shapeEnemy.setAsBox(15 / PPM, 25 / PPM, new Vector2(0 / PPM, 0 / PPM),0); // //
@@ -82,36 +83,40 @@ this.posX =posX;
 	
 	
 		fdef.filter.categoryBits= categoryBit;
-		fdef.filter.maskBits= (short) i;
+		fdef.filter.maskBits= maskBits;
 		//fdef.filter.maskBits= B2DVars.BIT_PLAYER |B2DVars.BIT_ENEMY;
 		body.createFixture(fdef).setUserData(bodyTAG);
 
 		// Player's sensor
 		sensroShape.setRadius(200/PPM);
 		fdef.shape = sensroShape;
-		fdef.filter.categoryBits= (short) i;
-		 fdef.filter.maskBits= categoryBit;
+		fdef.filter.categoryBits= categoryBit;
+		 fdef.filter.maskBits= (short) (maskBits |i);
+	
 		 fdef.density= 0.1f;
 		fdef.isSensor = true;
 		//body.createFixture(fdef).setUserData("sensorEnemy");
 		shapeEnemy.dispose();
 		sensroShape.dispose();
+		sprite= new B2DSprite(body);
+		
 		
 	}
 
 
 
-/*	public void attack()
+	public void attack()
 	{
 
-		if(Player.getPlayerHp()>6 && timer.hasCompleted()){
+		if(Player.getPlayerHP()>6 && timer.hasCompleted()){
 			
-				Player.setPlayerHp(Player.getPlayerHp()- enemyHitPower);
+				Player.setPlayerHP(Player.getPlayerHP()- enemyHitPower);
 				timer.start();
 				
 
 		}
-	}*/
+	}
+	
 	public void playAnimation(int animationRow, String textureName) {
 		this.textureName=textureName;
 		this.animationRow = animationRow;
@@ -124,14 +129,15 @@ this.posX =posX;
 					64);
 		}
 
-		animation.setFrames(sprites, 1 / 12f);
+		sprite.animation.setFrames(sprites, 1 / 12f);
 
-		width = sprites[0].getRegionWidth();
-		height = sprites[0].getRegionHeight();
+		sprite.width = sprites[0].getRegionWidth();
+		sprite.height = sprites[0].getRegionHeight();
 
 
 	}
-	//hp bar
+	
+/*	//hp bar
 	@Override
 	public void render(SpriteBatch sb) {
 		// TODO Auto-generated method stub
@@ -144,7 +150,7 @@ this.posX =posX;
 		sb.end();
 
 		
-	}
+	}*/
 	
 
 	public Body getBody() {return body;}
@@ -159,5 +165,15 @@ this.posX =posX;
 	public int getPosY() {return posY;}
 
 	public void setEnemyHitPower(int enemyHitPower) {this.enemyHitPower = enemyHitPower;}
+
+
+	public void update(float dt) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void render(SpriteBatch sb) {
+		sprite.render(sb);
+		
+	}
 
 }

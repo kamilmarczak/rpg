@@ -8,7 +8,7 @@ import com.rpg.game.AdultGame;
 
 public class HUD {
 	
-	private Player2 player;
+	private Player player;
 	
 	private TextureRegion container;
 	//private TextureRegion[] blocks;
@@ -16,7 +16,7 @@ public class HUD {
 	private TextureRegion[] font;
 	private HealthBar hp;
 	
-	public HUD(Player2 player2) {
+	public HUD(Player player2) {
 		hp= new HealthBar();
 		this.player = player2;
 		
@@ -61,7 +61,7 @@ public class HUD {
 		else if((bits & B2DVars.BIT_BLUE_BLOCK) != 0) {
 			sb.draw(blocks[2], 40, 208);
 		}*/
-		hp.playerHpDraw(sb, Player.getPlayerHp(),310, 375 );
+		hp.playerHpDraw(sb, Player.getPlayerHP(),310, 375 );
 		// draw crystal
 		sb.draw(crystal, 440, 380);
 		

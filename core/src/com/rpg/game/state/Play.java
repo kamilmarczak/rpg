@@ -28,7 +28,6 @@ import com.rpg.game.entities.Door;
 import com.rpg.game.entities.Enemy;
 import com.rpg.game.entities.HUD;
 import com.rpg.game.entities.Player;
-import com.rpg.game.entities.Player2;
 import com.rpg.game.entities.SmallEnemy;
 import com.rpg.game.entities.Teleport;
 import com.rpg.game.handler.B2DVars;
@@ -42,12 +41,12 @@ import com.rpg.game.handler.MyTimer;
 public class Play extends GameState {
 
 	// private IsometricTiledMapRenderer isoTiledrenderer;
-	private boolean debug = false;
+	private boolean debug = true;
 	private Box2DDebugRenderer b2dRenderer;
 	private MyContactListener cl;
 	public static World world;
 	//public static Player player;
-	public static Player2 player2;
+	public static Player player2;
 	private Body body;
 	private Array<Teleport> teleports;
 	private Array<Collectibles> collectibles;
@@ -67,12 +66,13 @@ public class Play extends GameState {
 	public static float getLastClickX() {return lastClickX;}
 	public static float getLastClickY() {return lastClickY;}
 //	public static Player getPlayer() {return player;}
-	public static Player2 getPlayer() {return player2;}
+	public static Player getPlayer() {return player2;}
 	public static boolean isMoving() {return isMoving;}
+	public static void setMoving(boolean isMoving) {Play.isMoving = isMoving;}
 	public static Array<Enemy> getEnemy() {return enemy;}
 	private static float lastClickX;
 	private static float lastClickY;
-	public static boolean isMoving = false;
+	private static boolean isMoving = false;
 	private static int numerAnimacii = 100;
 	
 	
@@ -156,16 +156,15 @@ public class Play extends GameState {
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			player2.getBody().setLinearVelocity(0, 0);
-			lastClickX = cam.position.x / PPM - (cam.viewportWidth / 2 / PPM)
-					+ Gdx.input.getX() / PPM;
-			lastClickY = cam.position.y / PPM - (cam.viewportHeight / 2 / PPM)
-					+ (cam.viewportHeight / PPM) - Gdx.input.getY() / PPM;
+			lastClickX = cam.position.x / PPM - (cam.viewportWidth / 2 / PPM)+ Gdx.input.getX() / PPM;
+			lastClickY = cam.position.y / PPM - (cam.viewportHeight / 2 / PPM)+ (cam.viewportHeight / PPM) - Gdx.input.getY() / PPM;
+			
 			isMoving = true;
 
 			animationChecker();
 		}
 
-		Player.playerControl();
+		
 
 	}
 
@@ -179,6 +178,7 @@ public class Play extends GameState {
 		damage();
 
 		player2.update(dt);
+		
 
 		for (int i = 0; i < teleports.size; i++) {
 			teleports.get(i).update(dt);
@@ -197,7 +197,7 @@ public class Play extends GameState {
 
 			enemy.get(i).update(dt);
 		}
-		// }
+		
 
 		teleportingLogic();
 	
@@ -208,8 +208,8 @@ public class Play extends GameState {
 	public void render() {
 	
 		// camera follow player
-		cam.setPosition(player2.getPosition().x * PPM, player2.getPosition().y
-				* PPM);
+		cam.setPosition(player2.getPosX() , player2.getPosX()
+				);
 		cam.update();
 		coinColector();
 
@@ -283,7 +283,7 @@ public class Play extends GameState {
 		for (int i = 0; i < bodiesDmg.size; i++) {
 			Body b = bodiesDmg.get(i);
 			
-			bm= new BodyMover(((SmallEnemy) b.getUserData()).getPosition().x, ((SmallEnemy) b.getUserData()).getPosition().y,playerPositionX, playerPositionY, 1);
+			//bm= new BodyMover(((SmallEnemy) b.getUserData()).getPosition().x, ((SmallEnemy) b.getUserData()).getPosition().y,playerPositionX, playerPositionY, 1);
 			((SmallEnemy) b.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementX());
 		//	((SmallEnemy) b.getUserData()).attack();
 		
@@ -346,46 +346,17 @@ public class Play extends GameState {
 
 	}
 	
-	public static void setMoving(boolean isMoving) {
-		Play.isMoving = isMoving;
-		}
+
 
 	private void createPlayer() {
 
-		// Def initializing
-		BodyDef bdef = new BodyDef();
-		FixtureDef fdef = new FixtureDef();
-		PolygonShape shape = new PolygonShape();
 
-		// BodyDef
-		bdef.position.set(400 / PPM, 400 / PPM);
-		bdef.type = BodyType.DynamicBody;
-		bdef.fixedRotation = true;
-		body = world.createBody(bdef);
-
-		// fixtureDef
-		shape.setAsBox(15 / PPM, 25 / PPM, new Vector2(0 / PPM, 0 / PPM), 0); // //
-		fdef.shape = shape;
-		fdef.restitution = 0;
-		fdef.filter.categoryBits = B2DVars.BIT_PLAYER;
-		// fdef.filter.maskBits= B2DVars.
-		body.createFixture(fdef).setUserData("Player");
-
-		// Player's sensor
-		shape.setAsBox(48 / PPM, 68 / PPM, new Vector2(0 / PPM, 0 / PPM), 0);
-		fdef.shape = shape;
-		fdef.filter.categoryBits = B2DVars.BIT_PLAYER;
-		fdef.filter.maskBits = B2DVars.BIT_DOOR | B2DVars.BIT_ENEMY;
-		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("sensor");
-
-		// create Player
 
 		//player = new Player(body);
-		player2 = new Player2(650, 650);
+		player2 = new Player(650, 650);
 		player2.playAnimation(4,player2.getEnemyTextureName());
-		body.setUserData("player");
-		shape.dispose();
+		
+		
 	}
 
 	private void creatPortal() {

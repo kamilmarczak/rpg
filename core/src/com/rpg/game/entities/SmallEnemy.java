@@ -1,7 +1,5 @@
 package com.rpg.game.entities;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.rpg.game.AdultGame;
 import com.rpg.game.handler.B2DVars;
 
 
@@ -13,7 +11,7 @@ public class SmallEnemy extends Enemy {
 	
 
 	public SmallEnemy(int i, int j) {
-	enemycreator(i, j,bodyTAG,B2DVars.BIT_ENEMY,B2DVars.BIT_PLAYER);
+	enemycreator(i, j,bodyTAG,B2DVars.BIT_ENEMY,B2DVars.BIT_PLAYER,  0);
 	setEnemyHitPower(1);
 	playAnimation(getAnimationRow(),textureName);
 	
@@ -21,7 +19,7 @@ public class SmallEnemy extends Enemy {
 	}
 
 
-
+	
 
 
 
