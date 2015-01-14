@@ -208,8 +208,8 @@ public class Play extends GameState {
 	public void render() {
 	
 		// camera follow player
-		cam.setPosition(player2.getPosX() , player2.getPosX()
-				);
+		cam.setPosition(player2.getPlayerPositionX()* PPM, player2.getPlayerPositionY()
+				* PPM);
 		cam.update();
 		coinColector();
 
@@ -283,7 +283,7 @@ public class Play extends GameState {
 		for (int i = 0; i < bodiesDmg.size; i++) {
 			Body b = bodiesDmg.get(i);
 			
-			//bm= new BodyMover(((SmallEnemy) b.getUserData()).getPosition().x, ((SmallEnemy) b.getUserData()).getPosition().y,playerPositionX, playerPositionY, 1);
+		//	bm= new BodyMover(((SmallEnemy) b.getUserData()).getPosition().x, ((SmallEnemy) b.getUserData()).getPosition().y,playerPositionX, playerPositionY, 1);
 			((SmallEnemy) b.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementX());
 		//	((SmallEnemy) b.getUserData()).attack();
 		

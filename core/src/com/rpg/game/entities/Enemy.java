@@ -161,8 +161,7 @@ this.posX =posX;
 	public void setAnimationRow(int animationRow) {	this.animationRow = animationRow;}
 	public boolean isFighting() {return isFighting;}
 	public void setFighting(boolean isFighting) {this.isFighting = isFighting;}
-	public int getPosX() {return posX;}
-	public int getPosY() {return posY;}
+
 
 	public void setEnemyHitPower(int enemyHitPower) {this.enemyHitPower = enemyHitPower;}
 

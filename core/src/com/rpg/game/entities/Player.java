@@ -16,6 +16,25 @@ public class Player extends Enemy  {
 	private  float playerPositionX;
 	private  float playerPositionY;
 
+	public float getPlayerPositionX() {
+		return playerPositionX;
+	}
+
+	public void setPlayerPositionX(float playerPositionX) {
+		this.playerPositionX = playerPositionX;
+	}
+
+	public float getPlayerPositionY() {
+		return playerPositionY;
+	}
+
+	public void setPlayerPositionY(float playerPositionY) {
+		this.playerPositionY = playerPositionY;
+	}
+
+
+
+
 	private BodyMover bm;
 	
 	public static int getPlayerHP() {
