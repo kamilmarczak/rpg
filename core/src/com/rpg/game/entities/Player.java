@@ -1,7 +1,5 @@
 package com.rpg.game.entities;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyMover;
 import com.rpg.game.state.Play;
@@ -9,52 +7,38 @@ import com.rpg.game.state.Play;
 public class Player extends Enemy  {
 	private static int COINS = 0;
 	private String textureName = "player";
+	private String bodyTAG = "player";
 	private static int playerHP=100;
-	
-	
-	
+	private BodyMover bm;
 	private  float playerPositionX;
 	private  float playerPositionY;
-
-	public float getPlayerPositionX() {
-		return playerPositionX;
-	}
-
-	public void setPlayerPositionX(float playerPositionX) {
-		this.playerPositionX = playerPositionX;
-	}
-
-	public float getPlayerPositionY() {
-		return playerPositionY;
-	}
-
-	public void setPlayerPositionY(float playerPositionY) {
-		this.playerPositionY = playerPositionY;
-	}
-
-
-
-
-	private BodyMover bm;
 	
-	public static int getPlayerHP() {
-		return playerHP;
-	}
 
-	public static void setPlayerHP(int playerHP) {
-		Player.playerHP = playerHP;
-	}
+	public float getPlayerPositionX() {return playerPositionX;}
+	public void setPlayerPositionX(float playerPositionX) {this.playerPositionX = playerPositionX;}
+	public float getPlayerPositionY() {return playerPositionY;}
+	public void setPlayerPositionY(float playerPositionY) {	this.playerPositionY = playerPositionY;}
+	public static int getPlayerHP() {	return playerHP;}
+	public static void setPlayerHP(int playerHP) {	Player.playerHP = playerHP;}
+	public static int getCOINS() {return COINS;}
+	public static void setCOINS(int COINs) {COINS = COINs;}
 
 
 
-
-	private String bodyTAG = "enemy";
 
 
 	public Player(int i, int j) {
 	
 		
-		enemycreator(i, j,bodyTAG, B2DVars.BIT_PLAYER, B2DVars.BIT_DOOR , B2DVars.BIT_ENEMY);
+	//	enemycreator(i, j,bodyTAG, B2DVars.BIT_PLAYER, B2DVars.BIT_DOOR | B2DVars.BIT_ENEMY);
+		enemycreator(i, j,bodyTAG, 
+				B2DVars.BIT_PLAYER,
+				B2DVars.BIT_ENEMY |
+				B2DVars.BIT_DOOR |
+				B2DVars.BIT_PORTAL_FORWARD |
+				B2DVars.BIT_PORTAL_BACK |
+				B2DVars.BIT_DOOR);
+		
 		playAnimation(getAnimationRow(), textureName);
 
 	getBody().setLinearVelocity(1, 1);
@@ -71,9 +55,11 @@ public class Player extends Enemy  {
 	}
 
 	public void playerControl() {
+		
+	
 		playerPositionX = getBody().getPosition().x;
 		playerPositionY = getBody().getPosition().y;
-		System.out.println(Play.getLastClickX());
+	
 		bm = new BodyMover(playerPositionX, playerPositionY, Play.getLastClickX(), Play.getLastClickY(), 2);
 		
 		//Play.setMoving(true);
@@ -84,8 +70,7 @@ public class Player extends Enemy  {
 		}
 		
 		
-		System.out.println( Play.isMoving() );
-		
+	
 		
 			if ((int) (getBody().getPosition().x * 10) == (int) (Play.getLastClickX() * 10)
 					&& (int) (getBody().getPosition().y * 10) == (int) (Play.getLastClickY() * 10)) {
@@ -103,8 +88,7 @@ public class Player extends Enemy  {
 			
 	}
 
-	public static int getCOINS() {return COINS;}
-	public static void setCOINS(int COINs) {COINS = COINs;}
+
 
 
 }

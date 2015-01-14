@@ -11,10 +11,8 @@ public class B2DVars {
 	public static final short BIT_DOOR = 4;
 	public static final short BIT_PORTAL_FORWARD = 8;
 	public static final short BIT_PORTAL_BACK = 16;
-	public static final short BIT_PORTAL = 32;
-
-	public static final short BIT_ENEMY = 64;
-
-	public static final short COLLECTA = 128;
+	public static final short BIT_ENEMY = 32;
+	public static final short COLLECTA = 64;
+	public static final short BIT_PLAYER_SENSOR =128;
 
 }

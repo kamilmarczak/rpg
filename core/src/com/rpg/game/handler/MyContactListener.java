@@ -33,21 +33,21 @@ public class MyContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-		//System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
+	//	System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
 		
 		if(fa == null || fb == null) return;
-		if(fa.getUserData() != null && fa.getUserData().equals("portalForward")) {
+		if(fa.getUserData() != null && fa.getUserData().equals("portalForward")&& fb.getUserData().equals("player")) {
 			isPlayerTeleportingForward=true;
 		}
-		if(fb.getUserData() != null && fb.getUserData().equals("portalForward")) {
+		if(fb.getUserData() != null && fb.getUserData().equals("portalForward")&& fa.getUserData().equals("player")) {
 			isPlayerTeleportingForward=true;
 		}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		if(fa == null || fb == null) return;
-		if(fa.getUserData() != null && fa.getUserData().equals("portalBack")) {
+		if(fa.getUserData() != null && fa.getUserData().equals("portalBack")&& fb.getUserData().equals("player")) {
 			isPlayerTeleportingBack=true;
 		}
-		if(fb.getUserData() != null && fb.getUserData().equals("portalBack")) {
+		if(fb.getUserData() != null && fb.getUserData().equals("portalBack")&& fa.getUserData().equals("player")) {
 			isPlayerTeleportingBack=true;
 		}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,12 +67,13 @@ public class MyContactListener implements ContactListener {
 		}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if(fa.getUserData() != null && fa.getUserData().equals("enemy")) {
+if( fa.getUserData().equals("sensor") &&fb.getUserData().equals("player")) {
 	damage.add(fa.getBody());
 	isPlayerInRange= true;
 	((SmallEnemy)fa.getBody().getUserData()).setFighting(true);
 }
-if(fb.getUserData() != null && fb.getUserData().equals("enemy")) {
+if(fb.getUserData().equals("sensor") &&fa.getUserData().equals("player")) {
+	
 	damage.add(fb.getBody());
 	isPlayerInRange= true;
 	((SmallEnemy)fb.getBody().getUserData()).setFighting(true);
@@ -88,28 +89,7 @@ coins.add(fb.getBody());
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 		
-		
-		/*	
-		if(fa.getUserData() != null && fa.getUserData().equals("sensor")) {
-			numFootContacts++;
-		}
-		if(fb.getUserData() != null && fb.getUserData().equals("sensor")) {
-			numFootContacts++;
-		}
-		
-	if(fa.getUserData() != null && fa.getUserData().equals("crystal")) {
-			bodiesToRemove.add(fa.getBody());
-		}
-		if(fb.getUserData() != null && fb.getUserData().equals("crystal")) {
-			bodiesToRemove.add(fb.getBody());
-		}
-		
-		if(fa.getUserData() != null && fa.getUserData().equals("spike")) {
-			playerDead = true;
-		}
-		if(fb.getUserData() != null && fb.getUserData().equals("spike")) {
-			playerDead = true;
-		}*/
+
 		
 	}
 
@@ -151,12 +131,12 @@ coins.add(fb.getBody());
 		}
 		
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if(fa.getUserData() != null && fa.getUserData().equals("enemy")) {
+		if(fa.getUserData().equals("enemy")&&fb.getUserData().equals("player")) {
 			((SmallEnemy)fa.getBody().getUserData()).setFighting(false);
 			damage.removeValue(fa.getBody(), true);
 			isPlayerInRange= false;
 		}
-		if(fb.getUserData() != null && fb.getUserData().equals("enemy")) {
+		if(fb.getUserData().equals("enemy")&&fa.getUserData().equals("player")) {
 			((SmallEnemy)fb.getBody().getUserData()).setFighting(false);
 			damage.removeValue(fb.getBody(), true);
 			isPlayerInRange= false;

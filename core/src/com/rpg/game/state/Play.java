@@ -153,9 +153,9 @@ public class Play extends GameState {
 
 		playerPositionX = player2.getBody().getPosition().x;
 		playerPositionY = player2.getBody().getPosition().y;
-
+	
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			player2.getBody().setLinearVelocity(0, 0);
+			
 			lastClickX = cam.position.x / PPM - (cam.viewportWidth / 2 / PPM)+ Gdx.input.getX() / PPM;
 			lastClickY = cam.position.y / PPM - (cam.viewportHeight / 2 / PPM)+ (cam.viewportHeight / PPM) - Gdx.input.getY() / PPM;
 			
@@ -175,10 +175,8 @@ public class Play extends GameState {
 		handleInput();
 
 		world.step(AdultGame.STEP, 6, 2);
-		damage();
-
 		player2.update(dt);
-		
+		damage();
 
 		for (int i = 0; i < teleports.size; i++) {
 			teleports.get(i).update(dt);
@@ -283,12 +281,20 @@ public class Play extends GameState {
 		for (int i = 0; i < bodiesDmg.size; i++) {
 			Body b = bodiesDmg.get(i);
 			
-		//	bm= new BodyMover(((SmallEnemy) b.getUserData()).getPosition().x, ((SmallEnemy) b.getUserData()).getPosition().y,playerPositionX, playerPositionY, 1);
+			
+			
+			bm= new BodyMover(((SmallEnemy) b.getUserData()).getBody().getPosition().x,
+							((SmallEnemy) b.getUserData()).getBody().getPosition().y,
+							playerPositionX, playerPositionY, 2);
 			((SmallEnemy) b.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementX());
-		//	((SmallEnemy) b.getUserData()).attack();
+			
+			
+			
+		((SmallEnemy) b.getUserData()).attack();
 		
 	
-			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+		System.out.println(bodiesDmg.size);
+/*			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 			playerIsAttacking= true;
 				if (((SmallEnemy) b.getUserData()) != null) {
 					//player.attack((SmallEnemy) b.getUserData());
@@ -308,7 +314,7 @@ public class Play extends GameState {
 						world.destroyBody(b);
 					}
 				}
-			}
+			}*/
 		}		
 	}
 
@@ -319,6 +325,10 @@ public class Play extends GameState {
 	public static boolean isPlayerIsAttacking() {
 		return playerIsAttacking;
 	}
+	
+	
+	
+	
 	private void coinColector(){
 		Array<Body> coinList = cl.getCoins();
 		for (int i = 0; i < coinList.size; i++) {
@@ -353,7 +363,7 @@ public class Play extends GameState {
 
 
 		//player = new Player(body);
-		player2 = new Player(650, 650);
+		player2 = new Player(750, 750);
 		player2.playAnimation(4,player2.getEnemyTextureName());
 		
 		
@@ -443,9 +453,11 @@ public class Play extends GameState {
 
 	// checking direction to draw sprite in the correct way
 	private void animationChecker() {
+		
 		if ((int) lastClickX > (int) playerPositionX
 				&& (int) lastClickY > (int) playerPositionY && !playerIsAttacking)
 			aniChecker(5);
+	
 
 		if ((int) lastClickX > (int) playerPositionX
 				&& (int) lastClickY < (int) playerPositionY&& !playerIsAttacking)
@@ -496,8 +508,10 @@ public class Play extends GameState {
 	// dont start animation over and over again
 	public static void aniChecker(int i) {
 		if (numerAnimacii != i) {
+		
 			player2.playAnimation(i,player2.getEnemyTextureName());
 			numerAnimacii = i;
+			
 		}
 	}
 
