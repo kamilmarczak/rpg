@@ -18,7 +18,7 @@ import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.MyTimer;
 import com.rpg.game.state.Play;
 
-public class Enemy{
+public class Entity{
 
 
 	private World world = null;
@@ -46,7 +46,7 @@ public class Enemy{
 	}
 
 
-	public Enemy() {
+	public Entity() {
 		
 		world=Play.getWorld();
 		hp= new HealthBar();
@@ -82,7 +82,7 @@ public class Enemy{
 		body.createFixture(fdef).setUserData(bodyTAG);
 		
 		// Player's sensor
-		sensroShape.setRadius(200/PPM);
+		sensroShape.setRadius(100/PPM);
 		fdef.shape = sensroShape;
 		fdef.filter.categoryBits= categoryBit;
 		fdef.isSensor = true;

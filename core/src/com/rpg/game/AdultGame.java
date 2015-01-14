@@ -83,11 +83,7 @@ public class AdultGame implements ApplicationListener {
 		viewport.update(width, height, false);
 		b2dCam.setToOrtho(false, width / PPM, height/ PPM);
 
-		//viewport2.update(width, width,false);
-		//G_WIDTH=width;
-		//	G_HEIGHT=height;
-		//cam.setToOrtho(false, G_WIDTH, G_HEIGHT);
-		//	hudCam.setToOrtho(false, G_WIDTH, G_HEIGHT);
+	
 
 	}
 

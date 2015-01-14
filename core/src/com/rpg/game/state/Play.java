@@ -25,7 +25,7 @@ import com.rpg.game.AdultGame;
 import com.rpg.game.entities.Coins;
 import com.rpg.game.entities.Collectibles;
 import com.rpg.game.entities.Door;
-import com.rpg.game.entities.Enemy;
+import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.HUD;
 import com.rpg.game.entities.Player;
 import com.rpg.game.entities.SmallEnemy;
@@ -51,13 +51,19 @@ public class Play extends GameState {
 	private Array<Teleport> teleports;
 	private Array<Collectibles> collectibles;
 	private Array<Door> doors;
-	private static Array<Enemy> enemy;
+	private static Array<Entity> enemy;
 	private EnemyDirection ed;
 	private HUD hud;
 	private BodyMover bm;
 	private GameMaps gameMap;
 	private MyTimer timerPlayer;
 	private static boolean playerIsAttacking = false;
+	public static boolean isPlayerIsAttacking() {
+		return playerIsAttacking;
+	}
+	public static void setPlayerIsAttacking(boolean playerIsAttacking) {
+		Play.playerIsAttacking = playerIsAttacking;
+	}
 	// movment
 	private static float playerPositionX;
 	private static float playerPositionY;
@@ -69,7 +75,7 @@ public class Play extends GameState {
 	public static Player getPlayer() {return player2;}
 	public static boolean isMoving() {return isMoving;}
 	public static void setMoving(boolean isMoving) {Play.isMoving = isMoving;}
-	public static Array<Enemy> getEnemy() {return enemy;}
+	public static Array<Entity> getEnemy() {return enemy;}
 	private static float lastClickX;
 	private static float lastClickY;
 	private static boolean isMoving = false;
@@ -131,7 +137,7 @@ public class Play extends GameState {
 		colle.getBody().setUserData(colle);
 	}
 	private void createEnemy(int iletenmy) {
-		enemy = new Array<Enemy>();
+		enemy = new Array<Entity>();
 
 		for (int i = 0; i < iletenmy; i++) {
 
@@ -277,31 +283,29 @@ public class Play extends GameState {
 		// damage
 		Array<Body> bodiesDmg = cl.getDamege();
 		float posX, posY;
+	
+		
+		
+
+		
 		
 		for (int i = 0; i < bodiesDmg.size; i++) {
 			Body b = bodiesDmg.get(i);
 			
-			
+
 			
 			bm= new BodyMover(((SmallEnemy) b.getUserData()).getBody().getPosition().x,
 							((SmallEnemy) b.getUserData()).getBody().getPosition().y,
-							playerPositionX, playerPositionY, 2);
-			((SmallEnemy) b.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementX());
-			
-			
-			
-		((SmallEnemy) b.getUserData()).attack();
+							playerPositionX, playerPositionY, 1);
+					((SmallEnemy) b.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
+						((SmallEnemy) b.getUserData()).attack();
 		
-	
-		System.out.println(bodiesDmg.size);
-/*			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-			playerIsAttacking= true;
+
+			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+				playerIsAttacking= true;
 				if (((SmallEnemy) b.getUserData()) != null) {
-					//player.attack((SmallEnemy) b.getUserData());
-				//	player.attack((SmallEnemy) b.getUserData());
-				//System.out.println(((Enemy)b.getUserData()).getBody());	
-					
-					//((SmallEnemy) b.getUserData()).setHitPoint(((SmallEnemy) b.getUserData()).getHitPoint() - 0.5f);
+
+					((SmallEnemy) b.getUserData()).setHitPoint(((SmallEnemy) b.getUserData()).getHitPoint() - 0.5f);
 					
 					if (((SmallEnemy) b.getUserData()).getHitPoint() <= 0) {
 						posX=((SmallEnemy) b.getUserData()).getBody().getPosition().x;
@@ -312,19 +316,15 @@ public class Play extends GameState {
 						((SmallEnemy) b.getUserData()).getHp().getSkinAtlas().dispose();
 						enemy.removeValue((SmallEnemy) b.getUserData(),false);
 						world.destroyBody(b);
+						
 					}
 				}
-			}*/
+			}
 		}		
 	}
 
 	
-	public static void setPlayerIsAttacking(boolean playerIsAttacking) {
-		Play.playerIsAttacking = playerIsAttacking;
-	}
-	public static boolean isPlayerIsAttacking() {
-		return playerIsAttacking;
-	}
+
 	
 	
 	
@@ -455,54 +455,38 @@ public class Play extends GameState {
 	private void animationChecker() {
 		
 		if ((int) lastClickX > (int) playerPositionX
-				&& (int) lastClickY > (int) playerPositionY && !playerIsAttacking)
+				&& (int) lastClickY > (int) playerPositionY )
 			aniChecker(5);
 	
 
 		if ((int) lastClickX > (int) playerPositionX
-				&& (int) lastClickY < (int) playerPositionY&& !playerIsAttacking)
+				&& (int) lastClickY < (int) playerPositionY)
 			aniChecker(8);
 
 		if ((int) lastClickX < (int) playerPositionX
-				&& (int) lastClickY > (int) playerPositionY&& !playerIsAttacking)
+				&& (int) lastClickY > (int) playerPositionY)
 			aniChecker(6);
 
 		if ((int) lastClickX < (int) playerPositionX
-				&& (int) lastClickY < (int) playerPositionY&& !playerIsAttacking)
+				&& (int) lastClickY < (int) playerPositionY)
 			aniChecker(7);
 
 		if ((int) lastClickX < (int) playerPositionX
-				&& (int) lastClickY == (int) playerPositionY&& !playerIsAttacking)
+				&& (int) lastClickY == (int) playerPositionY)
 			aniChecker(1);
 
 		if ((int) lastClickX > (int) playerPositionX
-				&& (int) lastClickY == (int) playerPositionY&& !playerIsAttacking)
+				&& (int) lastClickY == (int) playerPositionY)
 			aniChecker(3);
 
 		if ((int) lastClickX == (int) playerPositionX
-				&& (int) lastClickY < (int) playerPositionY&& !playerIsAttacking)
+				&& (int) lastClickY < (int) playerPositionY)
 			aniChecker(2);
 
 		if ((int) lastClickX == (int) playerPositionX
-				&& (int) lastClickY > (int) playerPositionY&& !playerIsAttacking)
+				&& (int) lastClickY > (int) playerPositionY)
 			aniChecker(0);
-/*		if (playerIsAttacking ){
-			aniChecker(9);
-			
-			
-			
-	
-				timerPlayer= new MyTimer(2);
-				timerPlayer.start();
-				
-				if(timerPlayer.hasCompleted()) {
-					Play.setPlayerIsAttacking(false);
-					
-				}
-				
 
-			
-		}*/
 	}
 
 	// dont start animation over and over again

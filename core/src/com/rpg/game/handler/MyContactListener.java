@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
-import com.rpg.game.entities.Enemy;
+import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.SmallEnemy;
 
 public class MyContactListener implements ContactListener {
@@ -33,7 +33,7 @@ public class MyContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-	//	System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
+		System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
 		
 		if(fa == null || fb == null) return;
 		if(fa.getUserData() != null && fa.getUserData().equals("portalForward")&& fb.getUserData().equals("player")) {
@@ -81,10 +81,10 @@ if(fb.getUserData().equals("sensor") &&fa.getUserData().equals("player")) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-if(fa.getUserData() != null && fa.getUserData().equals("coin")) {
+if(fa.getUserData() != null && fa.getUserData().equals("coin")&&fb.getUserData().equals("player")) {
 coins.add(fa.getBody());
 }
-if(fb.getUserData() != null && fb.getUserData().equals("coin")) {
+if(fb.getUserData() != null && fb.getUserData().equals("coin")&&fa.getUserData().equals("player")) {
 coins.add(fb.getBody());
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
@@ -131,13 +131,15 @@ coins.add(fb.getBody());
 		}
 		
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if(fa.getUserData().equals("enemy")&&fb.getUserData().equals("player")) {
+		if(fa.getUserData().equals("sensor")&&fb.getUserData().equals("player")) {
 			((SmallEnemy)fa.getBody().getUserData()).setFighting(false);
 			damage.removeValue(fa.getBody(), true);
 			isPlayerInRange= false;
+			
 		}
-		if(fb.getUserData().equals("enemy")&&fa.getUserData().equals("player")) {
+		if(fb.getUserData().equals("sensor")&&fa.getUserData().equals("player")) {
 			((SmallEnemy)fb.getBody().getUserData()).setFighting(false);
+			
 			damage.removeValue(fb.getBody(), true);
 			isPlayerInRange= false;
 		}

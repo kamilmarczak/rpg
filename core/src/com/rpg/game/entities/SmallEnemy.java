@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.rpg.game.handler.B2DVars;
 
 
-public class SmallEnemy extends Enemy {
+public class SmallEnemy extends Entity {
 
 	private String textureName="enemySmall";
 	private String bodyTAG = "enemy";
