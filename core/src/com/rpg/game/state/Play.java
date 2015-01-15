@@ -303,6 +303,7 @@ public class Play extends GameState {
 
 			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
 				playerIsAttacking= true;
+				Player.setTimerForAtt();
 				if (((SmallEnemy) b.getUserData()) != null) {
 
 					((SmallEnemy) b.getUserData()).setHitPoint(((SmallEnemy) b.getUserData()).getHitPoint() - 0.5f);
@@ -311,6 +312,7 @@ public class Play extends GameState {
 						posX=((SmallEnemy) b.getUserData()).getBody().getPosition().x;
 						posY=((SmallEnemy) b.getUserData()).getBody().getPosition().y;
 						createCoin(posX, posY);
+						
 						
 						
 						((SmallEnemy) b.getUserData()).getHp().getSkinAtlas().dispose();
