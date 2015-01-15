@@ -127,8 +127,6 @@ public class Entity{
 
 		sprite.width = sprites[0].getRegionWidth();
 		sprite.height = sprites[0].getRegionHeight();
-
-
 	}
 	
 

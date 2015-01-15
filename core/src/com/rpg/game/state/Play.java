@@ -22,9 +22,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.AdultGame;
-import com.rpg.game.entities.Coins;
-import com.rpg.game.entities.Coins2;
-import com.rpg.game.entities.Collectibles;
+import com.rpg.game.entities.Coin;
 import com.rpg.game.entities.Door;
 import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.HUD;
@@ -46,19 +44,18 @@ public class Play extends GameState {
 	private Box2DDebugRenderer b2dRenderer;
 	private MyContactListener cl;
 	public static World world;
-	//public static Player player;
 	public static Player player;
-	private Body body;
+
 	private Array<Teleport> teleports;
-	private Array<Collectibles> collectibles;
-	private Array<Coins2> coinsArray;
+
+	private Array<Coin> coinsArray;
 	private Array<Door> doors;
 	private static Array<Entity> enemy;
 	private EnemyDirection ed;
 	private HUD hud;
 	private BodyMover bm;
 	private GameMaps gameMap;
-	private MyTimer timerPlayer;
+	private MyTimer mtc = new MyTimer(1);
 	private static boolean playerIsAttacking = false;
 	public static boolean isPlayerIsAttacking() {
 		return playerIsAttacking;
@@ -81,14 +78,14 @@ public class Play extends GameState {
 	private static float lastClickY;
 	private static boolean isMoving = false;
 	private static int numerAnimacii = 100;
-	
+	public static World getWorld() {return world;}
 	
 	public Play(GameStateManager gsm) {
 
 		super(gsm);
 		ed = new EnemyDirection();
-		collectibles = new Array<Collectibles>();
-		coinsArray = new Array<Coins2>();
+		
+		coinsArray = new Array<Coin>();
 
 		// set up box2d
 		world = new World(new Vector2(0, 0), true); // gravity here
@@ -99,8 +96,7 @@ public class Play extends GameState {
 		// create Map
 		gameMap = new GameMaps();
 		gameMap.createMap();
-		cam.setBounds(0, gameMap.getWidthInTiles() * GameMaps.getTileSize(), 0,
-				gameMap.getHeightInTiles() * GameMaps.getTileSize());
+		cam.setBounds(0, gameMap.getWidthInTiles() * GameMaps.getTileSize(), 0,	gameMap.getHeightInTiles() * GameMaps.getTileSize());
 
 		// create player
 		createPlayer();
@@ -129,21 +125,13 @@ public class Play extends GameState {
 		
 	}
 
-	public static World getWorld() {
-		return world;
-	}
-	private void createCoin(float posX,float  posY) {
-	
-		Collectibles colle = new Collectibles(new Coins(world, posX, posY).getBody(), "coins");
-		collectibles.add(colle);
-		colle.getBody().setUserData(colle);
-	}
+
+
 	
 	
-	private void createCoin2(int x, int y){
-		
-		
-		Coins2 coin2 = new Coins2(x, y);
+	private void createCoin(int x, int y){
+
+		Coin coin2 = new Coin(x, y);
 		coinsArray.add(coin2);
 		coin2.getBody().setUserData(coin2);
 		
@@ -210,9 +198,7 @@ if(debug== true){
 			teleports.get(i).update(dt);
 		}
 		
-		for (int i = 0; i < collectibles.size; i++) {
-			collectibles.get(i).update(dt);
-		}
+
 		
 		for (int i = 0; i < coinsArray.size; i++) {
 			coinsArray.get(i).update(dt);
@@ -261,9 +247,7 @@ if(debug== true){
 
 		}
 		
-		for (int j= 0; j < collectibles.size; j++) {
-			collectibles.get(j).render(sb);
-		}
+
 		for (int i = 0; i < coinsArray.size; i++) {
 			
 			coinsArray.get(i).render(sb);
@@ -283,27 +267,17 @@ if(debug== true){
 		
 
 		//draw HUD
-		// draw hud
-		
-	
 		sb.setProjectionMatrix(hudCam.combined);
-	
 		hud.render(sb);
 		
 		if (debug) {
 
 			b2dCam.setPosition(
-					cam.position.x
-							/ PPM
-							- (b2dCam.viewportWidth / PPM - (b2dCam.viewportWidth / PPM)),
-					cam.position.y / PPM - (b2dCam.viewportHeight / PPM)
-							+ (b2dCam.viewportHeight / PPM));
+					cam.position.x/ PPM- (b2dCam.viewportWidth / PPM - (b2dCam.viewportWidth / PPM)),
+					cam.position.y / PPM - (b2dCam.viewportHeight / PPM)+ (b2dCam.viewportHeight / PPM));
 
-			b2dCam.setBounds(0,
-					(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
-					0, (gameMap.getHeightInTiles() * GameMaps.getTileSize())
-							/ PPM);
-
+			b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
+			0, (gameMap.getHeightInTiles() * GameMaps.getTileSize())/ PPM);
 			b2dCam.update();
 			b2dRenderer.render(world, b2dCam.combined);
 
@@ -314,7 +288,6 @@ if(debug== true){
 	public void drawPlayer() {
 
 		sb.setProjectionMatrix(cam.combined);
-		//player.render(sb);
 		player.render(sb);
 
 	}
@@ -351,7 +324,7 @@ if(debug== true){
 						posX=((SmallEnemy) b.getUserData()).getBody().getPosition().x;
 						posY=((SmallEnemy) b.getUserData()).getBody().getPosition().y;
 						//createCoin(posX, posY);
-						createCoin2((int)posX,(int) posY);
+						createCoin((int)posX,(int) posY);
 						
 						
 						
@@ -369,20 +342,18 @@ if(debug== true){
 
 	
 	
-	
-	
 	private void coinColector(){
 		Array<Body> coinList = cl.getCoins();
 		for (int i = 0; i < coinList.size; i++) {
 			Body bo = coinList.get(i);
-			//	collectibles.removeValue((Collectibles)bo.getUserData(), true);
-			//	world.destroyBody(bo);
-				
+				//TODO
 			//moving coins
 			bm= new BodyMover(bo.getPosition().x, bo.getPosition().y, 8000, 8000, 10);
-				((Coins2)bo.getUserData()).getBody().setLinearVelocity((float) bm.getMovementX(), (float) bm.getMovementY());
-				
+				((Coin)bo.getUserData()).getBody().setLinearVelocity((float) bm.getMovementX(), (float) bm.getMovementY());
 
+			//	coinsArray.removeValue((Coin) bo.getUserData(), true);
+				//	world.destroyBody(bo);
+					
 		}
 		///counting coins
 		if(coinList.size>0){
@@ -392,47 +363,18 @@ if(debug== true){
 		
 	}
 	
-	
-	
-	
-	
-/*	private void coinColector(){
-		Array<Body> coinList = cl.getCoins();
-		for (int i = 0; i < coinList.size; i++) {
-			Body bo = coinList.get(i);
-			//	collectibles.removeValue((Collectibles)bo.getUserData(), true);
-			//	world.destroyBody(bo);
-				
-			//moving coins
-			bm= new BodyMover(bo.getPosition().x, bo.getPosition().y, 8000, 8000, 10);
-				((Collectibles)bo.getUserData()).getBody().setLinearVelocity((float) bm.getMovementX(), (float) bm.getMovementY());
-				
-
-		}
-		///counting coins
-		if(coinList.size>0){
-			Player.setCOINS(Player.getCOINS()+1);
-			coinList.size--;
-		}
-		
-	}*/
 
 	public void dispose() {
 		GameMaps.tileMap.dispose();
 
 	}
-	
-
 
 	private void createPlayer() {
-
-
 
 		//player = new Player(body);
 		player = new Player(750, 750);
 		player.playAnimation(4,player.getEnemyTextureName());
-		
-		
+
 	}
 
 	private void creatPortal() {
@@ -478,9 +420,6 @@ if(debug== true){
 
 			}
 			if (mo instanceof RectangleMapObject) {
-				// float x = (float) mo.getProperties().get("x") / PPM;
-				// float y = (float) mo.getProperties().get("y") / PPM;
-
 				Rectangle r = ((RectangleMapObject) mo).getRectangle();
 
 				BodyDef cdef = new BodyDef();
@@ -491,8 +430,7 @@ if(debug== true){
 				float height = r.height / PPM;
 				cdef.position.set(x + 32 / PPM, y + 32 / PPM);
 				cdef.angle = 45;
-				// System.out.println((float)mo.getProperties().get("rotation")
-				// );
+
 				Body body = world.createBody(cdef);
 				FixtureDef cfdef = new FixtureDef();
 				PolygonShape pshape = new PolygonShape();
@@ -516,7 +454,8 @@ if(debug== true){
 
 		}
 	}
-
+//TODO
+	//move this from here
 	// checking direction to draw sprite in the correct way
 	private void animationChecker() {
 		if(isPlayerIsAttacking()) return;
@@ -582,8 +521,6 @@ if(debug== true){
 		} else if (cl.isPlayerEnterinHouse()) {
 
 			GameMaps.setResTyp("house1");
-			// gameMap.createMap("house1",level);
-
 			gsm.setState(GameStateManager.PLAY);
 		} else if (cl.isPlayerExitingHouse()) {
 
