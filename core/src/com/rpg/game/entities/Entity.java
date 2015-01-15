@@ -56,7 +56,7 @@ public class Entity{
 	}
 	
 
-	public void enemycreator(int posX,int posY, String bodyTAG,short categoryBit ,int maskBits){
+	public void enemycreator(float f,float g, String bodyTAG,short categoryBit ,int maskBits, boolean isSensor){
 		
 
 
@@ -68,14 +68,16 @@ public class Entity{
 		sensroShape= new CircleShape();
 		
 		// BodyDef
-		bdef.position.set(posX / PPM, posY / PPM);
+		bdef.position.set(f / PPM, g / PPM);
 		bdef.type = BodyType.DynamicBody;
 		bdef.fixedRotation = true;
+		
 	    body = world.createBody(bdef);
 
 		// fixtureDef
 		shapeEnemy.setAsBox(15 / PPM, 25 / PPM, new Vector2(0 / PPM, 0 / PPM),0); // //
 		fdef.shape = shapeEnemy;
+		fdef.isSensor = isSensor;
 		fdef.filter.categoryBits= categoryBit;
 		fdef.filter.maskBits=  (short) maskBits ;
 

@@ -8,11 +8,12 @@ public class SmallEnemy extends Entity {
 
 	private String textureName="enemySmall";
 	private String bodyTAG = "enemy";
+	boolean isSensor = false;
 
 	
 
 	public SmallEnemy(int i, int j) {
-	enemycreator(i, j,bodyTAG,B2DVars.BIT_ENEMY, B2DVars.BIT_ENEMY| B2DVars.BIT_PLAYER );
+	enemycreator(i, j,bodyTAG,B2DVars.BIT_ENEMY, B2DVars.BIT_ENEMY| B2DVars.BIT_PLAYER ,isSensor);
 	setEnemyHitPower(1);
 	playAnimation(getAnimationRow(),textureName);
 	

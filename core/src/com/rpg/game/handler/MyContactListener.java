@@ -33,7 +33,7 @@ public class MyContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-	//	System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
+		System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
 		
 		if(fa == null || fb == null) return;
 		if(fa.getUserData() != null && fa.getUserData().equals("portalForward")&& fb.getUserData().equals("player")) {
@@ -67,12 +67,12 @@ public class MyContactListener implements ContactListener {
 		}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if( fa.getUserData().equals("sensor") &&fb.getUserData().equals("player")) {
+if( fa.getUserData().equals("enemy") &&fb.getUserData().equals("player")) {
 	damage.add(fa.getBody());
 	isPlayerInRange= true;
 	((SmallEnemy)fa.getBody().getUserData()).setFighting(true);
 }
-if(fb.getUserData().equals("sensor") &&fa.getUserData().equals("player")) {
+if(fb.getUserData().equals("enemy") &&fa.getUserData().equals("player")) {
 	
 	damage.add(fb.getBody());
 	isPlayerInRange= true;
@@ -131,13 +131,13 @@ coins.add(fb.getBody());
 		}
 		
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if(fa.getUserData().equals("sensor")&&fb.getUserData().equals("player")) {
+		if(fa.getUserData().equals("enemy")&&fb.getUserData().equals("player")) {
 			((SmallEnemy)fa.getBody().getUserData()).setFighting(false);
 			damage.removeValue(fa.getBody(), true);
 			isPlayerInRange= false;
 			
 		}
-		if(fb.getUserData().equals("sensor")&&fa.getUserData().equals("player")) {
+		if(fb.getUserData().equals("enemy")&&fa.getUserData().equals("player")) {
 			((SmallEnemy)fb.getBody().getUserData()).setFighting(false);
 			
 			damage.removeValue(fb.getBody(), true);

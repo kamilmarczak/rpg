@@ -29,6 +29,7 @@ public class Player extends Entity  {
 	public static int getCOINS() {return COINS;}
 	public static void setCOINS(int COINs) {COINS = COINs;}
 	public static void setTimerForAtt() {	mt.start();}
+	boolean isSensor = false;
 
 
 
@@ -45,7 +46,7 @@ public class Player extends Entity  {
 				B2DVars.BIT_PORTAL_FORWARD |
 				B2DVars.BIT_PORTAL_BACK |
 				B2DVars.COLLECTA|
-				B2DVars.BIT_DOOR);
+				B2DVars.BIT_DOOR,false);
 		
 		playAnimation(getAnimationRow(), textureName);
 
@@ -110,13 +111,13 @@ public class Player extends Entity  {
 				getBody().setLinearVelocity(0, 0);
 				Play.setPlayerIsAttacking(true);
 				Play.aniChecker(9);
-				System.out.println("player is att");
+				
 				
 				if(mt.hasCompleted()){
 				
 					Play.setPlayerIsAttacking(false);
 					
-					System.out.println(" finished attacing");
+					
 					
 				}
 				}
