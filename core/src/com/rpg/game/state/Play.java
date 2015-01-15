@@ -41,7 +41,7 @@ import com.rpg.game.handler.MyTimer;
 public class Play extends GameState {
 
 	// private IsometricTiledMapRenderer isoTiledrenderer;
-	private boolean debug = true;
+	private boolean debug = false;
 	private Box2DDebugRenderer b2dRenderer;
 	private MyContactListener cl;
 	public static World world;
@@ -168,6 +168,15 @@ public class Play extends GameState {
 			isMoving = true;
 
 			animationChecker();
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+			
+
+if(debug== true){
+	debug= false;
+}else {
+	debug= true;
+}
 		}
 
 		
@@ -306,7 +315,7 @@ public class Play extends GameState {
 				Player.setTimerForAtt();
 				if (((SmallEnemy) b.getUserData()) != null) {
 
-					((SmallEnemy) b.getUserData()).setHitPoint(((SmallEnemy) b.getUserData()).getHitPoint() - 0.5f);
+					((SmallEnemy) b.getUserData()).setHitPoint(((SmallEnemy) b.getUserData()).getHitPoint() - 0.1f);
 					
 					if (((SmallEnemy) b.getUserData()).getHitPoint() <= 0) {
 						posX=((SmallEnemy) b.getUserData()).getBody().getPosition().x;
@@ -455,6 +464,7 @@ public class Play extends GameState {
 
 	// checking direction to draw sprite in the correct way
 	private void animationChecker() {
+		if(isPlayerIsAttacking()) return;
 		
 		if ((int) lastClickX > (int) playerPositionX
 				&& (int) lastClickY > (int) playerPositionY )

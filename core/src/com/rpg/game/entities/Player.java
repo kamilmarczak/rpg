@@ -4,6 +4,7 @@ import sun.rmi.runtime.Log;
 
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyMover;
+import com.rpg.game.handler.MyContactListener;
 import com.rpg.game.handler.MyTimer;
 import com.rpg.game.state.Play;
 
@@ -16,6 +17,7 @@ public class Player extends Entity  {
 	private static MyTimer mt=new MyTimer(1);
 	private  float playerPositionX;
 	private  float playerPositionY;
+	private MyContactListener mcl= new MyContactListener();
 	
 
 	public float getPlayerPositionX() {return playerPositionX;}
@@ -72,28 +74,46 @@ public class Player extends Entity  {
 		//Play.setMoving(true);
 	
 		//is moving
-		if(Play.isMoving())
-		{getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());}
-		
-		//is at dest
+		if(Play.isMoving()){
+			//not att
+			if(!Play.isPlayerIsAttacking()){
+			//body mover
+			getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
+			
+	//atack
+			 }else {
+				 
+				getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
+				Play.aniChecker(9);
+				if(mt.hasCompleted()){
+					Play.setPlayerIsAttacking(false);
+				}
+				
+			 
+			}//is at dest
 			if ((int) (getBody().getPosition().x * 10) == (int) (Play.getLastClickX() * 10)&& (int) (getBody().getPosition().y * 10) == (int) (Play.getLastClickY() * 10)) {
 				Play.setMoving(false);
 				
-			} 
+			}
+			
+		}
 		//is not moving
 			if(!Play.isMoving()){
+			
 				//if not moving and not attacking
 				if(!Play.isPlayerIsAttacking()){
 			getBody().setLinearVelocity(0, 0);
 			Play.aniChecker(4);
 			}//if is not moving and attacing
 				else{
+				
 				getBody().setLinearVelocity(0, 0);
 				Play.setPlayerIsAttacking(true);
 				Play.aniChecker(9);
 				System.out.println("player is att");
 				
 				if(mt.hasCompleted()){
+				
 					Play.setPlayerIsAttacking(false);
 					
 					System.out.println(" finished attacing");
