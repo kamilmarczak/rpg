@@ -3,7 +3,7 @@ package com.rpg.game.handler;
 import com.rpg.game.state.Play;
 
 public class EnemyDirection {
-	private int numerAnimacii = 100;
+
 
 
 	public void directionChecker(int i) {
@@ -11,7 +11,7 @@ public class EnemyDirection {
 		float firstX = Play.getEnemy().get(i).getBody().getLinearVelocity().x * 10;
 		float firstY = Play.getEnemy().get(i).getBody().getLinearVelocity().y * 10;
 		boolean isFighting = Play.getEnemy().get(i).isFighting();
-	//	System.out.println("isFa   "+isFighting);
+
 
 		if ((int) firstX > 0 && (int) firstY > 0 && !isFighting) {
 			anienemChecker(5, i);

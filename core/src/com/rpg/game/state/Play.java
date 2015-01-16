@@ -1,9 +1,7 @@
 package com.rpg.game.state;
 
 import static com.rpg.game.handler.B2DVars.PPM;
-
 import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.MapLayer;
@@ -31,11 +29,12 @@ import com.rpg.game.entities.SmallEnemy;
 import com.rpg.game.entities.Teleport;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyMover;
+import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.EnemyDirection;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
-import com.rpg.game.handler.MyTimer;
+import com.rpg.game.handler.PlayerControler;
 
 public class Play extends GameState {
 
@@ -55,36 +54,24 @@ public class Play extends GameState {
 	private HUD hud;
 	private BodyMover bm;
 	private GameMaps gameMap;
-	private MyTimer mtc = new MyTimer(1);
-	private static boolean playerIsAttacking = false;
-	public static boolean isPlayerIsAttacking() {
-		return playerIsAttacking;
-	}
-	public static void setPlayerIsAttacking(boolean playerIsAttacking) {
-		Play.playerIsAttacking = playerIsAttacking;
-	}
+	private PlayerControler pd;
+
+
+	
 	// movment
-	private static float playerPositionX;
-	private static float playerPositionY;
-	public static float getPlayerPositionX() {return playerPositionX;}
-	public static float getPlayerPositionY() {return playerPositionY;}
-	public static float getLastClickX() {return lastClickX;}
-	public static float getLastClickY() {return lastClickY;}
 	public static Player getPlayer() {return player;}
-	public static boolean isMoving() {return isMoving;}
-	public static void setMoving(boolean isMoving) {Play.isMoving = isMoving;}
+
 	public static Array<Entity> getEnemy() {return enemy;}
-	private static float lastClickX;
-	private static float lastClickY;
-	private static boolean isMoving = false;
-	private static int numerAnimacii = 100;
+
+
+	
 	public static World getWorld() {return world;}
 	
 	public Play(GameStateManager gsm) {
 
 		super(gsm);
 		ed = new EnemyDirection();
-		
+		pd= new PlayerControler();
 		coinsArray = new Array<Coin>();
 
 		// set up box2d
@@ -101,10 +88,6 @@ public class Play extends GameState {
 		// create player
 		createPlayer();
 		
-
-		
-		lastClickX = player.getBody().getPosition().x;
-		lastClickY = player.getBody().getPosition().y;
 		
 		// create portal
 		creatPortal();
@@ -157,18 +140,17 @@ public class Play extends GameState {
 	}
 
 	public void handleInput() {
+Condition.setPlayerPositionX(player.getBody().getPosition().x);
+Condition.setPlayerPositionY(player.getBody().getPosition().y);
 
-		playerPositionX = player.getBody().getPosition().x;
-		playerPositionY = player.getBody().getPosition().y;
-	
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			
-			lastClickX = cam.position.x / PPM - (cam.viewportWidth / 2 / PPM)+ Gdx.input.getX() / PPM;
-			lastClickY = cam.position.y / PPM - (cam.viewportHeight / 2 / PPM)+ (cam.viewportHeight / PPM) - Gdx.input.getY() / PPM;
+			Condition.setLastClickX(cam.position.x / PPM - (cam.viewportWidth / 2 / PPM)+ Gdx.input.getX() / PPM);
+			Condition.setLastClickY( cam.position.y / PPM - (cam.viewportHeight / 2 / PPM)+ (cam.viewportHeight / PPM) - Gdx.input.getY() / PPM);
 			
-			isMoving = true;
-
-			animationChecker();
+		
+			Condition.setMoving(true);
+			
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			
@@ -187,9 +169,9 @@ if(debug== true){
 	
 
 	public void update(float dt) {
-
+		pd.playerControl();
 		handleInput();
-
+		
 		world.step(AdultGame.STEP, 6, 2);
 		player.update(dt);
 		damage();
@@ -308,13 +290,13 @@ if(debug== true){
 			
 			bm= new BodyMover(((SmallEnemy) b.getUserData()).getBody().getPosition().x,
 							((SmallEnemy) b.getUserData()).getBody().getPosition().y,
-							playerPositionX, playerPositionY, 1);
+							Condition.getPlayerPositionX(), Condition.getPlayerPositionY(), 1);
 					((SmallEnemy) b.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
 						((SmallEnemy) b.getUserData()).attack();
 		
 
 			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-				playerIsAttacking= true;
+				Condition.setPlayerIsAttacking(true);
 				Player.setTimerForAtt();
 				if (((SmallEnemy) b.getUserData()) != null) {
 
@@ -452,56 +434,6 @@ if(debug== true){
 
 			}
 
-		}
-	}
-//TODO
-	//move this from here
-	// checking direction to draw sprite in the correct way
-	private void animationChecker() {
-		if(isPlayerIsAttacking()) return;
-		
-		if ((int) lastClickX > (int) playerPositionX
-				&& (int) lastClickY > (int) playerPositionY )
-			aniChecker(5);
-	
-
-		if ((int) lastClickX > (int) playerPositionX
-				&& (int) lastClickY < (int) playerPositionY)
-			aniChecker(8);
-
-		if ((int) lastClickX < (int) playerPositionX
-				&& (int) lastClickY > (int) playerPositionY)
-			aniChecker(6);
-
-		if ((int) lastClickX < (int) playerPositionX
-				&& (int) lastClickY < (int) playerPositionY)
-			aniChecker(7);
-
-		if ((int) lastClickX < (int) playerPositionX
-				&& (int) lastClickY == (int) playerPositionY)
-			aniChecker(1);
-
-		if ((int) lastClickX > (int) playerPositionX
-				&& (int) lastClickY == (int) playerPositionY)
-			aniChecker(3);
-
-		if ((int) lastClickX == (int) playerPositionX
-				&& (int) lastClickY < (int) playerPositionY)
-			aniChecker(2);
-
-		if ((int) lastClickX == (int) playerPositionX
-				&& (int) lastClickY > (int) playerPositionY)
-			aniChecker(0);
-
-	}
-
-	// dont start animation over and over again
-	public static void aniChecker(int i) {
-		if (numerAnimacii != i) {
-		
-			player.playAnimation(i,player.getEnemyTextureName());
-			numerAnimacii = i;
-			
 		}
 	}
 

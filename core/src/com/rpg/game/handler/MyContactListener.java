@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
-import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.SmallEnemy;
 
 public class MyContactListener implements ContactListener {
@@ -33,7 +32,7 @@ public class MyContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-		System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
+		//System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
 		
 		if(fa == null || fb == null) return;
 		if(fa.getUserData() != null && fa.getUserData().equals("portalForward")&& fb.getUserData().equals("player")) {

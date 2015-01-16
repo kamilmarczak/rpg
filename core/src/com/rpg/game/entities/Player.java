@@ -1,12 +1,10 @@
 package com.rpg.game.entities;
 
-import sun.rmi.runtime.Log;
-
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyMover;
-import com.rpg.game.handler.MyContactListener;
+import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.MyTimer;
-import com.rpg.game.state.Play;
+import com.rpg.game.handler.PlayerControler;
 
 public class Player extends Entity  {
 	private static int COINS = 0;
@@ -17,7 +15,7 @@ public class Player extends Entity  {
 	private static MyTimer mt=new MyTimer(1);
 	private  float playerPositionX;
 	private  float playerPositionY;
-	private MyContactListener mcl= new MyContactListener();
+
 	
 
 	public float getPlayerPositionX() {return playerPositionX;}
@@ -70,14 +68,14 @@ public class Player extends Entity  {
 		playerPositionX = getBody().getPosition().x;
 		playerPositionY = getBody().getPosition().y;
 	
-		bm = new BodyMover(playerPositionX, playerPositionY, Play.getLastClickX(), Play.getLastClickY(), 2);
+		bm = new BodyMover(playerPositionX, playerPositionY, Condition.getLastClickX(), Condition.getLastClickY(), 2);
 		
 		//Play.setMoving(true);
 	
 		//is moving
-		if(Play.isMoving()){
+		if(Condition.isMoving()){
 			//not att
-			if(!Play.isPlayerIsAttacking()){
+			if(!Condition.isPlayerIsAttacking()){
 			//body mover
 			getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
 			
@@ -85,37 +83,37 @@ public class Player extends Entity  {
 			 }else {
 				 
 				getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
-				Play.aniChecker(9);
+				PlayerControler.aniChecker(9);
 				if(mt.hasCompleted()){
-					Play.setPlayerIsAttacking(false);
+					Condition.setPlayerIsAttacking(false);
 				}
 				
 			 
 			}//is at dest
-			if ((int) (getBody().getPosition().x * 10) == (int) (Play.getLastClickX() * 10)&& (int) (getBody().getPosition().y * 10) == (int) (Play.getLastClickY() * 10)) {
-				Play.setMoving(false);
+			if ((int) (getBody().getPosition().x * 10) == (int) (Condition.getLastClickX() * 10)&& (int) (getBody().getPosition().y * 10) == (int) (Condition.getLastClickY() * 10)) {
+				Condition.setMoving(false);
 				
 			}
 			
 		}
 		//is not moving
-			if(!Play.isMoving()){
+			if(!Condition.isMoving()){
 			
 				//if not moving and not attacking
-				if(!Play.isPlayerIsAttacking()){
+				if(!Condition.isPlayerIsAttacking()){
 			getBody().setLinearVelocity(0, 0);
-			Play.aniChecker(4);
+			PlayerControler.aniChecker(4);
 			}//if is not moving and attacing
 				else{
 				
 				getBody().setLinearVelocity(0, 0);
-				Play.setPlayerIsAttacking(true);
-				Play.aniChecker(9);
+				Condition.setPlayerIsAttacking(true);
+				PlayerControler.aniChecker(9);
 				
 				
 				if(mt.hasCompleted()){
 				
-					Play.setPlayerIsAttacking(false);
+					Condition.setPlayerIsAttacking(false);
 					
 					
 					
