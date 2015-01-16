@@ -43,8 +43,8 @@ public class Player extends Entity  {
 				B2DVars.BIT_DOOR |
 				B2DVars.BIT_PORTAL_FORWARD |
 				B2DVars.BIT_PORTAL_BACK |
-				B2DVars.COLLECTA|
-				B2DVars.BIT_DOOR,false);
+				B2DVars.COLLECTA
+				,false);
 		
 		playAnimation(getAnimationRow(), textureName);
 

@@ -32,7 +32,7 @@ public class MyContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-		//System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
+		System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
 		
 		if(fa == null || fb == null) return;
 		if(fa.getUserData() != null && fa.getUserData().equals("portalForward")&& fb.getUserData().equals("player")) {
@@ -51,17 +51,17 @@ public class MyContactListener implements ContactListener {
 		}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		if(fa == null || fb == null) return;
-		if(fa.getUserData() != null && fa.getUserData().equals("doorEnter")) {
+		if(fa.getUserData() != null && fa.getUserData().equals("doorEnter")&& fb.getUserData().equals("player")) {
 			isPlayerEnterinHouse=true;
 		}
-		if(fb.getUserData() != null && fb.getUserData().equals("doorEnter")) {
+		if(fb.getUserData() != null && fb.getUserData().equals("doorEnter")&& fa.getUserData().equals("player")) {
 			isPlayerEnterinHouse=true;
 		}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if(fa.getUserData() != null && fa.getUserData().equals("doorExit")) {
+		if(fa.getUserData() != null && fa.getUserData().equals("doorExit")&& fb.getUserData().equals("player")) {
 			isPlayerExitingHouse=true;
 		}
-		if(fb.getUserData() != null && fb.getUserData().equals("doorExit")) {
+		if(fb.getUserData() != null && fb.getUserData().equals("doorExit")&& fa.getUserData().equals("player")) {
 			isPlayerExitingHouse=true;
 		}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

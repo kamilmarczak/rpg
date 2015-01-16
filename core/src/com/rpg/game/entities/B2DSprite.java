@@ -22,9 +22,7 @@ public class B2DSprite  {
 	
 			}
 	
-	public B2DSprite() {
-		animation = new Animation();
-	}
+
 
 	public void setAnimation(TextureRegion reg, float delay) {
 

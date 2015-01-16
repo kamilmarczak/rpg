@@ -38,15 +38,13 @@ import com.rpg.game.handler.PlayerControler;
 
 public class Play extends GameState {
 
-	// private IsometricTiledMapRenderer isoTiledrenderer;
+	
 	private boolean debug = false;
 	private Box2DDebugRenderer b2dRenderer;
 	private MyContactListener cl;
 	public static World world;
 	public static Player player;
-
 	private Array<Teleport> teleports;
-
 	private Array<Coin> coinsArray;
 	private Array<Door> doors;
 	private static Array<Entity> enemy;
@@ -54,24 +52,21 @@ public class Play extends GameState {
 	private HUD hud;
 	private BodyMover bm;
 	private GameMaps gameMap;
-	private PlayerControler pd;
+	private PlayerControler pc;
+	private int enemyIerator=0;
 
 
 	
 	// movment
 	public static Player getPlayer() {return player;}
-
 	public static Array<Entity> getEnemy() {return enemy;}
-
-
-	
 	public static World getWorld() {return world;}
 	
 	public Play(GameStateManager gsm) {
 
 		super(gsm);
 		ed = new EnemyDirection();
-		pd= new PlayerControler();
+		pc= new PlayerControler();
 		coinsArray = new Array<Coin>();
 
 		// set up box2d
@@ -88,11 +83,12 @@ public class Play extends GameState {
 		// create player
 		createPlayer();
 		
-		
 		// create portal
 		creatPortal();
-
-		createEnemy(20);
+		
+		//create enemy
+		createEnemy(enemyIerator);
+		
 
 		// set up b2dcamera
 		b2dCam.setToOrtho(false, AdultGame.G_WIDTH / PPM, AdultGame.G_HEIGHT/ PPM);
@@ -101,11 +97,7 @@ public class Play extends GameState {
 				(gameMap.getHeightInTiles() * GameMaps.getTileSize()) / PPM);
 		// Set up HUD
 		hud = new HUD(player);
-		
-		
-		
-		
-		
+			
 	}
 
 
@@ -140,8 +132,9 @@ public class Play extends GameState {
 	}
 
 	public void handleInput() {
-Condition.setPlayerPositionX(player.getBody().getPosition().x);
-Condition.setPlayerPositionY(player.getBody().getPosition().y);
+		
+			Condition.setPlayerPositionX(player.getBody().getPosition().x);
+			Condition.setPlayerPositionY(player.getBody().getPosition().y);
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			
@@ -155,13 +148,15 @@ Condition.setPlayerPositionY(player.getBody().getPosition().y);
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			
 
-if(debug== true){
-	debug= false;
-}else {
-	debug= true;
-}
+			if(debug== true){
+				debug= false;
+			}else {
+				debug= true;
+			}
 		}
+		
 
+		
 		
 
 	}
@@ -169,37 +164,32 @@ if(debug== true){
 	
 
 	public void update(float dt) {
-		pd.playerControl();
-		handleInput();
-		
 		world.step(AdultGame.STEP, 6, 2);
+		pc.startControl();
+		handleInput();
+		teleportingLogic();		
 		player.update(dt);
 		damage();
-
+		coinColector();
 		for (int i = 0; i < teleports.size; i++) {
 			teleports.get(i).update(dt);
 		}
-		
 
-		
 		for (int i = 0; i < coinsArray.size; i++) {
 			coinsArray.get(i).update(dt);
-			
 		}
 		
 		for (int i = 0; i < doors.size; i++) {
 			doors.get(i).update(dt);
 		}
 
-		// if(Enemy.getSmallEnemys()!=null){
 		for (int i = 0; i < enemy.size; i++) {
 			ed.directionChecker(i);
-
 			enemy.get(i).update(dt);
 		}
 		
 
-		teleportingLogic();
+		
 	
 		
 	}
@@ -208,11 +198,9 @@ if(debug== true){
 	public void render() {
 	
 		// camera follow player
-		cam.setPosition(player.getPlayerPositionX()* PPM, player.getPlayerPositionY()
-				* PPM);
+		cam.setPosition(player.getPlayerPositionX()* PPM, player.getPlayerPositionY()* PPM);
 		cam.update();
-		
-		coinColector();
+
 
 		// draw tile
 		gameMap.getTmr().setView(cam);
@@ -408,21 +396,24 @@ if(debug== true){
 				cdef.type = BodyType.StaticBody;
 				float x = r.x / PPM;
 				float y = r.y / PPM;
-				float width = r.width / PPM;
-				float height = r.height / PPM;
+				
+				float width = r.width /10;
+				float height = r.height/10 ;
 				cdef.position.set(x + 32 / PPM, y + 32 / PPM);
-				cdef.angle = 45;
+				
 
 				Body body = world.createBody(cdef);
 				FixtureDef cfdef = new FixtureDef();
 				PolygonShape pshape = new PolygonShape();
 				pshape.setAsBox(width / PPM, height / PPM);
 				cfdef.shape = pshape;
-				cfdef.isSensor = true;
+			//	cfdef.isSensor = true;
+				
 				if (a.equals("doorEnter")) {
-
+					cfdef.filter.categoryBits = B2DVars.BIT_DOOR;
 					body.createFixture(cfdef).setUserData("doorEnter");
 				} else if (a.equals("doorExit")) {
+					cfdef.filter.categoryBits = B2DVars.BIT_DOOR;
 					body.createFixture(cfdef).setUserData("doorExit");
 
 				}
@@ -451,7 +442,7 @@ if(debug== true){
 			// GameMaps.setLevel(level--);
 			gsm.setState(GameStateManager.PLAY);
 		} else if (cl.isPlayerEnterinHouse()) {
-
+			
 			GameMaps.setResTyp("house1");
 			gsm.setState(GameStateManager.PLAY);
 		} else if (cl.isPlayerExitingHouse()) {

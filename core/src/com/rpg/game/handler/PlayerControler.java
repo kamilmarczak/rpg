@@ -14,7 +14,7 @@ public class PlayerControler {
 	}
 	
 	
-	public void playerControl() {
+	public void startControl() {
 		
 		playersX=(int)Condition.getPlayerPositionX();
 		playersY=(int)Condition.getPlayerPositionY();
