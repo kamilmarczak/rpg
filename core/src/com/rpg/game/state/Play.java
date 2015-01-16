@@ -1,7 +1,9 @@
 package com.rpg.game.state;
 
 import static com.rpg.game.handler.B2DVars.PPM;
+
 import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.MapLayer;
@@ -34,26 +36,25 @@ import com.rpg.game.handler.EnemyDirection;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
-import com.rpg.game.handler.PlayerControler;
 
 public class Play extends GameState {
 
 	
 	private boolean debug = false;
 	private Box2DDebugRenderer b2dRenderer;
-	private MyContactListener cl;
+	private static MyContactListener cl;
 	public static World world;
 	public static Player player;
 	private Array<Teleport> teleports;
-	private Array<Coin> coinsArray;
+	
 	private Array<Door> doors;
 	private static Array<Entity> enemy;
 	private EnemyDirection ed;
 	private HUD hud;
 	private BodyMover bm;
 	private GameMaps gameMap;
-	private PlayerControler pc;
-	private int enemyIerator=0;
+	private int enemyIerator=10;
+	
 
 
 	
@@ -62,12 +63,13 @@ public class Play extends GameState {
 	public static Array<Entity> getEnemy() {return enemy;}
 	public static World getWorld() {return world;}
 	
+	public static MyContactListener getCl() {return cl;}
 	public Play(GameStateManager gsm) {
-
 		super(gsm);
 		ed = new EnemyDirection();
-		pc= new PlayerControler();
-		coinsArray = new Array<Coin>();
+
+		
+		
 
 		// set up box2d
 		world = new World(new Vector2(0, 0), true); // gravity here
@@ -92,9 +94,8 @@ public class Play extends GameState {
 
 		// set up b2dcamera
 		b2dCam.setToOrtho(false, AdultGame.G_WIDTH / PPM, AdultGame.G_HEIGHT/ PPM);
-		b2dCam.setBounds(0,
-				(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM, 0,
-				(gameMap.getHeightInTiles() * GameMaps.getTileSize()) / PPM);
+		b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
+						 0,(gameMap.getHeightInTiles() * GameMaps.getTileSize()) / PPM);
 		// Set up HUD
 		hud = new HUD(player);
 			
@@ -104,13 +105,7 @@ public class Play extends GameState {
 
 	
 	
-	private void createCoin(int x, int y){
 
-		Coin coin2 = new Coin(x, y);
-		coinsArray.add(coin2);
-		coin2.getBody().setUserData(coin2);
-		
-	}
 	
 	private void createEnemy(int iletenmy) {
 		enemy = new Array<Entity>();
@@ -146,53 +141,32 @@ public class Play extends GameState {
 			
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-			
-
 			if(debug== true){
 				debug= false;
 			}else {
 				debug= true;
 			}
 		}
-		
-
-		
-		
-
 	}
 
 	
 
 	public void update(float dt) {
 		world.step(AdultGame.STEP, 6, 2);
-		pc.startControl();
 		handleInput();
 		teleportingLogic();		
 		player.update(dt);
-		damage();
 		coinColector();
-		for (int i = 0; i < teleports.size; i++) {
-			teleports.get(i).update(dt);
-		}
-
-		for (int i = 0; i < coinsArray.size; i++) {
-			coinsArray.get(i).update(dt);
-		}
 		
-		for (int i = 0; i < doors.size; i++) {
-			doors.get(i).update(dt);
-		}
-
-		for (int i = 0; i < enemy.size; i++) {
-			ed.directionChecker(i);
-			enemy.get(i).update(dt);
-		}
 		
-
-		
+		for (int i = 0; i < teleports.size; i++) {teleports.get(i).update(dt);}
+		for (int i = 0; i < player.getCoinsArray().size; i++) {	player.getCoinsArray().get(i).update(dt);}
+		for (int i = 0; i < doors.size; i++) {doors.get(i).update(dt);}
+		for (int i = 0; i < enemy.size; i++) {ed.directionChecker(i);enemy.get(i).update(dt);}
 	
 		
 	}
+
 
 
 	public void render() {
@@ -201,7 +175,6 @@ public class Play extends GameState {
 		cam.setPosition(player.getPlayerPositionX()* PPM, player.getPlayerPositionY()* PPM);
 		cam.update();
 
-
 		// draw tile
 		gameMap.getTmr().setView(cam);
 		gameMap.getTmr().render();
@@ -209,45 +182,23 @@ public class Play extends GameState {
 		// draw player
 		drawPlayer();
 		// draw portal
-		for (int i = 0; i < teleports.size; i++) {
-			teleports.get(i).render(sb);
-		}
-		for (int j = 0; j < doors.size; j++) {
-			doors.get(j).render(sb);
-
-		}
+		for (int i = 0; i < teleports.size; i++) {teleports.get(i).render(sb);}
+		for (int j = 0; j < doors.size; j++) {doors.get(j).render(sb);}
+		for (int i = 0; i <player.getCoinsArray().size; i++) {player.getCoinsArray().get(i).render(sb);}
+		for (int j = 0; j < enemy.size; j++) {enemy.get(j).render(sb);}
 		
-
-		for (int i = 0; i < coinsArray.size; i++) {
-			
-			coinsArray.get(i).render(sb);
-			
-		}
-		
-		for (int j = 0; j < enemy.size; j++) {
-
-			enemy.get(j).render(sb);
-
-		}
-		
-
-		
-		
-		
-		
-
 		//draw HUD
 		sb.setProjectionMatrix(hudCam.combined);
 		hud.render(sb);
 		
 		if (debug) {
 
-			b2dCam.setPosition(
-					cam.position.x/ PPM- (b2dCam.viewportWidth / PPM - (b2dCam.viewportWidth / PPM)),
+			b2dCam.setPosition(cam.position.x/ PPM- (b2dCam.viewportWidth / PPM - (b2dCam.viewportWidth / PPM)),
 					cam.position.y / PPM - (b2dCam.viewportHeight / PPM)+ (b2dCam.viewportHeight / PPM));
-
+			
 			b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
 			0, (gameMap.getHeightInTiles() * GameMaps.getTileSize())/ PPM);
+			
 			b2dCam.update();
 			b2dRenderer.render(world, b2dCam.combined);
 
@@ -261,52 +212,8 @@ public class Play extends GameState {
 		player.render(sb);
 
 	}
-	private void damage() {
-		// damage
-		Array<Body> bodiesDmg = cl.getDamege();
-		float posX, posY;
 	
-		
-		
 
-		
-		
-		for (int i = 0; i < bodiesDmg.size; i++) {
-			Body b = bodiesDmg.get(i);
-			
-
-			
-			bm= new BodyMover(((SmallEnemy) b.getUserData()).getBody().getPosition().x,
-							((SmallEnemy) b.getUserData()).getBody().getPosition().y,
-							Condition.getPlayerPositionX(), Condition.getPlayerPositionY(), 1);
-					((SmallEnemy) b.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
-						((SmallEnemy) b.getUserData()).attack();
-		
-
-			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-				Condition.setPlayerIsAttacking(true);
-				Player.setTimerForAtt();
-				if (((SmallEnemy) b.getUserData()) != null) {
-
-					((SmallEnemy) b.getUserData()).setHitPoint(((SmallEnemy) b.getUserData()).getHitPoint() - 0.5f);
-					
-					if (((SmallEnemy) b.getUserData()).getHitPoint() <= 0) {
-						posX=((SmallEnemy) b.getUserData()).getBody().getPosition().x;
-						posY=((SmallEnemy) b.getUserData()).getBody().getPosition().y;
-						//createCoin(posX, posY);
-						createCoin((int)posX,(int) posY);
-						
-						
-						
-						((SmallEnemy) b.getUserData()).getHp().getSkinAtlas().dispose();
-						enemy.removeValue((SmallEnemy) b.getUserData(),false);
-						world.destroyBody(b);
-						
-					}
-				}
-			}
-		}		
-	}
 
 	
 
@@ -320,7 +227,6 @@ public class Play extends GameState {
 			//moving coins
 			bm= new BodyMover(bo.getPosition().x, bo.getPosition().y, 8000, 8000, 10);
 				((Coin)bo.getUserData()).getBody().setLinearVelocity((float) bm.getMovementX(), (float) bm.getMovementY());
-
 			//	coinsArray.removeValue((Coin) bo.getUserData(), true);
 				//	world.destroyBody(bo);
 					
@@ -329,6 +235,7 @@ public class Play extends GameState {
 		if(coinList.size>0){
 			Player.setCOINS(Player.getCOINS()+1);
 			coinList.size--;
+			
 		}
 		
 	}
@@ -336,6 +243,7 @@ public class Play extends GameState {
 
 	public void dispose() {
 		GameMaps.tileMap.dispose();
+	
 
 	}
 
