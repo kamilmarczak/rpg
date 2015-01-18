@@ -36,11 +36,12 @@ import com.rpg.game.handler.EnemyDirection;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
+import com.rpg.game.pathfinding.AStarPathFinder;
 
 public class Play extends GameState {
 
 	
-	private boolean debug = false;
+	private static boolean debug = false;
 	private Box2DDebugRenderer b2dRenderer;
 	private static MyContactListener cl;
 	public static World world;
@@ -55,8 +56,10 @@ public class Play extends GameState {
 	private GameMaps gameMap;
 	private int enemyIerator=10;
 	
+	// pathfinding
 
-
+	/** The x coordinate of selected unit or -1 if none is selected */
+	
 	
 	// movment
 	public static Player getPlayer() {return player;}
@@ -79,7 +82,7 @@ public class Play extends GameState {
 
 		// create Map
 		gameMap = new GameMaps();
-		gameMap.createMap();
+		//gameMap.createMap();
 		cam.setBounds(0, gameMap.getWidthInTiles() * GameMaps.getTileSize(), 0,	gameMap.getHeightInTiles() * GameMaps.getTileSize());
 
 		// create player
@@ -99,21 +102,21 @@ public class Play extends GameState {
 		// Set up HUD
 		hud = new HUD(player);
 			
+		
+		
+
+		
+		
+		
 	}
 
-
-
-	
-	
-
-	
 	private void createEnemy(int iletenmy) {
 		enemy = new Array<Entity>();
 
 		for (int i = 0; i < iletenmy; i++) {
 
 			Random random = new Random();
-			SmallEnemy sm = new SmallEnemy(300, 300);
+			SmallEnemy sm = new SmallEnemy(300, 300 ,B2DVars.SMALLENEMY);
 		
 			float x = random.nextFloat();
 			float y = random.nextFloat();
@@ -135,9 +138,9 @@ public class Play extends GameState {
 			
 			Condition.setLastClickX(cam.position.x / PPM - (cam.viewportWidth / 2 / PPM)+ Gdx.input.getX() / PPM);
 			Condition.setLastClickY( cam.position.y / PPM - (cam.viewportHeight / 2 / PPM)+ (cam.viewportHeight / PPM) - Gdx.input.getY() / PPM);
-			
-		
 			Condition.setMoving(true);
+			
+
 			
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
@@ -150,6 +153,7 @@ public class Play extends GameState {
 	}
 
 	
+
 
 	public void update(float dt) {
 		world.step(AdultGame.STEP, 6, 2);
@@ -180,7 +184,9 @@ public class Play extends GameState {
 		gameMap.getTmr().render();
 
 		// draw player
-		drawPlayer();
+		sb.setProjectionMatrix(cam.combined);
+		player.render(sb);
+		
 		// draw portal
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).render(sb);}
 		for (int j = 0; j < doors.size; j++) {doors.get(j).render(sb);}
@@ -198,32 +204,29 @@ public class Play extends GameState {
 			
 			b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
 			0, (gameMap.getHeightInTiles() * GameMaps.getTileSize())/ PPM);
-			
+		
 			b2dCam.update();
+			b2dRenderer.setDrawVelocities(true);
+			b2dRenderer.setDrawContacts(true);
+			b2dRenderer.setDrawInactiveBodies(true);
 			b2dRenderer.render(world, b2dCam.combined);
+			
 
 		}
 
 	}
 
-	public void drawPlayer() {
-
-		sb.setProjectionMatrix(cam.combined);
-		player.render(sb);
-
-	}
 	
 
 
 	
-
+//TODO move this shit form here
 	
 	
 	private void coinColector(){
 		Array<Body> coinList = cl.getCoins();
 		for (int i = 0; i < coinList.size; i++) {
 			Body bo = coinList.get(i);
-				//TODO
 			//moving coins
 			bm= new BodyMover(bo.getPosition().x, bo.getPosition().y, 8000, 8000, 10);
 				((Coin)bo.getUserData()).getBody().setLinearVelocity((float) bm.getMovementX(), (float) bm.getMovementY());
@@ -242,7 +245,7 @@ public class Play extends GameState {
 	
 
 	public void dispose() {
-		GameMaps.tileMap.dispose();
+		GameMaps.getTileMap().dispose();
 	
 
 	}
@@ -250,7 +253,7 @@ public class Play extends GameState {
 	private void createPlayer() {
 
 		//player = new Player(body);
-		player = new Player(750, 750);
+		player = new Player(750, 750,B2DVars.PLAYER);
 		player.playAnimation(4,player.getEnemyTextureName());
 
 	}
@@ -347,8 +350,6 @@ public class Play extends GameState {
 			GameMaps.setLevel(GameMaps.getLevel() - 1);
 			gsm.setState(GameStateManager.PLAY);
 
-			// GameMaps.setLevel(level--);
-			gsm.setState(GameStateManager.PLAY);
 		} else if (cl.isPlayerEnterinHouse()) {
 			
 			GameMaps.setResTyp("house1");
@@ -359,5 +360,49 @@ public class Play extends GameState {
 			gsm.setState(GameStateManager.PLAY);
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

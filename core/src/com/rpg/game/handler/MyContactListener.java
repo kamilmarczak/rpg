@@ -14,6 +14,7 @@ public class MyContactListener implements ContactListener {
 	//private int numFootContacts;
 	private Array<Body> bodiesToRemove;
 	private Array<Body> damage;
+	private Array<Body> fallow;
 	private Array<Body> coins;
 	private boolean isPlayerTeleportingForward;
 	private boolean isPlayerTeleportingBack;
@@ -25,6 +26,7 @@ public class MyContactListener implements ContactListener {
 		super();
 		damage= new Array<Body>();
 		coins= new Array<Body>();
+		fallow= new Array<Body>();
 	}
 
 
@@ -68,17 +70,16 @@ public class MyContactListener implements ContactListener {
 
 if( fa.getUserData().equals("enemy") &&fb.getUserData().equals("player")) {
 	damage.add(fa.getBody());
-	isPlayerInRange= true;
+
 	((SmallEnemy)fa.getBody().getUserData()).setFighting(true);
 }
 if(fb.getUserData().equals("enemy") &&fa.getUserData().equals("player")) {
 	
 	damage.add(fb.getBody());
-	isPlayerInRange= true;
+
 	((SmallEnemy)fb.getBody().getUserData()).setFighting(true);
 
 }
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if(fa.getUserData() != null && fa.getUserData().equals("coin")&&fb.getUserData().equals("player")) {
 coins.add(fa.getBody());
@@ -88,6 +89,14 @@ coins.add(fb.getBody());
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 		
+
+if( fa.getUserData().equals("enemy") &&fb.getUserData().equals("playerSensor")) {
+	fallow.add(fa.getBody());
+}
+if(fb.getUserData().equals("enemy") &&fa.getUserData().equals("playerSensor")) {
+	fallow.add(fb.getBody());
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		
 	}
@@ -142,8 +151,16 @@ coins.add(fb.getBody());
 			damage.removeValue(fb.getBody(), true);
 			isPlayerInRange= false;
 		}
-		///////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+if(fa.getUserData().equals("enemy")&&fb.getUserData().equals("playerSensor")) {
+	fallow.removeValue(fa.getBody(), true);
+
+}
+if(fb.getUserData().equals("enemy")&&fa.getUserData().equals("playerSensor")) {
+	fallow.removeValue(fb.getBody(), true);
+}
+///////////////////////////////////////////////////////////////////////////////////////
 		
 		
 		
@@ -151,7 +168,13 @@ coins.add(fb.getBody());
 	}
 	
 		
-//	public boolean playerCanJump() { return numFootContacts > 0; }
+public Array<Body> getFallow() {
+		return fallow;
+	}
+
+
+
+	//	public boolean playerCanJump() { return numFootContacts > 0; }
 	public Array<Body> getBodies() { return bodiesToRemove; }
 	public Array<Body> getDamege() { return damage; }
 	public Array<Body> getCoins() {return coins;}

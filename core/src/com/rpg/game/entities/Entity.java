@@ -15,9 +15,10 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.AdultGame;
 import com.rpg.game.handler.MyTimer;
+import com.rpg.game.pathfinding.Mover;
 import com.rpg.game.state.Play;
 
-public class Entity{
+public class Entity implements Mover {
 
 
 	private World world = null;
@@ -36,7 +37,8 @@ public class Entity{
 	private String textureName;
 	private Body body;
 	protected B2DSprite sprite;
-	
+	private int type;
+
 
 
 
@@ -45,17 +47,17 @@ public class Entity{
 	}
 
 
-	public Entity() {
-		
+	public Entity(int type) {
+		this.type = type;
 		world=Play.getWorld();
 		hp= new HealthBar();
 		timer= new MyTimer(1);
 		timer.start();
 		
 	}
-	
 
-	public void enemycreator(float f,float g, String bodyTAG,short categoryBit ,int maskBits, boolean isSensor){
+
+	public void enemycreator(float f,float g, String bodyTAG,String sensorTAG, short categoryBit ,int maskBits, boolean isSensor){
 		
 
 
@@ -87,7 +89,7 @@ public class Entity{
 		fdef.shape = sensroShape;
 		fdef.filter.categoryBits= categoryBit;
 		fdef.isSensor = true;
-		body.createFixture(fdef).setUserData("sensor");
+		body.createFixture(fdef).setUserData(sensorTAG);
 		shapeEnemy.dispose();
 		sensroShape.dispose();
 		sprite= new B2DSprite(body);
@@ -151,5 +153,15 @@ public class Entity{
 	
 		
 	}
+
+
+
+	@Override
+	public int getType() {
+		return type;
+	}
+
+
+
 
 }

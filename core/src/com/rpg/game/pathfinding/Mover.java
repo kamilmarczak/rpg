@@ -14,4 +14,6 @@ package com.rpg.game.pathfinding;
  */
 public interface Mover {
 
+	int getType();
+
 }

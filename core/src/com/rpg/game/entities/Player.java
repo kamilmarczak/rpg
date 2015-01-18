@@ -15,6 +15,7 @@ public class Player extends Entity  {
 	private static int COINS = 0;
 	private String textureName = "player";
 	private String bodyTAG = "player";
+	private String sensorTAG = "playerSensor";
 	private static int playerHP=100;
 	private static MyTimer mt=new MyTimer(1);
 	private static BodyMover bm;
@@ -41,8 +42,27 @@ public class Player extends Entity  {
 	private PlayerControler pc= new PlayerControler();
 
 
-	public Player(int i, int j) {
-		enemycreator(i, j,bodyTAG, 
+	public Player(int i, int j, int type) {
+		super(type);
+		
+	
+		enemycreator(i, j,bodyTAG,sensorTAG ,
+				B2DVars.BIT_PLAYER,
+				B2DVars.BIT_ENEMY |
+				B2DVars.BIT_DOOR |
+				B2DVars.BIT_PORTAL_FORWARD |
+				B2DVars.BIT_PORTAL_BACK |
+				B2DVars.COLLECTA,false);
+		
+		playAnimation(getAnimationRow(), textureName);
+	
+
+	}
+	public Player(int type) {
+		super(type);
+		
+	
+		enemycreator(300, 300,bodyTAG,sensorTAG ,
 				B2DVars.BIT_PLAYER,
 				B2DVars.BIT_ENEMY |
 				B2DVars.BIT_DOOR |
@@ -64,30 +84,34 @@ public void update(float dt) {
 	damage() ;
 	
 }
-public  void damage() {
-// damage
-Array<Body> bodiesDmg = Play.getCl().getDamege();
+		public  void damage() {
+				
+		Array<Body> bodiesDmg = Play.getCl().getDamege();
+			Array<Body> fallowDmg = Play.getCl().getFallow();
+			
+			
+			//Enemy Fallow player
+				for(int j =0; j<fallowDmg.size; j++){
+						Body f = fallowDmg.get(j);
+							bm= new BodyMover(((Entity) f.getUserData()).getBody().getPosition().x,
+			  ((Entity) f.getUserData()).getBody().getPosition().y,
+			  getPlayerPositionX(), getPlayerPositionY(), 1);
+				((Entity) f.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
+	
+}
+				//Enemy attack player
+		for (int i = 0; i < bodiesDmg.size; i++) {
+		Body b = bodiesDmg.get(i);
 
-
-
-for (int i = 0; i < bodiesDmg.size; i++) {
-
-Body b = bodiesDmg.get(i);
-//Enemy Fallow player
-		bm= new BodyMover(((Entity) b.getUserData()).getBody().getPosition().x,
-						  ((Entity) b.getUserData()).getBody().getPosition().y,
-						  getPlayerPositionX(), getPlayerPositionY(), 1);
-		((Entity) b.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
-			//Enemy Attack
 		((Entity) b.getUserData()).attack();
 
 //Player attack
-if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-	Condition.setPlayerIsAttacking(true);
-	setTimerForAtt();
+			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+					Condition.setPlayerIsAttacking(true);
+						setTimerForAtt();
 
-		((Entity) b.getUserData()).setHitPoint(((Entity) b.getUserData()).getHitPoint() - 0.5f);
-		ishidead((Entity) b.getUserData());
+							((Entity) b.getUserData()).setHitPoint(((Entity) b.getUserData()).getHitPoint() - 0.5f);
+								ishidead((Entity) b.getUserData());
 		}
 	}		
 }
@@ -99,7 +123,7 @@ public void ishidead(Entity entity){
 	float posX=entity.getBody().getPosition().x;
 	float posY=entity.getBody().getPosition().y;
 	
-		createCoin(posX,posY);
+		createCoin(posX,posY,B2DVars.COIN);
 		entity.getHp().getSkinAtlas().dispose();
 		Play.getEnemy().removeValue(entity,false);
 		Play.getWorld().destroyBody(entity.getBody());
@@ -108,9 +132,10 @@ public void ishidead(Entity entity){
 	
 }
 
-public void createCoin(float posX, float posY){
+public void createCoin(float posX, float posY, int money){
 
-	Coin coin = new Coin(posX, posY);
+	Coin coin = new Coin(posX, posY, money);
+	
 	coinsArray.add(coin);
 	coin.getBody().setUserData(coin);
 	
