@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -22,7 +23,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.AdultGame;
-import com.rpg.game.entities.Coin;
 import com.rpg.game.entities.Door;
 import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.HUD;
@@ -36,7 +36,7 @@ import com.rpg.game.handler.EnemyDirection;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
-import com.rpg.game.pathfinding.AStarPathFinder;
+import com.rpg.game.handler.PlayerControler;
 
 public class Play extends GameState {
 
@@ -54,8 +54,8 @@ public class Play extends GameState {
 	private HUD hud;
 	private BodyMover bm;
 	private GameMaps gameMap;
-	private int enemyIerator=10;
-	
+	private int enemyIerator=0;
+	private PlayerControler pc= new PlayerControler();
 	// pathfinding
 
 	/** The x coordinate of selected unit or -1 if none is selected */
@@ -131,16 +131,24 @@ public class Play extends GameState {
 
 	public void handleInput() {
 		
-			Condition.setPlayerPositionX(player.getBody().getPosition().x);
-			Condition.setPlayerPositionY(player.getBody().getPosition().y);
+			Condition.setPlayerPositionX( player.getBody().getPosition().x);
+			Condition.setPlayerPositionY( player.getBody().getPosition().y);
+			pc.startControl();
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+
+
+			 Condition.setLastClickX  (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
+			 Condition.setLastClickY (cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
+
+/*			 
+			 System.out.println("LAst clk "+(cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM )+"   "
+			+(cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM)+
+			"Player body pos"+player.getBody().getPosition().x+ "  " +player.getBody().getPosition().y);
+*/
 			
-			Condition.setLastClickX(cam.position.x / PPM - (cam.viewportWidth / 2 / PPM)+ Gdx.input.getX() / PPM);
-			Condition.setLastClickY( cam.position.y / PPM - (cam.viewportHeight / 2 / PPM)+ (cam.viewportHeight / PPM) - Gdx.input.getY() / PPM);
 			Condition.setMoving(true);
 			
-
 			
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
@@ -160,7 +168,7 @@ public class Play extends GameState {
 		handleInput();
 		teleportingLogic();		
 		player.update(dt);
-		coinColector();
+//		coinColector();
 		
 		
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).update(dt);}
@@ -223,7 +231,7 @@ public class Play extends GameState {
 //TODO move this shit form here
 	
 	
-	private void coinColector(){
+/*	private void coinColector(){
 		Array<Body> coinList = cl.getCoins();
 		for (int i = 0; i < coinList.size; i++) {
 			Body bo = coinList.get(i);
@@ -241,7 +249,7 @@ public class Play extends GameState {
 			
 		}
 		
-	}
+	}*/
 	
 
 	public void dispose() {
@@ -253,8 +261,8 @@ public class Play extends GameState {
 	private void createPlayer() {
 
 		//player = new Player(body);
-		player = new Player(750, 750,B2DVars.PLAYER);
-		player.playAnimation(4,player.getEnemyTextureName());
+		player = new Player(0, 0,B2DVars.PLAYER);
+	//	player.playAnimation(4,player.getEnemyTextureName());
 
 	}
 

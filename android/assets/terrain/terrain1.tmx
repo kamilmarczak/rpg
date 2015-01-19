@@ -86,7 +86,7 @@
  </tileset>
  <layer name="Ground" width="60" height="60">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3DAQkAAAwEofv+pddjKLhqqqqqqqqqqqqqqqqqquqrB41l5KJAOAAA
+   H4sIAAAAAAAAC+3PsQ0AIAwEsWQd9h+QBSig4ZFw4f6uq6oBAAAAAAAAAAAAAOAhYyHddPs/3eDXr1+/O6+//aYb/HJqAk2e4SpAOAAA
   </data>
  </layer>
  <objectgroup name="Teleport">

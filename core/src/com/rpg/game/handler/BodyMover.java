@@ -3,6 +3,7 @@ package com.rpg.game.handler;
 public class BodyMover {
 	double movementX=0;
 	double movementY=0;
+	double distance ;
 	
 	
 	public BodyMover(float startPozX,float startPozY,float destX,float destY,int speed) {
@@ -11,24 +12,37 @@ public class BodyMover {
 		
 		float pathX = destX - startPozX;
 		float pathY = destY - startPozY;
-		double distance = Math.sqrt(pathX * pathX + pathY * pathY);
+		 distance = Math.sqrt(pathX * pathX + pathY * pathY);
 		double directionX = pathX / distance;
 		double directionY = pathY / distance;
+	
+		
 		 movementX = directionX * speed;
 		 movementY = directionY * speed;
 
 		
-		
+		 atDestynation();
 	}
 
 
-	public double getMovementX() {
-		return movementX;
+	public float getMovementX() {
+		return  (float) movementX;
 	}
+public boolean atDestynation(){
+	
+	if(distance<0.1)
+	{
+		movementY=0;
+		movementX=0;
+	return true;
+	}else {
+		return false;
+	}
+}
 
 
-	public double getMovementY() {
-		return movementY;
+	public float getMovementY() {
+		return  (float) movementY;
 	}
 
 }

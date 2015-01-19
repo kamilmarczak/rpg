@@ -69,7 +69,8 @@ public class Entity implements Mover {
 		sensroShape= new CircleShape();
 		
 		// BodyDef
-		bdef.position.set(f / PPM, g / PPM);
+		bdef.position.set(f/ PPM, g / PPM);
+		
 		bdef.type = BodyType.DynamicBody;
 		bdef.fixedRotation = true;
 		

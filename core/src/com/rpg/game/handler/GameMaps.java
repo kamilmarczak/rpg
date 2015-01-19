@@ -68,12 +68,13 @@ public class GameMaps implements TileBasedMap {
 				if (cell == null)continue;
 				if (cell.getTile() == null)continue;
 			if(cell.getTile().getProperties().containsKey("trawa")){
-				terrain[row][col]=GRASS;
+				terrain[col][row]=GRASS;
+				
 				
 			}		
 			}
 		}
-		System.out.println(Arrays.deepToString(terrain));
+		//System.out.println(Arrays.deepToString(terrain));
 	}
 	
 	public void createMap(String resTyp,Integer level) {
@@ -86,6 +87,7 @@ public class GameMaps implements TileBasedMap {
 		tileSize = tileMap.getProperties().get("tilewidth", Integer.class);
 		tileMapWidth = tileMap.getProperties().get("width", Integer.class);
 		tileMapHeight = tileMap.getProperties().get("height", Integer.class);
+	
 
 	}
 	
@@ -129,7 +131,7 @@ public class GameMaps implements TileBasedMap {
 		
 		//TODO
 		//not sure if true of fallse
-		return false;
+		return true;
 		}
 
 	@Override

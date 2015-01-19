@@ -39,10 +39,10 @@ public class Player extends Entity  {
 	public static void setCOINS(int COINs) {COINS = COINs;}
 	public static void setTimerForAtt() {	mt.start();}
 	boolean isSensor = false;
-	private PlayerControler pc= new PlayerControler();
 
 
-	public Player(int i, int j, int type) {
+
+	public Player(float i, float j, int type) {
 		super(type);
 		
 	
@@ -80,7 +80,7 @@ public class Player extends Entity  {
 public void update(float dt) {
 	// TODO Auto-generated method stub
 	super.update(dt);
-	pc.startControl();
+	
 	damage() ;
 	
 }
@@ -90,7 +90,7 @@ public void update(float dt) {
 			Array<Body> fallowDmg = Play.getCl().getFallow();
 			
 			
-			//Enemy Fallow player
+/*			//Enemy Fallow player
 				for(int j =0; j<fallowDmg.size; j++){
 						Body f = fallowDmg.get(j);
 							bm= new BodyMover(((Entity) f.getUserData()).getBody().getPosition().x,
@@ -98,7 +98,7 @@ public void update(float dt) {
 			  getPlayerPositionX(), getPlayerPositionY(), 1);
 				((Entity) f.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
 	
-}
+}*/
 				//Enemy attack player
 		for (int i = 0; i < bodiesDmg.size; i++) {
 		Body b = bodiesDmg.get(i);
