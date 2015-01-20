@@ -12,11 +12,13 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
+import com.rpg.game.entities.Door;
 import com.rpg.game.pathfinding.AStarPathFinder;
 import com.rpg.game.pathfinding.Mover;
 import com.rpg.game.pathfinding.Path;
 import com.rpg.game.pathfinding.PathFinder;
 import com.rpg.game.state.Play;
+import com.sun.xml.internal.fastinfoset.algorithm.BuiltInEncodingAlgorithm.WordListener;
 
 public class PlayerControler {
 	
@@ -33,8 +35,9 @@ public class PlayerControler {
 	private float lastFindX = -1;
 	
 	private float lastFindY = -1;
+	private int iterator2 =0 ;
 	
-	
+	private Array<Body> trace= new Array<Body>();
 	
 	
 	
@@ -67,13 +70,19 @@ public class PlayerControler {
 		// path =finder.findPath(Play.getPlayer(), (int)1,(int) playersY, (int)lastClickX,(int) lastClickY);
 		 
 		
+		// System.out.println("LAst clk "+lastClickX+"   "+lastClickY+"Player body pos"+Condition.getPlayerPositionX()+ "  " +Condition.getPlayerPositionY());
+		 
+		 
 		 
 
 		
 					if ((lastFindX != lastClickX) || (lastFindY != lastClickY)) {
 						lastFindX = lastClickX;
 						lastFindY = lastClickY;
-						 path =finder.findPath(Play.getPlayer(), (int)playersX,(int) playersY, (int)lastClickX,(int) lastClickY);
+						
+						 path =finder.findPath(Play.getPlayer(), (int)(Play.getPlayer().getBody().getPosition().x/0.64),
+								 (int) (Play.getPlayer().getBody().getPosition().y/0.64f+0.32f), (int)(lastClickX/0.64f+0.32f),(int)( lastClickY/0.64f+0.32f));
+					
 					
 					}
 
@@ -84,15 +93,23 @@ public class PlayerControler {
 			 
 			//	for(int a =0; a<path.getLength();a++){
 			 if(path.getLength()!=iterator){
-			//	 System.out.println(path.getLength()+" ite"+iterator);
-				//	 bm = new BodyMover(Condition.getPlayerPositionX(), Condition.getPlayerPositionY(),path.getStep(a).getX()*0.64f+0.32f, path.getStep(a).getY()*0.64f+0.32f, 2);
 					 bm = new BodyMover(Condition.getPlayerPositionX(), Condition.getPlayerPositionY(),path.getStep(iterator).getX()*0.64f+0.32f, path.getStep(iterator).getY()*0.64f+0.32f, 2);
 						if( path.getLength()!=iterator-1){
 						if(bm.atDestynation())
 							 iterator++;
-
-				//	System.out.println(path.getStep(a).getX()*0.64f+0.32f+"  "+playersX);
+						System.out.println("test2");
 						}
+				}else {
+					iterator=0;
+					iterator2=0;
+					path=null;
+					
+					for(int a=0;a<trace.size;a++){
+						Body bodzioy =trace.get(a);
+							Play.world.destroyBody(bodzioy);
+							trace.removeValue(bodzioy, false);
+						}
+
 				}
 			 
 			 
@@ -101,78 +118,34 @@ public class PlayerControler {
 		 
 		 
 		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
 
-		
 		
 		 
 		 try {
-			for(int a =0; a<path.getLength();a++){
+			 if(path.getLength()!=iterator2 ){
 				
 				BodyDef bdef = new BodyDef();
 				FixtureDef	fdef = new FixtureDef();
-				PolygonShape	shapeEnemy = new PolygonShape();
+				CircleShape	shapeEnemy = new CircleShape();
 				
-				bdef.position.set(path.getX(a)*0.64f+0.32f, path.getY(a)*0.64f+0.32f);
+				bdef.position.set(path.getX(iterator2)*0.64f+0.32f, path.getY(iterator2)*0.64f+0.32f);
 				  
 			//	bdef.position.set(path.getX(a)*0.64f+0.32f, path.getY(a)*0.64f+0.32f);
 				bdef.type = BodyType.StaticBody;
-				bdef.fixedRotation = true;
-
-				Body  body = Play.getWorld().createBody(bdef);
-				shapeEnemy.setAsBox(32 / PPM, 32 / PPM, new Vector2(0 / PPM, 0 / PPM),0);
-				fdef.shape = shapeEnemy;
-				body.createFixture(fdef);	
-				
 			
-			//	bm = new BodyMover(Condition.getPlayerPositionX(), Condition.getPlayerPositionY(),path.getStep(iterator).getX()*0.64f+0.32f, path.getStep(iterator).getY()*0.64f+0.32f, 2);
-		
+
+				shapeEnemy.setRadius(0.32f);
+				fdef.shape = shapeEnemy;
+				Body  body = Play.getWorld().createBody(bdef);
+				body.createFixture(fdef);	
+				iterator2++;
+				trace.add(body);
 			 }
 			
-
-			
 		} catch (Exception e) {
-			System.out.println("blad z dlugoscia sciezki");
-			e.printStackTrace();
+			//System.out.println("blad z dlugoscia sciezki");
+		//	e.printStackTrace();
 		}
-		 /*
-		
-		 bm = new BodyMover(Condition.getPlayerPositionX(), Condition.getPlayerPositionY(),path.getStep(iterator).getX()*0.64f+0.32f, path.getStep(iterator).getY()*0.64f+0.32f, 2);
-	}
-		
-		if(bm.atDestynation())
-			 iterator++;
-
-*/
-
 
 	
 	

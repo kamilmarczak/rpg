@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
@@ -47,7 +48,8 @@ public class Play extends GameState {
 	public static World world;
 	public static Player player;
 	private Array<Teleport> teleports;
-	
+	ShapeRenderer shapeRenderernew ;
+
 	private Array<Door> doors;
 	private static Array<Entity> enemy;
 	private EnemyDirection ed;
@@ -70,7 +72,7 @@ public class Play extends GameState {
 	public Play(GameStateManager gsm) {
 		super(gsm);
 		ed = new EnemyDirection();
-
+		
 		
 		
 
@@ -107,7 +109,7 @@ public class Play extends GameState {
 
 		
 		
-		
+		shapeRenderernew=new ShapeRenderer();
 	}
 
 	private void createEnemy(int iletenmy) {
@@ -151,6 +153,16 @@ public class Play extends GameState {
 			
 			
 		}
+		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+
+			System.out.println("Pozycia X:"+(cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM )+
+		" PozyciaY "+(cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM));
+
+			
+		}
+		
+		
+		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			if(debug== true){
 				debug= false;
@@ -201,6 +213,7 @@ public class Play extends GameState {
 		for (int i = 0; i <player.getCoinsArray().size; i++) {player.getCoinsArray().get(i).render(sb);}
 		for (int j = 0; j < enemy.size; j++) {enemy.get(j).render(sb);}
 		
+
 		//draw HUD
 		sb.setProjectionMatrix(hudCam.combined);
 		hud.render(sb);
@@ -219,10 +232,32 @@ public class Play extends GameState {
 			b2dRenderer.setDrawInactiveBodies(true);
 			b2dRenderer.render(world, b2dCam.combined);
 			
+		
+			shapeRenderernew.setProjectionMatrix(cam.combined);
+			
+			shapeRenderernew.setAutoShapeType(true);
+			cam.update();
+			shapeRenderernew.begin();
+			for (int j = 0; j < GameMaps.getBounds().size(); j++) {
+				 shapeRenderernew.rect(GameMaps.getBounds().get(j).getX(),GameMaps.getBounds().get(j).getY(),GameMaps.getBounds().get(j).getWidth(),GameMaps.getBounds().get(j).getHeight())	;
+				
+			}
+				 shapeRenderernew.end();
+			
+			
+			}
+			
+			
 
 		}
+		
+		
+	
 
-	}
+		
+		
+
+	
 
 	
 

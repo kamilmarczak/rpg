@@ -1,13 +1,14 @@
 package com.rpg.game.handler;
 
+import com.rpg.game.state.Play;
+
 
 
 public class Condition {
 	private static boolean playerIsAttacking = false;
 	private static float lastClickX;
 	private static float lastClickY;
-	private static  float playerPositionX;
-	private static  float playerPositionY;
+
 	private static boolean isMoving = false;
 	private static boolean triger= true;
 	
@@ -28,10 +29,10 @@ public class Condition {
 	
 	public static boolean isMoving() {return isMoving;}
 	public static void setMoving(boolean isMoving) {Condition.isMoving = isMoving;}
-	public static  void setPlayerPositionX(float playerPositionX) {Condition.playerPositionX = playerPositionX;}
-	public static  void setPlayerPositionY(float playerPositionY) {Condition.playerPositionY = playerPositionY;	}
-	public static  float getPlayerPositionX() {return playerPositionX;}
-	public static  float getPlayerPositionY() {return playerPositionY;}
+	public static  void setPlayerPositionX(float playerPositionX) {Play.getPlayer().getBody().getPosition().x = playerPositionX;}
+	public static  void setPlayerPositionY(float playerPositionY) {Play.getPlayer().getBody().getPosition().y = playerPositionY;	}
+	public static  float getPlayerPositionX() {return Play.getPlayer().getBody().getPosition().x ;}
+	public static  float getPlayerPositionY() {return Play.getPlayer().getBody().getPosition().y ;}
 	public static void setLastClickX(float lastClickX) {Condition.lastClickX = lastClickX;}
 	public static void setLastClickY(float lastClickY) {Condition.lastClickY = lastClickY;}
 	public static float getLastClickX() {return lastClickX;}
