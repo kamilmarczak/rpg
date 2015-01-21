@@ -86,7 +86,7 @@
  </tileset>
  <layer name="Ground" width="60" height="60">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3RuQ0AIAwEsGQd9h+QnooGnRRcuL+nq6oBAAAAAAAAAAAAAACAa+uQzmODN/3SGZJ9p//7iw1Q09tyQDgAAA==
+   H4sIAAAAAAAAC+2YSxLDIAxDk+vk/gfstpNpiQOyJMAL7TpGz79Az+M4zlKpVCpNp8vAA5t3R2ZFDq8HzcJ7Z8nMmQsvwncWcyumqudUvErN2M9utUXyPvV+dDbc9zNintl7wbHvXHnV/lfgdd1XKF/s++Sv/Rg9G7Xvsvgi+X3jB7WbmbwRT6vVeJTX4TvO4kXWyIE5ur+ul78fPU+t1n0Ywa7mY9aN/f7OYlf7WJXZpT9YZ/+7R43OlyNzVnzXe6VrXMc6ZMdFe2vlEHE3yPSXmb9f+yt6n3SrcZaX1Xh3q29k7pW8rRnsmc0WLyOvq2onXvUbgv2ecKlt8c59zogPVL+PxmnNIXpOUTGc6tjDvgNvb6yZeXerL/P/LzXvW+8qVgTvTKzf5/d+r3p4M/0z6p+VG0UOenqV/QZRflMVuntUvPNKeH0AmR7OqkA4AAA=
   </data>
  </layer>
  <objectgroup name="Teleport">

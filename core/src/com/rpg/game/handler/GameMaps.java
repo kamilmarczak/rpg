@@ -1,24 +1,17 @@
 package com.rpg.game.handler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.entities.Entity;
-import com.rpg.game.entities.SmallEnemy;
 import com.rpg.game.pathfinding.Mover;
 import com.rpg.game.pathfinding.TileBasedMap;
-import com.rpg.game.state.Play;
-
-import static com.rpg.game.handler.B2DVars.PPM;
 
 
 
@@ -31,18 +24,18 @@ public class GameMaps implements TileBasedMap {
 	private int[][] units;
 	
 	
-	public static ArrayList<Rectangle> getBounds() {
+	public static Array<Rectangle> getBounds() {
 		return bounds;
 	}
 
-	public void setBounds(ArrayList<Rectangle> bounds) {
+	public void setBounds(Array<Rectangle> bounds) {
 		this.bounds = bounds;
 	}
 
 	private static String resTyp = "terrain";
 	public static void setResTyp(String resTyp) {GameMaps.resTyp = resTyp;}
 
-	private static ArrayList<Rectangle>  bounds;
+	private static Array<Rectangle>  bounds;
 	private static  int level = 1;
 	private static float tileSize;
 	public static void setLevel(int level) {GameMaps.level = level;}
@@ -59,9 +52,10 @@ public class GameMaps implements TileBasedMap {
 	public static final int WATER = 0;
 
 	public GameMaps(){
-		this.bounds = new ArrayList<Rectangle>();
+		this.bounds = new Array<Rectangle>();
 		createMap(resTyp, level);
 		mapLayer= (TiledMapTileLayer) tileMap.getLayers().get("Ground");
+		
 		terrain = new int[tileMapWidth][tileMapHeight];
 		visited = new boolean[tileMapWidth][tileMapHeight];
 		units = new int[tileMapWidth][tileMapHeight];

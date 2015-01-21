@@ -48,7 +48,7 @@ public class Play extends GameState {
 	public static World world;
 	public static Player player;
 	private Array<Teleport> teleports;
-	ShapeRenderer shapeRenderernew ;
+	ShapeRenderer shapeRenderer ;
 
 	private Array<Door> doors;
 	private static Array<Entity> enemy;
@@ -59,8 +59,8 @@ public class Play extends GameState {
 	private int enemyIerator=0;
 	private PlayerControler pc= new PlayerControler();
 	// pathfinding
-
-	/** The x coordinate of selected unit or -1 if none is selected */
+private boolean justPresed= false;
+	
 	
 	
 	// movment
@@ -72,7 +72,7 @@ public class Play extends GameState {
 	public Play(GameStateManager gsm) {
 		super(gsm);
 		ed = new EnemyDirection();
-		
+		shapeRenderer=new ShapeRenderer();
 		
 		
 
@@ -109,7 +109,7 @@ public class Play extends GameState {
 
 		
 		
-		shapeRenderernew=new ShapeRenderer();
+	
 	}
 
 	private void createEnemy(int iletenmy) {
@@ -138,28 +138,31 @@ public class Play extends GameState {
 			pc.startControl();
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-
-
+		
+			if(justPresed){
+				justPresed=false;
+			
 			 Condition.setLastClickX  (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
 			 Condition.setLastClickY (cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
-
-/*			 
-			 System.out.println("LAst clk "+(cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM )+"   "
-			+(cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM)+
-			"Player body pos"+player.getBody().getPosition().x+ "  " +player.getBody().getPosition().y);
-*/
-			
-			Condition.setMoving(true);
-			
-			
+			 Condition.setMoving(true);
+			}
+		
+		}else {
+			justPresed=true;
 		}
-		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
 
-			System.out.println("Pozycia X:"+(cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM )+
-		" PozyciaY "+(cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM));
-
-			
-		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -202,6 +205,40 @@ public class Play extends GameState {
 		// draw tile
 		gameMap.getTmr().setView(cam);
 		gameMap.getTmr().render();
+		if (debug) {
+			
+			b2dCam.setPosition(cam.position.x/ PPM- (b2dCam.viewportWidth / PPM - (b2dCam.viewportWidth / PPM)),
+					cam.position.y / PPM - (b2dCam.viewportHeight / PPM)+ (b2dCam.viewportHeight / PPM));
+			
+			b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
+					0, (gameMap.getHeightInTiles() * GameMaps.getTileSize())/ PPM);
+			
+			b2dCam.update();
+			b2dRenderer.setDrawVelocities(true);
+			b2dRenderer.setDrawContacts(true);
+			b2dRenderer.setDrawInactiveBodies(true);
+			b2dRenderer.render(world, b2dCam.combined);
+			
+			
+			shapeRenderer.setProjectionMatrix(cam.combined);
+			
+			shapeRenderer.setAutoShapeType(true);
+			//cam.update();
+			shapeRenderer.begin();
+			for (int j = 0; j < GameMaps.getBounds().size; j++) {
+				shapeRenderer.rect(GameMaps.getBounds().get(j).getX(),GameMaps.getBounds().get(j).getY(),GameMaps.getBounds().get(j).getWidth(),GameMaps.getBounds().get(j).getHeight())	;
+			}
+			for (int j = 0; j < PlayerControler.getTrace().size; j++) {
+				
+				shapeRenderer.setColor(255,255,255,1);
+				shapeRenderer.circle(PlayerControler.getTrace().get(j).x, PlayerControler.getTrace().get(j).y, PlayerControler.getTrace().get(j).radius-1);
+				shapeRenderer.setColor(255,255,255,1);
+			}
+			
+			shapeRenderer.end();
+			
+			
+		}
 
 		// draw player
 		sb.setProjectionMatrix(cam.combined);
@@ -218,48 +255,9 @@ public class Play extends GameState {
 		sb.setProjectionMatrix(hudCam.combined);
 		hud.render(sb);
 		
-		if (debug) {
 
-			b2dCam.setPosition(cam.position.x/ PPM- (b2dCam.viewportWidth / PPM - (b2dCam.viewportWidth / PPM)),
-					cam.position.y / PPM - (b2dCam.viewportHeight / PPM)+ (b2dCam.viewportHeight / PPM));
-			
-			b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
-			0, (gameMap.getHeightInTiles() * GameMaps.getTileSize())/ PPM);
-		
-			b2dCam.update();
-			b2dRenderer.setDrawVelocities(true);
-			b2dRenderer.setDrawContacts(true);
-			b2dRenderer.setDrawInactiveBodies(true);
-			b2dRenderer.render(world, b2dCam.combined);
-			
-		
-			shapeRenderernew.setProjectionMatrix(cam.combined);
-			
-			shapeRenderernew.setAutoShapeType(true);
-			cam.update();
-			shapeRenderernew.begin();
-			for (int j = 0; j < GameMaps.getBounds().size(); j++) {
-				 shapeRenderernew.rect(GameMaps.getBounds().get(j).getX(),GameMaps.getBounds().get(j).getY(),GameMaps.getBounds().get(j).getWidth(),GameMaps.getBounds().get(j).getHeight())	;
-				
-			}
-				 shapeRenderernew.end();
-			
-			
-			}
-			
-			
 
 		}
-		
-		
-	
-
-		
-		
-
-	
-
-	
 
 
 	
@@ -296,7 +294,7 @@ public class Play extends GameState {
 	private void createPlayer() {
 
 		//player = new Player(body);
-		player = new Player(0, 0,B2DVars.PLAYER);
+		player = new Player(1000, 1000,B2DVars.PLAYER);
 	//	player.playAnimation(4,player.getEnemyTextureName());
 
 	}
