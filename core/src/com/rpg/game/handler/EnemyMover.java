@@ -4,13 +4,13 @@ import static com.rpg.game.handler.B2DVars.PPM;
 
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.entities.Entity;
 import com.rpg.game.pathfinding.AStarPathFinder;
 import com.rpg.game.pathfinding.Path;
 import com.rpg.game.pathfinding.PathFinder;
-import com.rpg.game.state.Play;
 
 public class EnemyMover {
 
@@ -22,7 +22,7 @@ public class EnemyMover {
 
 	private BodyMover bm;
 	private boolean usItDone = true;
-	private Entity entity;
+
 	private Array<Circle> enemyTrace = new Array<Circle>();
 
 	public EnemyMover() {
@@ -32,29 +32,28 @@ public class EnemyMover {
 
 	}
 
-	public void pathStarter() {
+	public void pathStarter(Entity entity) {
 
 			if(usItDone){
 
-				entity = EnemyContainer.GETSMALLENEMY().first();
-				int enemyNextX = randInt((int)entity.getBody().getPosition().x-2,(int) entity.getBody().getPosition().x+5);
-				int enemyNextY =  randInt((int)entity.getBody().getPosition().y-2,(int) entity.getBody().getPosition().y+5);
-				System.out.println(enemyNextX/0.64+.32+" -  "+enemyNextY/0.64+.32+"        "+enemyNextX/0.64+" - "+enemyNextY/0.64);
+				
+				int enemyNextX = randInt((int)entity.getBody().getPosition().x-5,(int) entity.getBody().getPosition().x+5);
+				int enemyNextY =  randInt((int)entity.getBody().getPosition().y-5,(int) entity.getBody().getPosition().y+5);
+				
 	
 				
-				if(enemyNextY/0.64<=0||enemyNextX/0.64<=0||enemyNextX/0.64>map.getHeightInTiles() ||enemyNextY/0.64>map.getWidthInTiles()){
-					//	if(enemyNextY/0.64+.32<=0||enemyNextX/0.64+.32<=0||enemyNextX/0.64+.32>map.getHeightInTiles() ||enemyNextY/0.64+.32>map.getWidthInTiles()){
-				System.out.println( "za ma³e random");
+				if(enemyNextY/B2DVars.MTT<=0||enemyNextX/B2DVars.MTT<=0||enemyNextX/B2DVars.MTT>map.getHeightInTiles() ||enemyNextY/B2DVars.MTT>map.getWidthInTiles()){
+				Gdx.app.debug("EnemyMover", "out of bounds");
 					
 				}else {
 			
 				
 				
 				path = finder.findPath(entity, 
-						(int) (entity.getBody().getPosition().x / 0.64f),
-						(int) (entity.getBody().getPosition().y / 0.64f),
-						(int) (enemyNextX / 0.64f),
-						(int) (enemyNextY / 0.64f));	
+						(int) (entity.getBody().getPosition().x / B2DVars.MTT),
+						(int) (entity.getBody().getPosition().y / B2DVars.MTT),
+						(int) (enemyNextX / B2DVars.MTT),
+						(int) (enemyNextY / B2DVars.MTT));	
 				usItDone=false;
 			}
 			}
@@ -68,8 +67,8 @@ public class EnemyMover {
 						bm = new BodyMover(
 								entity.getBody().getPosition().x,
 								entity.getBody().getPosition().y,
-								path.getStep(iterator).getX() * 0.64f + 0.32f,
-								path.getStep(iterator).getY() * 0.64f + 0.32f,5);
+								path.getStep(iterator).getX() * B2DVars.MTT + B2DVars.MTT/2,
+								path.getStep(iterator).getY() * B2DVars.MTT + B2DVars.MTT/2,2);
 						
 						entity.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
 						
@@ -83,7 +82,7 @@ public class EnemyMover {
 					}
 					
 					 if(path.getLength()>iterator2){
-						 Circle ciclce = new Circle((path.getX(iterator2)*0.64f+0.32f)*PPM, (path.getY(iterator2)*0.64f+0.32f )*PPM, 32f);
+						 Circle ciclce = new Circle((path.getX(iterator2)*B2DVars.MTT+B2DVars.MTT/2)*PPM, (path.getY(iterator2)*B2DVars.MTT+B2DVars.MTT/2 )*PPM, 32f);
 							enemyTrace .add(ciclce);
 							iterator2++;}
 				

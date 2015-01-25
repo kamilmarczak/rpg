@@ -47,24 +47,24 @@ public class PlayerControler {
 						iterator2=0;
 						 trace.clear();
 						 path =finder.findPath(Play.getPlayer(),
-								 (int)(Play.getPlayer().getBody().getPosition().x/0.64f),
-								 (int) (Play.getPlayer().getBody().getPosition().y/0.64f), 
-								 (int)(lastClickX/0.64f),
-								 (int)(lastClickY/0.64f));
+								 (int)(Play.getPlayer().getBody().getPosition().x/B2DVars.MTT),
+								 (int) (Play.getPlayer().getBody().getPosition().y/B2DVars.MTT), 
+								 (int)(lastClickX/B2DVars.MTT),
+								 (int)(lastClickY/B2DVars.MTT));
 					}
 
 
 		 
 			if(path!=null){
 			 if(path.getLength()!=iterator){
-			 bm = new BodyMover(Condition.getPlayerPositionX(), Condition.getPlayerPositionY(),path.getStep(iterator).getX()*0.64f+0.32f, path.getStep(iterator).getY()*0.64f+0.32f, 2);
+			 bm = new BodyMover(Condition.getPlayerPositionX(), Condition.getPlayerPositionY(),path.getStep(iterator).getX()*B2DVars.MTT+B2DVars.MTT/2, path.getStep(iterator).getY()*B2DVars.MTT+B2DVars.MTT/2, 2);
 			if(bm.atDestynation()){iterator++;}
 			}
 		
 
 			
 			 if(path.getLength()>iterator2){
-				 Circle ciclce = new Circle((path.getX(iterator2)*0.64f+0.32f)*PPM, (path.getY(iterator2)*0.64f+0.32f )*PPM, 32f);
+				 Circle ciclce = new Circle((path.getX(iterator2)*B2DVars.MTT+B2DVars.MTT/2)*PPM, (path.getY(iterator2)*B2DVars.MTT+B2DVars.MTT/2 )*PPM, 32f);
 					trace.add(ciclce);
 					iterator2++;}
 					}else {

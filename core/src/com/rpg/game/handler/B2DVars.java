@@ -4,6 +4,7 @@ public class B2DVars {
 	
 	//pixel ratio
 	public static final float PPM = 100;
+	public static final float MTT = 0.64f;
 
 	
 	//category bits

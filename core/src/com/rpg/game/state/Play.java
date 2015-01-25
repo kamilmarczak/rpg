@@ -56,12 +56,12 @@ public class Play extends GameState {
 	private HUD hud;
 	private BodyMover bm;
 	private GameMaps gameMap;
-	private int enemyIerator=1;
+	private int enemyIerator=5;
 
 	private PlayerControler pc= new PlayerControler();
 	// pathfinding
 		private boolean justPresed= false;
-		private EnemyMover em = new EnemyMover();
+		
 	private GameMaps gameMaps = new GameMaps();
 	
 	
@@ -124,7 +124,7 @@ public class Play extends GameState {
 		for (int i = 0; i < iletenmy; i++) {
 
 
-			SmallEnemy smalEn = new SmallEnemy(randInt(1, 2000), randInt(1, 2000) ,B2DVars.SMALLENEMY);
+			SmallEnemy smalEn = new SmallEnemy(randInt(1, (int) (gameMap.getWidthInTiles()/B2DVars.MTT)), randInt(1, (int) (gameMap.getHeightInTiles()/B2DVars.MTT)) ,B2DVars.SMALLENEMY);
 
 			EnemyContainer.GETSMALLENEMY().add(smalEn);
 			smalEn.getBody().setUserData(smalEn);
@@ -191,7 +191,7 @@ public class Play extends GameState {
 			ed.directionChecker(i);
 			EnemyContainer.GETSMALLENEMY().get(i).update(dt);}
 		pc.startControl();
-		em.pathStarter();
+		
 		
 	}
 
@@ -236,12 +236,12 @@ public class Play extends GameState {
 				shapeRenderer.circle(PlayerControler.getTrace().get(j).x, PlayerControler.getTrace().get(j).y, PlayerControler.getTrace().get(j).radius-1);
 				shapeRenderer.setColor(255,255,255,1);
 			}
-			for (int j = 0; j < em.getEnemyTrace().size; j++) {
+/*			for (int j = 0; j < em.getEnemyTrace().size; j++) {
 				
 				shapeRenderer.setColor(0,255,255,1);
 				shapeRenderer.circle(em.getEnemyTrace().get(j).x, em.getEnemyTrace().get(j).y, em.getEnemyTrace().get(j).radius-1);
 				shapeRenderer.setColor(255,255,255,1);
-			}
+			}*/
 			
 			shapeRenderer.end();
 			

@@ -2,6 +2,7 @@ package com.rpg.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.rpg.game.handler.B2DVars;
+import com.rpg.game.handler.EnemyMover;
 
 
 public class SmallEnemy extends Entity {
@@ -16,6 +17,8 @@ public class SmallEnemy extends Entity {
 	boolean isSensor = false;
 	private String sensorTAG="sensorEnemySmall";
 	private int type=3;
+	private EnemyMover em;
+	private SmallEnemy smallEnemy;
 	public int getType() {return type;}
 	
 //path
@@ -23,7 +26,7 @@ public class SmallEnemy extends Entity {
 
 	public SmallEnemy(int i, int j,int type) {
 		super(type);
-
+		em = new EnemyMover();
 	enemycreator(i, j,bodyTAG,sensorTAG, B2DVars.BIT_ENEMY, B2DVars.BIT_ENEMY| B2DVars.BIT_PLAYER ,isSensor);
 	setEnemyHitPower(1);
 	playAnimation(getAnimationRow(),textureName);
@@ -44,7 +47,12 @@ public class SmallEnemy extends Entity {
 	}
 
 
-
+@Override
+public void update(float dt) {
+	// TODO Auto-generated method stub
+	super.update(dt);
+	em.pathStarter((SmallEnemy)getBody().getUserData());
+}
 
 
 

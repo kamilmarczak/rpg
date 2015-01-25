@@ -25,7 +25,7 @@ public class Entity implements Mover {
 	private BodyDef bdef;
 	private FixtureDef fdef;
 	private PolygonShape shapeEnemy;
-	private CircleShape sensroShape;
+	private CircleShape sensroShape, circle;
 	//private  Body body;
 	private boolean isFighting= false;
 	private int animationRow =0;
@@ -67,6 +67,7 @@ public class Entity implements Mover {
 		fdef = new FixtureDef();
 		shapeEnemy = new PolygonShape();
 		sensroShape= new CircleShape();
+		circle= new CircleShape();
 		
 		// BodyDef
 		bdef.position.set(f/ PPM, g / PPM);
@@ -77,12 +78,13 @@ public class Entity implements Mover {
 	    body = world.createBody(bdef);
 
 		// fixtureDef
-		shapeEnemy.setAsBox(15 / PPM, 25 / PPM, new Vector2(0 / PPM, 0 / PPM),0); // //
-		fdef.shape = shapeEnemy;
+		//shapeEnemy.setAsBox(5 / PPM, 5 / PPM, new Vector2(0 / PPM, 0 / PPM),0); // //
+		circle.setRadius(15/PPM);
+		fdef.shape = circle;
 		fdef.isSensor = isSensor;
 		fdef.filter.categoryBits= categoryBit;
 		fdef.filter.maskBits=  (short) maskBits ;
-
+fdef.restitution=1;
 		body.createFixture(fdef).setUserData(bodyTAG);
 		
 		// Player's sensor
