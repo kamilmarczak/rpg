@@ -19,10 +19,10 @@ public class PlayerControler {
 	private static GameMaps map = new GameMaps();
 	private PathFinder finder;
 	private Path path;
-	private float lastFindX = -1;
-	private float lastFindY = -1;
+	private float lastFindX ;
+	private float lastFindY ;
 	private static Array<Circle> trace= new Array<Circle>();
-	private boolean firstclick= true;
+
 	
 
 	
@@ -44,44 +44,32 @@ public class PlayerControler {
 						lastFindX = lastClickX;
 						lastFindY = lastClickY;
 						iterator=0;
+						iterator2=0;
 						 trace.clear();
 						 path =finder.findPath(Play.getPlayer(),
 								 (int)(Play.getPlayer().getBody().getPosition().x/0.64f),
 								 (int) (Play.getPlayer().getBody().getPosition().y/0.64f), 
 								 (int)(lastClickX/0.64f),
 								 (int)(lastClickY/0.64f));
-						 
-				
-							 
-					
-
-					
 					}
 
 
 		 
-					if(path!=null){
-		
+			if(path!=null){
 			 if(path.getLength()!=iterator){
-				 
-					 bm = new BodyMover(Condition.getPlayerPositionX(), Condition.getPlayerPositionY(),path.getStep(iterator).getX()*0.64f+0.32f, path.getStep(iterator).getY()*0.64f+0.32f, 2);
-				
-						if(bm.atDestynation())iterator++;
-
-					}
+			 bm = new BodyMover(Condition.getPlayerPositionX(), Condition.getPlayerPositionY(),path.getStep(iterator).getX()*0.64f+0.32f, path.getStep(iterator).getY()*0.64f+0.32f, 2);
+			if(bm.atDestynation()){iterator++;}
+			}
 		
 
 			
 			 if(path.getLength()>iterator2){
 				 Circle ciclce = new Circle((path.getX(iterator2)*0.64f+0.32f)*PPM, (path.getY(iterator2)*0.64f+0.32f )*PPM, 32f);
 					trace.add(ciclce);
-					iterator2++;
-			 }else {
-				 iterator2=0;
-				
-			}
+					iterator2++;}
 					}else {
 						bm = new BodyMover(Condition.getPlayerPositionX(), Condition.getPlayerPositionY(),Condition.getPlayerPositionX(), Condition.getPlayerPositionY(), 5);
+						
 					}
 
 
@@ -146,39 +134,37 @@ public class PlayerControler {
 			if(Condition.isPlayerIsAttacking()) return;
 			
 			if (lastClickX > playersX
-					&& (int)lastClickY > playersY && !bm.atDestynation())
+					&& (int)lastClickY > playersY)
 				aniChecker(5);
 			
 			if (lastClickX > playersX
-					&&  lastClickY < playersY&& !bm.atDestynation())
+					&&  lastClickY < playersY)
 				aniChecker(8);
 
 			if (lastClickX <playersX
-					&&  lastClickY > playersY&& !bm.atDestynation())
+					&&  lastClickY > playersY)
 				aniChecker(6);
 
 			if (lastClickX< playersX
-					&&  lastClickY < playersY&& !bm.atDestynation())
+					&&  lastClickY < playersY)
 				aniChecker(7);
 
 			if (lastClickX < playersX
-					&& lastClickY == playersY&& !bm.atDestynation())
+					&& lastClickY == playersY)
 				aniChecker(1);
 
 			if (lastClickX > playersX
-					&& lastClickY == playersY&& !bm.atDestynation())
+					&& lastClickY == playersY)
 				aniChecker(3);
 
 			if (lastClickX == playersX
-					&& lastClickY < playersY&& !bm.atDestynation())
+					&& lastClickY < playersY)
 				aniChecker(2);
 
 			if (lastClickX == playersX
-					&& lastClickY > playersY&& !bm.atDestynation())
+					&& lastClickY > playersY)
 				aniChecker(0);
-			if(bm.atDestynation()){
-				aniChecker(4);
-			}
+			
 		}
 
 		// dont start animation over and over again

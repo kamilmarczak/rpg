@@ -1,16 +1,18 @@
 package com.rpg.game.handler;
 
-import com.rpg.game.state.Play;
+
 
 public class EnemyDirection {
 
 
 
-	public void directionChecker(int i) {
 
-		float firstX = Play.getEnemy().get(i).getBody().getLinearVelocity().x * 10;
-		float firstY = Play.getEnemy().get(i).getBody().getLinearVelocity().y * 10;
-		boolean isFighting = Play.getEnemy().get(i).isFighting();
+	public void directionChecker(int i) {
+	
+
+	float firstX = EnemyContainer.GETSMALLENEMY().get(i).getBody().getLinearVelocity().x * 10;
+		float firstY = EnemyContainer.GETSMALLENEMY().get(i).getBody().getLinearVelocity().y * 10;
+		boolean isFighting = EnemyContainer.GETSMALLENEMY().get(i).isFighting();
 
 
 		if ((int) firstX > 0 && (int) firstY > 0 && !isFighting) {
@@ -66,8 +68,8 @@ public class EnemyDirection {
 
 	private void anienemChecker(int j, int i) {
 
-		if(Play.getEnemy().get(i).getAnimationRow()!=j){
-			Play.getEnemy().get(i).playAnimation(j, Play.getEnemy().get(i).getEnemyTextureName());
+		if(EnemyContainer.GETSMALLENEMY().get(i).getAnimationRow()!=j){
+			EnemyContainer.GETSMALLENEMY().get(i).playAnimation(j, EnemyContainer.GETSMALLENEMY().get(i).getEnemyTextureName());
 			
 		}
 			

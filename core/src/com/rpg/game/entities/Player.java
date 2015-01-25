@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyMover;
 import com.rpg.game.handler.Condition;
+import com.rpg.game.handler.EnemyContainer;
 import com.rpg.game.handler.MyTimer;
 import com.rpg.game.handler.PlayerControler;
 import com.rpg.game.state.Play;
@@ -39,6 +40,7 @@ public class Player extends Entity  {
 	public static void setCOINS(int COINs) {COINS = COINs;}
 	public static void setTimerForAtt() {	mt.start();}
 	boolean isSensor = false;
+//	private EnemyContainer enemyContainer = new EnemyContainer();;
 
 
 
@@ -125,7 +127,7 @@ public void ishidead(Entity entity){
 	
 		createCoin(posX,posY,B2DVars.COIN);
 		entity.getHp().getSkinAtlas().dispose();
-		Play.getEnemy().removeValue(entity,false);
+		EnemyContainer .GETSMALLENEMY().removeValue(entity,false);
 		Play.getWorld().destroyBody(entity.getBody());
 		
 	}

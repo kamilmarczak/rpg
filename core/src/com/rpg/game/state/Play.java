@@ -1,9 +1,6 @@
 package com.rpg.game.state;
 
 import static com.rpg.game.handler.B2DVars.PPM;
-
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,7 +10,6 @@ import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -25,7 +21,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.AdultGame;
 import com.rpg.game.entities.Door;
-import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.HUD;
 import com.rpg.game.entities.Player;
 import com.rpg.game.entities.SmallEnemy;
@@ -33,11 +28,16 @@ import com.rpg.game.entities.Teleport;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyMover;
 import com.rpg.game.handler.Condition;
+import com.rpg.game.handler.EnemyContainer;
 import com.rpg.game.handler.EnemyDirection;
+import com.rpg.game.handler.EnemyMover;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
 import com.rpg.game.handler.PlayerControler;
+
+
+
 
 public class Play extends GameState {
 
@@ -47,33 +47,39 @@ public class Play extends GameState {
 	private static MyContactListener cl;
 	public static World world;
 	public static Player player;
-	private Array<Teleport> teleports;
-	ShapeRenderer shapeRenderer ;
+	
 
+	private Array<Teleport> teleports;
+	private ShapeRenderer shapeRenderer ;
 	private Array<Door> doors;
-	private static Array<Entity> enemy;
 	private EnemyDirection ed;
 	private HUD hud;
 	private BodyMover bm;
 	private GameMaps gameMap;
-	private int enemyIerator=0;
+	private int enemyIerator=1;
+
 	private PlayerControler pc= new PlayerControler();
 	// pathfinding
-private boolean justPresed= false;
+		private boolean justPresed= false;
+		private EnemyMover em = new EnemyMover();
+	private GameMaps gameMaps = new GameMaps();
 	
 	
 	
 	// movment
 	public static Player getPlayer() {return player;}
-	public static Array<Entity> getEnemy() {return enemy;}
 	public static World getWorld() {return world;}
-	
 	public static MyContactListener getCl() {return cl;}
+	
+	
+	
+	
+	
 	public Play(GameStateManager gsm) {
 		super(gsm);
 		ed = new EnemyDirection();
 		shapeRenderer=new ShapeRenderer();
-		
+		//enemyContainer= new EnemyContainer();
 		
 
 		// set up box2d
@@ -113,29 +119,33 @@ private boolean justPresed= false;
 	}
 
 	private void createEnemy(int iletenmy) {
-		enemy = new Array<Entity>();
+
 
 		for (int i = 0; i < iletenmy; i++) {
 
-			Random random = new Random();
-			SmallEnemy sm = new SmallEnemy(300, 300 ,B2DVars.SMALLENEMY);
-		
-			float x = random.nextFloat();
-			float y = random.nextFloat();
-			sm.getBody().setLinearVelocity(x, y);
-			enemy.add(sm);
-			sm.getBody().setUserData(sm);
+
+			SmallEnemy smalEn = new SmallEnemy(randInt(1, 2000), randInt(1, 2000) ,B2DVars.SMALLENEMY);
+
+			EnemyContainer.GETSMALLENEMY().add(smalEn);
+			smalEn.getBody().setUserData(smalEn);
 			
 
 		}
 
 	}
 
+	public int randInt(int Min, int Max) {
+	    return Min + (int)(Math.random() * (Max - Min + 1));
+	}
+	
+	
+	
+	
 	public void handleInput() {
 		
 			Condition.setPlayerPositionX( player.getBody().getPosition().x);
 			Condition.setPlayerPositionY( player.getBody().getPosition().y);
-			pc.startControl();
+	
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 		
@@ -151,19 +161,6 @@ private boolean justPresed= false;
 			justPresed=true;
 		}
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
@@ -186,11 +183,15 @@ private boolean justPresed= false;
 //		coinColector();
 		
 		
+		
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).update(dt);}
 		for (int i = 0; i < player.getCoinsArray().size; i++) {	player.getCoinsArray().get(i).update(dt);}
 		for (int i = 0; i < doors.size; i++) {doors.get(i).update(dt);}
-		for (int i = 0; i < enemy.size; i++) {ed.directionChecker(i);enemy.get(i).update(dt);}
-	
+		for (int i = 0; i <EnemyContainer.GETSMALLENEMY().size; i++) {
+			ed.directionChecker(i);
+			EnemyContainer.GETSMALLENEMY().get(i).update(dt);}
+		pc.startControl();
+		em.pathStarter();
 		
 	}
 
@@ -226,12 +227,19 @@ private boolean justPresed= false;
 			//cam.update();
 			shapeRenderer.begin();
 			for (int j = 0; j < GameMaps.getBounds().size; j++) {
+				
 				shapeRenderer.rect(GameMaps.getBounds().get(j).getX(),GameMaps.getBounds().get(j).getY(),GameMaps.getBounds().get(j).getWidth(),GameMaps.getBounds().get(j).getHeight())	;
 			}
 			for (int j = 0; j < PlayerControler.getTrace().size; j++) {
 				
 				shapeRenderer.setColor(255,255,255,1);
 				shapeRenderer.circle(PlayerControler.getTrace().get(j).x, PlayerControler.getTrace().get(j).y, PlayerControler.getTrace().get(j).radius-1);
+				shapeRenderer.setColor(255,255,255,1);
+			}
+			for (int j = 0; j < em.getEnemyTrace().size; j++) {
+				
+				shapeRenderer.setColor(0,255,255,1);
+				shapeRenderer.circle(em.getEnemyTrace().get(j).x, em.getEnemyTrace().get(j).y, em.getEnemyTrace().get(j).radius-1);
 				shapeRenderer.setColor(255,255,255,1);
 			}
 			
@@ -248,7 +256,7 @@ private boolean justPresed= false;
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).render(sb);}
 		for (int j = 0; j < doors.size; j++) {doors.get(j).render(sb);}
 		for (int i = 0; i <player.getCoinsArray().size; i++) {player.getCoinsArray().get(i).render(sb);}
-		for (int j = 0; j < enemy.size; j++) {enemy.get(j).render(sb);}
+		for (int j = 0; j < EnemyContainer.GETSMALLENEMY().size; j++) {EnemyContainer.GETSMALLENEMY().get(j).render(sb);}
 		
 
 		//draw HUD

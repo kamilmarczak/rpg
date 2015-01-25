@@ -24,42 +24,37 @@ public class GameMaps implements TileBasedMap {
 	private int[][] units;
 	
 	
-	public static Array<Rectangle> getBounds() {
-		return bounds;
-	}
-
-	public void setBounds(Array<Rectangle> bounds) {
-		this.bounds = bounds;
-	}
 
 	private static String resTyp = "terrain";
-	public static void setResTyp(String resTyp) {GameMaps.resTyp = resTyp;}
-
 	private static Array<Rectangle>  bounds;
 	private static  int level = 1;
 	private static float tileSize;
-	public static void setLevel(int level) {GameMaps.level = level;}
-	
-	public static  int getLevel() {return GameMaps.level;}
-
 	private OrthogonalTiledMapRenderer tmr;
 	private int tileMapWidth;
 	private int tileMapHeight;
 	public static TiledMapTileLayer mapLayer;
-	
-	
 	public static final int GRASS = 1;
 	public static final int WATER = 0;
+	
+	
 
+	public static Array<Rectangle> getBounds() {return bounds;}
+	public static void setResTyp(String resTyp) {GameMaps.resTyp = resTyp;}
+	public static void setLevel(int level) {GameMaps.level = level;}
+	public static  int getLevel() {return GameMaps.level;}
+	public OrthogonalTiledMapRenderer getTmr() {return tmr;}
+	public static float getTileSize() {return tileSize;}
+	public static TiledMap getTileMap() {return tileMap;}
+	
+	
+	
 	public GameMaps(){
-		this.bounds = new Array<Rectangle>();
+		GameMaps.bounds = new Array<Rectangle>();
 		createMap(resTyp, level);
 		mapLayer= (TiledMapTileLayer) tileMap.getLayers().get("Ground");
-		
 		terrain = new int[tileMapWidth][tileMapHeight];
 		visited = new boolean[tileMapWidth][tileMapHeight];
 		units = new int[tileMapWidth][tileMapHeight];
-	
 		allCelsinLayer();
 		
 		
@@ -72,7 +67,6 @@ public class GameMaps implements TileBasedMap {
 		for(int col =0; col <mapLayer.getHeight();col++){
 			for(int row=0; row<mapLayer.getWidth();row++){
 				//get cell
-		
 				Cell cell = mapLayer.getCell(col, row);
 				if (cell == null)continue;
 				if (cell.getTile() == null)continue;
@@ -84,7 +78,7 @@ public class GameMaps implements TileBasedMap {
 			}		
 			}
 		}
-		//System.out.println(Arrays.deepToString(terrain));
+	
 	}
 	
 
@@ -103,10 +97,6 @@ public class GameMaps implements TileBasedMap {
 	
 
 	}
-	
-	public OrthogonalTiledMapRenderer getTmr() {return tmr;}
-	public static float getTileSize() {return tileSize;}
-	public static TiledMap getTileMap() {return tileMap;}
 	
 	public void clearVisited() {
 		for (int x=0;x<getWidthInTiles();x++) {
@@ -134,13 +124,19 @@ public class GameMaps implements TileBasedMap {
 	@Override
 	public boolean blocked(Mover mover, int x, int y) {
 		
-
 		int unit = ((Entity) mover).getType();
-		
 		if (unit == B2DVars.PLAYER) {
-			return terrain[x][y] != GRASS;
+			return terrain[x][y] != GRASS;	
 			
 		}
+		if (unit == B2DVars.SMALLENEMY) {
+			return terrain[x][y] != GRASS;	
+		}
+		
+		
+		
+		
+		
 		
 		//TODO
 		//not sure if true of fallse
