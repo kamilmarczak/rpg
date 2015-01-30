@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.rpg.game.AdultGame;
+import com.rpg.game.entities.creature.Player;
 
 
 public class HUD {
@@ -13,7 +14,7 @@ public class HUD {
 	private TextureRegion[] font;
 	private HealthBar hp;
 	
-	public HUD(Player player2) {
+	public HUD(Player player) {
 		hp= new HealthBar();
 		
 		
@@ -64,7 +65,7 @@ public class HUD {
 		
 		// draw crystal amount
 		//drawString(sb, player.getCOINS() + " / " + player.getTotalCrystals(), 132, 211);
-		drawString(sb, " "+Player.getCOINS()+" " , 462, 385);
+		//drawString(sb, " "+Player.getCOINS()+" " , 462, 385);
 		sb.end();
 		
 	}

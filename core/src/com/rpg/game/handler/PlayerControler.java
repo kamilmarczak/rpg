@@ -3,6 +3,7 @@ package com.rpg.game.handler;
 import static com.rpg.game.handler.B2DVars.PPM;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.utils.Array;
+import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.pathfinding.AStarPathFinder;
 import com.rpg.game.pathfinding.Path;
 import com.rpg.game.pathfinding.PathFinder;
@@ -78,16 +79,16 @@ public class PlayerControler {
 		
 		//is moving
 		if(Condition.isMoving()){
-			animationChecker();
+		//	animationChecker();
 			//not att
 			if(!Condition.isPlayerIsAttacking()){
 			//body mover
 				Play.player.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
-			
+				//aniChecker(0);
 				//atack
 			 }else {
 				//Play.player.getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
-				aniChecker(9);
+			//	aniChecker(9);
 				if(mt.hasCompleted()){
 					Condition.setPlayerIsAttacking(false);
 				}
@@ -102,15 +103,15 @@ public class PlayerControler {
 				
 				//if not moving and not attacking
 				if(!Condition.isPlayerIsAttacking()){
-					
+				
 					Play.player.getBody().setLinearVelocity(0, 0);
-					aniChecker(4);
+					//aniChecker(4);
 			}//if is not moving and attacing
 				else{
 				
 					Play.player.getBody().setLinearVelocity(0, 0);
 					Condition.setPlayerIsAttacking(true);
-					aniChecker(9);
+					//aniChecker(9);
 				
 				
 				if(mt.hasCompleted()){
@@ -129,51 +130,15 @@ public class PlayerControler {
 	}
 
 
-		// checking direction to draw sprite in the correct way
-		private void animationChecker() {
-			if(Condition.isPlayerIsAttacking()) return;
-			
-			if (lastClickX > playersX
-					&& (int)lastClickY > playersY)
-				aniChecker(5);
-			
-			if (lastClickX > playersX
-					&&  lastClickY < playersY)
-				aniChecker(8);
 
-			if (lastClickX <playersX
-					&&  lastClickY > playersY)
-				aniChecker(6);
-
-			if (lastClickX< playersX
-					&&  lastClickY < playersY)
-				aniChecker(7);
-
-			if (lastClickX < playersX
-					&& lastClickY == playersY)
-				aniChecker(1);
-
-			if (lastClickX > playersX
-					&& lastClickY == playersY)
-				aniChecker(3);
-
-			if (lastClickX == playersX
-					&& lastClickY < playersY)
-				aniChecker(2);
-
-			if (lastClickX == playersX
-					&& lastClickY > playersY)
-				aniChecker(0);
-			
-		}
-
-		// dont start animation over and over again
+/*		// dont start animation over and over again
 		public static void aniChecker(int i) {
 			if (numerAnimacii  != i) {
+		
 				Play.player.playAnimation(i,Play.player.getEnemyTextureName());
 				numerAnimacii = i;
 				
 				
 			}
-		}
+		}*/
 }

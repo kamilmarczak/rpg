@@ -1,13 +1,18 @@
 package com.rpg.game.state;
 
 import static com.rpg.game.handler.B2DVars.PPM;
+
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ai.steer.behaviors.Face;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -22,18 +27,17 @@ import com.badlogic.gdx.utils.Array;
 import com.rpg.game.AdultGame;
 import com.rpg.game.entities.Door;
 import com.rpg.game.entities.HUD;
-import com.rpg.game.entities.Player;
-import com.rpg.game.entities.SmallEnemy;
 import com.rpg.game.entities.Teleport;
+import com.rpg.game.entities.creature.Player;
+import com.rpg.game.entities.creature.SmallCoyote;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyMover;
 import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.EnemyContainer;
-import com.rpg.game.handler.EnemyDirection;
-import com.rpg.game.handler.EnemyMover;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
+import com.rpg.game.handler.MyTimer;
 import com.rpg.game.handler.PlayerControler;
 
 
@@ -46,17 +50,19 @@ public class Play extends GameState {
 	private Box2DDebugRenderer b2dRenderer;
 	private static MyContactListener cl;
 	public static World world;
-	public static Player player;
+	public static com.rpg.game.entities.creature.Player player;
+
 	
 
 	private Array<Teleport> teleports;
 	private ShapeRenderer shapeRenderer ;
 	private Array<Door> doors;
-	private EnemyDirection ed;
+
 	private HUD hud;
 	private BodyMover bm;
 	private GameMaps gameMap;
-	private int enemyIerator=5;
+	private int enemyIerator=20;
+	private MyTimer myTimerSmallEnemy= new MyTimer(1);
 
 	private PlayerControler pc= new PlayerControler();
 	// pathfinding
@@ -77,7 +83,7 @@ public class Play extends GameState {
 	
 	public Play(GameStateManager gsm) {
 		super(gsm);
-		ed = new EnemyDirection();
+	
 		shapeRenderer=new ShapeRenderer();
 		//enemyContainer= new EnemyContainer();
 		
@@ -99,8 +105,7 @@ public class Play extends GameState {
 		// create portal
 		creatPortal();
 		
-		//create enemy
-		createEnemy(enemyIerator);
+
 		
 
 		// set up b2dcamera
@@ -119,23 +124,51 @@ public class Play extends GameState {
 	}
 
 	private void createEnemy(int iletenmy) {
+		if(iletenmy>EnemyContainer.GETSMALLENEMY().size)
+		{
 
+			if(myTimerSmallEnemy.hasCompleted()){
+				SmallCoyote smalCoy = new SmallCoyote(randInt(0, 2500), randInt(0,2500));
 
-		for (int i = 0; i < iletenmy; i++) {
-
-
-			SmallEnemy smalEn = new SmallEnemy(randInt(1, (int) (gameMap.getWidthInTiles()/B2DVars.MTT)), randInt(1, (int) (gameMap.getHeightInTiles()/B2DVars.MTT)) ,B2DVars.SMALLENEMY);
-
-			EnemyContainer.GETSMALLENEMY().add(smalEn);
-			smalEn.getBody().setUserData(smalEn);
+			EnemyContainer.GETSMALLENEMY().add(smalCoy);
+			smalCoy.getBody().setUserData(smalCoy);
+			myTimerSmallEnemy.start();
 			
+			
+/*			smalCoy.setMaxAngularAcceleration(100);
+			smalCoy.setMaxAngularSpeed(15);
+*/
 
-		}
+
+			// Create target
+		
+		
+			
+/*if(player!=null){
+			
+			final Face<Vector2> faceSB = new Face<Vector2>(smalCoy, player) //
+					.setTimeToTarget(0.1f) //
+					.setAlignTolerance(0.001f) //
+					.setDecelerationRadius(MathUtils.degreesToRadians * 180);
+			smalCoy.setSteeringBehavior(faceSB);
+
+}*/
+
+			
+			
+			}}
 
 	}
 
-	public int randInt(int Min, int Max) {
-	    return Min + (int)(Math.random() * (Max - Min + 1));
+	public static int randInt(int min, int max) {
+
+
+	    Random rand = new Random();
+
+
+	    int randomNum = rand.nextInt((max - min) + 1) + min;
+
+	    return randomNum;
 	}
 	
 	
@@ -185,14 +218,15 @@ public class Play extends GameState {
 		
 		
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).update(dt);}
-		for (int i = 0; i < player.getCoinsArray().size; i++) {	player.getCoinsArray().get(i).update(dt);}
+		//for (int i = 0; i < player.getCoinsArray().size; i++) {	player.getCoinsArray().get(i).update(dt);}
 		for (int i = 0; i < doors.size; i++) {doors.get(i).update(dt);}
 		for (int i = 0; i <EnemyContainer.GETSMALLENEMY().size; i++) {
-			ed.directionChecker(i);
+		//	ed.directionChecker(i);
 			EnemyContainer.GETSMALLENEMY().get(i).update(dt);}
 		pc.startControl();
 		
-		
+		//create enemy
+		createEnemy(enemyIerator);
 	}
 
 
@@ -206,6 +240,8 @@ public class Play extends GameState {
 		// draw tile
 		gameMap.getTmr().setView(cam);
 		gameMap.getTmr().render();
+		
+		
 		if (debug) {
 			
 			b2dCam.setPosition(cam.position.x/ PPM- (b2dCam.viewportWidth / PPM - (b2dCam.viewportWidth / PPM)),
@@ -255,7 +291,7 @@ public class Play extends GameState {
 		// draw portal
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).render(sb);}
 		for (int j = 0; j < doors.size; j++) {doors.get(j).render(sb);}
-		for (int i = 0; i <player.getCoinsArray().size; i++) {player.getCoinsArray().get(i).render(sb);}
+		//for (int i = 0; i <player.getCoinsArray().size; i++) {player.getCoinsArray().get(i).render(sb);}
 		for (int j = 0; j < EnemyContainer.GETSMALLENEMY().size; j++) {EnemyContainer.GETSMALLENEMY().get(j).render(sb);}
 		
 
@@ -302,7 +338,14 @@ public class Play extends GameState {
 	private void createPlayer() {
 
 		//player = new Player(body);
-		player = new Player(1000, 1000,B2DVars.PLAYER);
+		player = new Player(1000, 1000);
+		
+	/*	final Face<Vector2> faceSB = new Face<Vector2>(player, getPlayer()) //
+				.setTimeToTarget(0.5f) //
+				.setAlignTolerance(0.001f) //
+				.setDecelerationRadius(MathUtils.degreesToRadians * 180);
+				
+		player.setSteeringBehavior(faceSB);*/
 	//	player.playAnimation(4,player.getEnemyTextureName());
 
 	}

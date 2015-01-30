@@ -9,7 +9,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.rpg.game.entities.Entity;
+import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.pathfinding.Mover;
 import com.rpg.game.pathfinding.TileBasedMap;
 
@@ -124,7 +124,7 @@ public class GameMaps implements TileBasedMap {
 	@Override
 	public boolean blocked(Mover mover, int x, int y) {
 		
-		int unit = ((Entity) mover).getType();
+		int unit = ((Creature) mover).getType();
 		if (unit == B2DVars.PLAYER) {
 			return terrain[x][y] != GRASS;	
 			

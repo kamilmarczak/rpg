@@ -24,17 +24,17 @@ public class Teleport extends B2DSprite {
 			if(a.equals("back")){
 				Texture tex = AdultGame.res.getTexture("portal");
 				TextureRegion[] sprites = TextureRegion.split(tex, 64, 64)[0];
-				animation.setFrames(sprites, 1 / 12f);
+				getAnimation().setFrames(sprites, 1 / 12f);
 				
-				width = sprites[0].getRegionWidth();
-				height = sprites[0].getRegionHeight();
+				setWidth(sprites[0].getRegionWidth());
+				setHeight(sprites[0].getRegionHeight());
 				}else if(a.equals("forward")) {
 					Texture tex = AdultGame.res.getTexture("portal2");
 					TextureRegion[] sprites = TextureRegion.split(tex, 64, 64)[0];
-					animation.setFrames(sprites, 1 / 12f);
+					getAnimation().setFrames(sprites, 1 / 12f);
 					
-					width = sprites[0].getRegionWidth();
-					height = sprites[0].getRegionHeight();
+					setWidth(sprites[0].getRegionWidth());
+					setHeight(sprites[0].getRegionHeight());
 					
 				}else{}
 		

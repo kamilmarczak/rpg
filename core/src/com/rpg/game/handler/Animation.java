@@ -31,6 +31,10 @@ public class Animation {
 
 	}
 	
+	
+	
+	
+	
 	public void setDelay(float f) { delay = f; }
 	public void setCurrentFrame(int i) { if(i < frames.length) currentFrame = i; }
 	public void setFrames(TextureRegion[] frames) {

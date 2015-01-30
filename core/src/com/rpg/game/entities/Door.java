@@ -13,9 +13,9 @@ public class Door extends B2DSprite {
 	
 			Texture text = AdultGame.res.getTexture("door");
 			TextureRegion[] sprites = TextureRegion.split(text, 64, 64)[0];
-			animation.setFrames(sprites, 1 / 12f);
-			width = sprites[0].getRegionWidth();
-			height = sprites[0].getRegionHeight();
+			getAnimation().setFrames(sprites, 1 / 12f);
+			setWidth(sprites[0].getRegionWidth());
+			setHeight(sprites[0].getRegionHeight());
 		
 			
 	//}

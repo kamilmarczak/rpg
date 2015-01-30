@@ -12,20 +12,7 @@ public class Condition {
 	private static boolean isMoving = false;
 	private static boolean triger= true;
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	public static boolean isMoving() {return isMoving;}
 	public static void setMoving(boolean isMoving) {Condition.isMoving = isMoving;}

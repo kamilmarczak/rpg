@@ -1,9 +1,10 @@
-package com.rpg.game.entities;
+/*package com.rpg.game.entities;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.rpg.game.handler.B2DVars;
 import static com.rpg.game.handler.B2DVars.PPM;
 
-public class Coin extends Entity {
+public class Coin extends Entity2 {
 
 	private String textureName="coins";
 	private String bodyTAG = "coin";
@@ -18,4 +19,17 @@ public class Coin extends Entity {
 
 	}
 
+	@Override
+	public void update(float dt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render(SpriteBatch sb) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
+*/

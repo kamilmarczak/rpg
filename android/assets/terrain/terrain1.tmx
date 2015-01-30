@@ -86,7 +86,7 @@
  </tileset>
  <layer name="Ground" width="60" height="60">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+2YSxLDIAxDk+vk/gfstpNpiQOyJMAL7TpGz79Az+M4zlKpVCpNp8vAA5t3R2ZFDq8HzcJ7Z8nMmQsvwncWcyumqudUvErN2M9utUXyPvV+dDbc9zNintl7wbHvXHnV/lfgdd1XKF/s++Sv/Rg9G7Xvsvgi+X3jB7WbmbwRT6vVeJTX4TvO4kXWyIE5ur+ul78fPU+t1n0Ywa7mY9aN/f7OYlf7WJXZpT9YZ/+7R43OlyNzVnzXe6VrXMc6ZMdFe2vlEHE3yPSXmb9f+yt6n3SrcZaX1Xh3q29k7pW8rRnsmc0WLyOvq2onXvUbgv2ecKlt8c59zogPVL+PxmnNIXpOUTGc6tjDvgNvb6yZeXerL/P/LzXvW+8qVgTvTKzf5/d+r3p4M/0z6p+VG0UOenqV/QZRflMVuntUvPNKeH0AmR7OqkA4AAA=
+   H4sIAAAAAAAAC+2YSxLDMAhDnevk/gfMvpMSbAQIm4U2nQ7W41e71xjjarVarVY53QQeonlPZM7I4f2hKry/LJ45Y+FF+PZilmJm9VwWb6Yq9jNbbZG8X72vnQ32/YyY5+i9wNh3rLzZ/nfgZd1XKF/R98m3/ag9G7XvvPg0+Z3xg9rNkbwaT7vV2MrL8DsexYusEQOzdn/dk9+3npct6T6MYM/mi6xb9Pvbiz3bx67MLP0Rdfa/e5R1vhiZveKz3itZ4zLWwTsu2puUQ8TdwNOfZ/7e9pf2PslWYy8vu/GeVl/N3GfySjO4MpsSb0Red9VJvNlviOj3BEttm7f2ORYfqH63xpHmUPoccVaV2iLrtPKfQUXe1ViVeU+rb+T/X9m8s96zWFH5qsRqeUOt8mbXyOrPKzesvKheYVAFj6099QDzTS9BQDgAAA==
   </data>
  </layer>
  <objectgroup name="Teleport">

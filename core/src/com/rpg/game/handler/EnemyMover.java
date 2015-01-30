@@ -6,8 +6,9 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.rpg.game.entities.Entity;
+import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.pathfinding.AStarPathFinder;
 import com.rpg.game.pathfinding.Path;
 import com.rpg.game.pathfinding.PathFinder;
@@ -20,8 +21,19 @@ public class EnemyMover {
 	private Path path;
 	private int iterator = 0, iterator2 = 0;
 
+
+
 	private BodyMover bm;
 	private boolean usItDone = true;
+	private Vector2 enemDestVestor;
+
+	public Vector2 getEnemDestVestor() {
+		return enemDestVestor;
+	}
+
+	public void setEnemDestVestor(Vector2 enemDestVestor) {
+		this.enemDestVestor = enemDestVestor;
+	}
 
 	private Array<Circle> enemyTrace = new Array<Circle>();
 
@@ -32,14 +44,14 @@ public class EnemyMover {
 
 	}
 
-	public void pathStarter(Entity entity) {
+	public void pathStarter(Creature creature) {
 
 			if(usItDone){
 
 				
-				int enemyNextX = randInt((int)entity.getBody().getPosition().x-5,(int) entity.getBody().getPosition().x+5);
-				int enemyNextY =  randInt((int)entity.getBody().getPosition().y-5,(int) entity.getBody().getPosition().y+5);
-				
+				int enemyNextX = randInt((int)creature.getBody().getPosition().x-5,(int) creature.getBody().getPosition().x+5);
+				int enemyNextY =  randInt((int)creature.getBody().getPosition().y-5,(int) creature.getBody().getPosition().y+5);
+				iterator=0;
 	
 				
 				if(enemyNextY/B2DVars.MTT<=0||enemyNextX/B2DVars.MTT<=0||enemyNextX/B2DVars.MTT>map.getHeightInTiles() ||enemyNextY/B2DVars.MTT>map.getWidthInTiles()){
@@ -49,9 +61,9 @@ public class EnemyMover {
 			
 				
 				
-				path = finder.findPath(entity, 
-						(int) (entity.getBody().getPosition().x / B2DVars.MTT),
-						(int) (entity.getBody().getPosition().y / B2DVars.MTT),
+				path = finder.findPath(creature, 
+						(int) (creature.getBody().getPosition().x / B2DVars.MTT),
+						(int) (creature.getBody().getPosition().y / B2DVars.MTT),
 						(int) (enemyNextX / B2DVars.MTT),
 						(int) (enemyNextY / B2DVars.MTT));	
 				usItDone=false;
@@ -65,12 +77,13 @@ public class EnemyMover {
 					if (path.getLength() != iterator) {
 								
 						bm = new BodyMover(
-								entity.getBody().getPosition().x,
-								entity.getBody().getPosition().y,
+								creature.getBody().getPosition().x,
+								creature.getBody().getPosition().y,
 								path.getStep(iterator).getX() * B2DVars.MTT + B2DVars.MTT/2,
-								path.getStep(iterator).getY() * B2DVars.MTT + B2DVars.MTT/2,2);
+								path.getStep(iterator).getY() * B2DVars.MTT + B2DVars.MTT/2,1);
 						
-						entity.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
+						creature.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
+					
 						
 						if (bm.atDestynation()) {
 							iterator++;iterator2=0;}
@@ -89,10 +102,10 @@ public class EnemyMover {
 						
 
 				} else {//if there is no path
-					bm = new BodyMover(entity.getBody().getPosition().x, entity
-							.getBody().getPosition().y, entity.getBody()
-							.getPosition().x, entity.getBody().getPosition().y,1);
-					entity.getBody().setLinearVelocity(bm.getMovementX(),
+					bm = new BodyMover(creature.getBody().getPosition().x, creature
+							.getBody().getPosition().y, creature.getBody()
+							.getPosition().x, creature.getBody().getPosition().y,1);
+					creature.getBody().setLinearVelocity(bm.getMovementX(),
 							bm.getMovementY());
 					usItDone=true;
 					
@@ -106,6 +119,29 @@ public class EnemyMover {
 
 	}
 	
+	
+
+	
+	public BodyMover getBm() {
+		return bm;
+	}
+
+	public void setBm(BodyMover bm) {
+		this.bm = bm;
+	}
+
+	public int getIterator() {
+		return iterator;
+	}
+
+	public void setIterator(int iterator) {
+		this.iterator = iterator;
+	}
+
+	public void setUsItDone(boolean usItDone) {
+		this.usItDone = usItDone;
+	}
+
 	public Array<Circle> getEnemyTrace() {
 		return enemyTrace;
 	}

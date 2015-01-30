@@ -1,4 +1,4 @@
-package com.rpg.game.entities;
+/*package com.rpg.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -9,7 +9,7 @@ import com.rpg.game.handler.BodyMover;
 import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.EnemyContainer;
 import com.rpg.game.handler.MyTimer;
-import com.rpg.game.handler.PlayerControler;
+
 import com.rpg.game.state.Play;
 
 public class Player extends Entity  {
@@ -20,6 +20,7 @@ public class Player extends Entity  {
 	private static int playerHP=100;
 	private static MyTimer mt=new MyTimer(1);
 	private static BodyMover bm;
+	private static int type =3;
 
 	private Array<Coin> coinsArray=new Array<Coin>();
 
@@ -44,8 +45,8 @@ public class Player extends Entity  {
 
 
 
-	public Player(float i, float j, int type) {
-		super(type);
+	public Player(float i, float j) {
+		super(type );
 		
 	
 		enemycreator(i, j,bodyTAG,sensorTAG ,
@@ -60,22 +61,7 @@ public class Player extends Entity  {
 	
 
 	}
-	public Player(int type) {
-		super(type);
-		
-	
-		enemycreator(300, 300,bodyTAG,sensorTAG ,
-				B2DVars.BIT_PLAYER,
-				B2DVars.BIT_ENEMY |
-				B2DVars.BIT_DOOR |
-				B2DVars.BIT_PORTAL_FORWARD |
-				B2DVars.BIT_PORTAL_BACK |
-				B2DVars.COLLECTA,false);
-		
-		playAnimation(getAnimationRow(), textureName);
-	
 
-	}
 
 	
 @Override
@@ -92,7 +78,7 @@ public void update(float dt) {
 			Array<Body> fallowDmg = Play.getCl().getFallow();
 			
 			
-/*			//Enemy Fallow player
+			//Enemy Fallow player
 				for(int j =0; j<fallowDmg.size; j++){
 						Body f = fallowDmg.get(j);
 							bm= new BodyMover(((Entity) f.getUserData()).getBody().getPosition().x,
@@ -100,7 +86,7 @@ public void update(float dt) {
 			  getPlayerPositionX(), getPlayerPositionY(), 1);
 				((Entity) f.getUserData()).getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
 	
-}*/
+}
 				//Enemy attack player
 		for (int i = 0; i < bodiesDmg.size; i++) {
 		Body b = bodiesDmg.get(i);
@@ -143,3 +129,4 @@ public void createCoin(float posX, float posY, int money){
 	
 	}
 }
+*/
