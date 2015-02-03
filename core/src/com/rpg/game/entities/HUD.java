@@ -13,10 +13,11 @@ public class HUD {
 	private TextureRegion crystal;
 	private TextureRegion[] font;
 	private HealthBar hp;
+	private Player player;
 	
 	public HUD(Player player) {
 		hp= new HealthBar();
-		
+		this.player = player;
 		
 		Texture tex = AdultGame.res.getTexture("hud");
 		
@@ -59,13 +60,13 @@ public class HUD {
 		else if((bits & B2DVars.BIT_BLUE_BLOCK) != 0) {
 			sb.draw(blocks[2], 40, 208);
 		}*/
-		hp.playerHpDraw(sb, Player.getPlayerHP(),310, 375 );
+		hp.playerHpDraw(sb, player.getHealth(),310, 375 );
 		// draw crystal
 		sb.draw(crystal, 440, 380);
 		
 		// draw crystal amount
 		//drawString(sb, player.getCOINS() + " / " + player.getTotalCrystals(), 132, 211);
-		//drawString(sb, " "+Player.getCOINS()+" " , 462, 385);
+		drawString(sb, " "+1000+" " , 462, 385);
 		sb.end();
 		
 	}

@@ -1,12 +1,12 @@
-package com.rpg.game.entities;
+package com.rpg.game.handler;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.rpg.game.handler.Animation;
-import com.rpg.game.handler.B2DVars;
+import com.rpg.game.AdultGame;
 
 public class B2DSprite  {
 	
@@ -14,6 +14,7 @@ public class B2DSprite  {
 	private Animation animation;
 	private float width;
 	private float height;
+	private int animationRow=0;
 
 	
 	public B2DSprite(Body body) {
@@ -25,10 +26,8 @@ public class B2DSprite  {
 	
 
 
-	public void setAnimation(TextureRegion reg, float delay) {
-
-		setAnimation(new TextureRegion[] { reg }, delay);
-	}
+	public void setAnimation(TextureRegion reg, float delay) {	
+		setAnimation(new TextureRegion[] { reg }, delay);}
 	
 	public void setAnimation(TextureRegion[] reg, float delay) {
 
@@ -43,11 +42,11 @@ public class B2DSprite  {
 	}
 	
 	public void render(SpriteBatch sb) {
-		Vector2 pos = body.getPosition();
+	
 		int pozX=(int)(getPosition().x * B2DVars.PPM - getWidth() / 2);
 		int pozY=(int) (getPosition().y * B2DVars.PPM - getHeight() / 2);
-		float w = getAnimation().getFrame().getRegionWidth();
-		float h = getAnimation().getFrame().getRegionHeight();
+		float w = animation.getFrame().getRegionWidth();
+		float h = animation.getFrame().getRegionHeight();
 		float ox = w / 2f;
 		float oy = h / 2f;
 		
@@ -64,6 +63,23 @@ public class B2DSprite  {
 	
 	}
 	
+	public  void playAnimation(int animationRow, String textureName) {
+
+		setAnimationRow(animationRow);
+
+		Texture tex = AdultGame.res.getTexture(textureName);
+		TextureRegion[] sprites = new TextureRegion[9];
+
+		for (int i = 0; i < sprites.length; i++) {
+			sprites[i] = new TextureRegion(tex, i * 64, animationRow * 64, 64,
+					64);
+		}
+
+		getAnimation().setFrames(sprites, 1 / 12f);
+
+		setWidth(sprites[0].getRegionWidth());
+		setHeight(sprites[0].getRegionHeight());
+	}
 
 	
 	
@@ -71,8 +87,20 @@ public class B2DSprite  {
 	
 	
 	
+
 	
-	
+	public int getAnimationRow() {
+		return animationRow;
+	}
+
+
+
+	public void setAnimationRow(int animationRow) {
+		this.animationRow = animationRow;
+	}
+
+
+
 	public Body getBody() { return body; }
 	public Vector2 getPosition() { return getBody().getPosition(); }
 	

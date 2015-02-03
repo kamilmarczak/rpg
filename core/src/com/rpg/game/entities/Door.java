@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.rpg.game.AdultGame;
+import com.rpg.game.handler.B2DSprite;
 
 public class Door extends B2DSprite {
 

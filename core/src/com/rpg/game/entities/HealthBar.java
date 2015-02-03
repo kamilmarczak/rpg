@@ -37,9 +37,9 @@ public class HealthBar extends Actor {
         loadingBar.draw(batch, x, y+height, hitPoint * width , height /10);
     }
 
-	public void playerHpDraw(SpriteBatch sb, int hitPoint, int x, int y) {
+	public void playerHpDraw(SpriteBatch sb, float f, int x, int y) {
 		 loadingBarBackground.draw(sb, x, y, 100 , 20 );
-        loadingBar.draw(sb, x, y, hitPoint  , 20);
+        loadingBar.draw(sb, x, y, f  , 20);
 		
 	}
 

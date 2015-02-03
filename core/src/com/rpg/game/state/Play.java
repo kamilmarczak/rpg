@@ -6,7 +6,11 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.ai.steer.behaviors.Face;
+import com.badlogic.gdx.ai.steer.behaviors.CollisionAvoidance;
+import com.badlogic.gdx.ai.steer.behaviors.PrioritySteering;
+import com.badlogic.gdx.ai.steer.behaviors.Wander;
+import com.badlogic.gdx.ai.steer.limiters.LinearAccelerationLimiter;
+import com.badlogic.gdx.ai.tests.steer.box2d.Box2dRadiusProximity;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -31,14 +35,13 @@ import com.rpg.game.entities.Teleport;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.entities.creature.SmallCoyote;
 import com.rpg.game.handler.B2DVars;
-import com.rpg.game.handler.BodyMover;
 import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.EnemyContainer;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
 import com.rpg.game.handler.MyTimer;
-import com.rpg.game.handler.PlayerControler;
+import com.rpg.game.handler.steering.PlayerControler;
 
 
 
@@ -50,25 +53,25 @@ public class Play extends GameState {
 	private Box2DDebugRenderer b2dRenderer;
 	private static MyContactListener cl;
 	public static World world;
-	public static com.rpg.game.entities.creature.Player player;
-
-	
-
+	public static Player player;
 	private Array<Teleport> teleports;
 	private ShapeRenderer shapeRenderer ;
 	private Array<Door> doors;
 
-	private HUD hud;
-	private BodyMover bm;
-	private GameMaps gameMap;
-	private int enemyIerator=20;
-	private MyTimer myTimerSmallEnemy= new MyTimer(1);
+	
+	
 
-	private PlayerControler pc= new PlayerControler();
+
+	private HUD hud;
+
+	private GameMaps gameMap;
+	private int enemyIerator=250;
+	private MyTimer myTimerSmallEnemy= new MyTimer(1);
 	// pathfinding
 		private boolean justPresed= false;
 		
-	private GameMaps gameMaps = new GameMaps();
+	//private GameMaps gameMaps = new GameMaps();
+
 	
 	
 	
@@ -77,88 +80,67 @@ public class Play extends GameState {
 	public static World getWorld() {return world;}
 	public static MyContactListener getCl() {return cl;}
 	
-	
-	
-	
-	
+
 	public Play(GameStateManager gsm) {
 		super(gsm);
-	
 		shapeRenderer=new ShapeRenderer();
 		//enemyContainer= new EnemyContainer();
-		
-
 		// set up box2d
 		world = new World(new Vector2(0, 0), true); // gravity here
 		cl = new MyContactListener();
 		world.setContactListener(cl);
 		b2dRenderer = new Box2DDebugRenderer();
-
 		// create Map
 		gameMap = new GameMaps();
 		//gameMap.createMap();
 		cam.setBounds(0, gameMap.getWidthInTiles() * GameMaps.getTileSize(), 0,	gameMap.getHeightInTiles() * GameMaps.getTileSize());
-
 		// create player
 		createPlayer();
-		
+	
 		// create portal
 		creatPortal();
-		
-
-		
-
 		// set up b2dcamera
 		b2dCam.setToOrtho(false, AdultGame.G_WIDTH / PPM, AdultGame.G_HEIGHT/ PPM);
 		b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
 						 0,(gameMap.getHeightInTiles() * GameMaps.getTileSize()) / PPM);
 		// Set up HUD
 		hud = new HUD(player);
-			
-		
-		
 
-		
-		
-	
 	}
 
 	private void createEnemy(int iletenmy) {
 		if(iletenmy>EnemyContainer.GETSMALLENEMY().size)
 		{
-
-			if(myTimerSmallEnemy.hasCompleted()){
-				SmallCoyote smalCoy = new SmallCoyote(randInt(0, 2500), randInt(0,2500));
-
+		//	if(myTimerSmallEnemy.hasCompleted()){
+			if(true){
+				
+			SmallCoyote smalCoy = new SmallCoyote(randInt(0, 2500), randInt(0,2500));
+			
 			EnemyContainer.GETSMALLENEMY().add(smalCoy);
 			smalCoy.getBody().setUserData(smalCoy);
+			EnemyContainer.GETSMALLENEMY().add(smalCoy);
+			
+
+
+			
 			myTimerSmallEnemy.start();
-			
-			
-/*			smalCoy.setMaxAngularAcceleration(100);
-			smalCoy.setMaxAngularSpeed(15);
-*/
 
-
-			// Create target
-		
-		
-			
-/*if(player!=null){
-			
-			final Face<Vector2> faceSB = new Face<Vector2>(smalCoy, player) //
-					.setTimeToTarget(0.1f) //
-					.setAlignTolerance(0.001f) //
-					.setDecelerationRadius(MathUtils.degreesToRadians * 180);
-			smalCoy.setSteeringBehavior(faceSB);
-
-}*/
-
-			
-			
 			}}
 
 	}
+	
+	
+
+
+
+
+
+	
+	
+	
+	
+	
+	
 
 	public static int randInt(int min, int max) {
 
@@ -181,18 +163,36 @@ public class Play extends GameState {
 	
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+			
+			
+			
 		
 			if(justPresed){
 				justPresed=false;
 			
 			 Condition.setLastClickX  (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
 			 Condition.setLastClickY (cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
+	
 			 Condition.setMoving(true);
 			}
 		
 		}else {
 			justPresed=true;
 		}
+		
+		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+			
+			
+			 float x= (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
+		float y=(cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
+			
+			 player.getTarget().getBody().setTransform(x, y,  player.getTarget().getBody().getAngle());
+		
+
+		
+		}
+		
+		
 
 		
 		
@@ -223,11 +223,12 @@ public class Play extends GameState {
 		for (int i = 0; i <EnemyContainer.GETSMALLENEMY().size; i++) {
 		//	ed.directionChecker(i);
 			EnemyContainer.GETSMALLENEMY().get(i).update(dt);}
-		pc.startControl();
-		
+	
 		//create enemy
 		createEnemy(enemyIerator);
 	}
+	
+	
 
 
 
@@ -238,9 +239,10 @@ public class Play extends GameState {
 		cam.update();
 
 		// draw tile
+		if(!debug){
 		gameMap.getTmr().setView(cam);
 		gameMap.getTmr().render();
-		
+		}
 		
 		if (debug) {
 			
@@ -258,7 +260,6 @@ public class Play extends GameState {
 			
 			
 			shapeRenderer.setProjectionMatrix(cam.combined);
-			
 			shapeRenderer.setAutoShapeType(true);
 			//cam.update();
 			shapeRenderer.begin();
@@ -339,22 +340,25 @@ public class Play extends GameState {
 
 		//player = new Player(body);
 		player = new Player(1000, 1000);
+	// target = new Target(100, 100);
+		 
+	
 		
-	/*	final Face<Vector2> faceSB = new Face<Vector2>(player, getPlayer()) //
-				.setTimeToTarget(0.5f) //
-				.setAlignTolerance(0.001f) //
-				.setDecelerationRadius(MathUtils.degreesToRadians * 180);
-				
-		player.setSteeringBehavior(faceSB);*/
+	
 	//	player.playAnimation(4,player.getEnemyTextureName());
 
 	}
+
+
+	
+	
+	
 
 	private void creatPortal() {
 
 		teleports = new Array<Teleport>();
 		doors = new Array<Door>();
-		MapLayer ml = gameMap.getTileMap().getLayers().get("Teleport");
+		MapLayer ml = GameMaps.getTileMap().getLayers().get("Teleport");
 		if (ml == null)
 			return;
 

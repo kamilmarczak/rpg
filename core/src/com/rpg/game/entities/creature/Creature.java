@@ -1,126 +1,181 @@
 package com.rpg.game.entities.creature;
 
 
-import static com.rpg.game.handler.B2DVars.PPM;
-
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.ai.steer.Steerable;
+import com.badlogic.gdx.ai.steer.SteeringAcceleration;
+import com.badlogic.gdx.ai.steer.SteeringBehavior;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.rpg.game.AdultGame;
-import com.rpg.game.entities.B2DSprite;
-import com.rpg.game.entities.Entity2;
+import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.HealthBar;
+import com.rpg.game.handler.B2DSprite;
+import com.rpg.game.handler.BodyCreator;
+import com.rpg.game.handler.steering.Target;
 import com.rpg.game.pathfinding.Mover;
 
-public abstract class Creature extends Entity2 implements Mover{
+public abstract class Creature extends Entity implements Mover, Steerable<Vector2>{
 	
-	protected int health;
-	protected Body body;
-	protected B2DSprite sprite;
-	private BodyDef bdef;
-	private FixtureDef fdef;
-	//private PolygonShape polygonShape;
-	private CircleShape sensroShape, circle;
-	public int getHitPoint() {return hitPoint;}
-	public void setHitPoint(int hitPoint) {this.hitPoint = hitPoint;}
-	private int animationRow =0,hitPoint,enemyHitPower=0;
+	
 	protected HealthBar healthBar;
+	protected BodyCreator bodyCreator; 
+	protected  B2DSprite sprite;
+	protected Body body;
+	private float health;
+	private int enemyHitPower=0;
 	private boolean isFighting= false;
-
-
-	 
-	 
-	 
-	public boolean isFighting() {
-		return isFighting;
-	}
-	public void setFighting(boolean isFighting) {
-		this.isFighting = isFighting;
-	}
-	public Creature(float x, float y, String bodyTAG, String sensorTAG,short categoryBit,int maskBits,boolean isSensor) {
-		super(x, y);
-		health = 10;
-
-		bodyCreator(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor);
-	}
+	private Target target;
+	
+	//limiter 
+	protected  boolean independentFacing;
+	float maxLinearSpeed;
+	float maxLinearAcceleration;
+	float maxAngularSpeed;
+	float maxAngularAcceleration;
+	protected SteeringBehavior<Vector2> steeringBehavior;
+	protected final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
+	public boolean isIndependentFacing () {return independentFacing;}
+	public void setIndependentFacing (boolean independentFacing) {this.independentFacing = independentFacing;}
+	public SteeringBehavior<Vector2> getSteeringBehavior () {return steeringBehavior;}
+	public void setSteeringBehavior (SteeringBehavior<Vector2> steeringBehavior) {this.steeringBehavior = steeringBehavior;}
+	float boundingRadius= 1;
+	boolean tagged;
+	///
+	
+	
 
 	
-	public void bodyCreator(float x,float y, String bodyTAG,String sensorTAG, short categoryBit ,int maskBits, boolean isSensor){
-		// Def initializing
-		bdef = new BodyDef();
-		fdef = new FixtureDef();
-		//polygonShape = new PolygonShape();
-		circle= new CircleShape();
-		// BodyDef
-		bdef.position.set(x/ PPM, y / PPM);
-		bdef.type = BodyType.DynamicBody;
-		bdef.fixedRotation = true;
-	    body = world.createBody(bdef);
-
-		// fixtureDef
-	//	shapeEnemy.setAsBox(5 / PPM, 5 / PPM, new Vector2(0 / PPM, 0 / PPM),0); // //
-		circle.setRadius(10/PPM);
-		fdef.shape = circle;
-		//fdef.shape = shapeEnemy;
-		fdef.isSensor = isSensor;
-		fdef.filter.categoryBits= categoryBit;
-		fdef.filter.maskBits=  (short) maskBits ;
-		fdef.restitution=0;
-		body.createFixture(fdef).setUserData(bodyTAG);
-		
-		// Player's sensor
-		circle.setRadius(100/PPM);
-		fdef.shape = sensroShape;
-		fdef.filter.categoryBits= categoryBit;
-		fdef.isSensor = true;
-		//body.createFixture(fdef).setUserData(sensorTAG);
-		//shapeEnemy.dispose();
-	//	sensroShape.dispose();
+	public Target getTarget() {	return target;}
+	public void setTarget(Target target) {this.target = target;}
+	
+	
+	
+	
+	public Creature(float x,float y, String bodyTAG,String sensorTAG, short categoryBit ,int maskBits, boolean isSensor) {
+		super(x, y);
+		body= new BodyCreator( x,  y, bodyTAG , sensorTAG,  categoryBit,  maskBits,  isSensor).getBody();
+		createTarget(x, y);
 		sprite= new B2DSprite(body);
 
-		
 	}
+	private void createTarget(float x, float y){target= new Target(x, y);}
 	
 	
-	public  void playAnimation(int animationRow, String textureName) {
+	
+	public int getEnemyHitPower() {return enemyHitPower;}
+	public void setEnemyHitPower(int enemyHitPower) {this.enemyHitPower = enemyHitPower;}
+	public Body getBody() {return body;}
+	public boolean isFighting() {return isFighting;}
+	public void setFighting(boolean isFighting) {this.isFighting = isFighting;}
+	public float getHealth() {return health;}
+	public void setHealth(int health) {this.health = health;}
 
-		this.setAnimationRow(animationRow);
+	//_________________________________________________________________________
+	//Getter and setters for steering
+	@Override
+	public Vector2 getPosition () { return body.getPosition();}
+	@Override
+	public float getOrientation () {return body.getAngle();}
+	@Override
+	public Vector2 getLinearVelocity () {return body.getLinearVelocity();}
+	@Override
+	public float getAngularVelocity () {return body.getAngularVelocity();}
+	@Override
+	public float getBoundingRadius () {return boundingRadius;}
+	@Override
+	public boolean isTagged () {return tagged;}
+	@Override
+	public void setTagged (boolean tagged) {this.tagged = tagged;}
+	@Override
+	public Vector2 newVector () {return new Vector2();}
+	@Override
+	public float vectorToAngle (Vector2 vector) {return (float)Math.atan2(-vector.x, vector.y);}
+	@Override
+	public Vector2 angleToVector (Vector2 outVector, float angle) {
+		outVector.x = -(float)Math.sin(angle);
+		outVector.y = (float)Math.cos(angle);
+		return outVector;}
+	//
+	// Limiter implementation
+	//
 
-		Texture tex = AdultGame.res.getTexture(textureName);
-		TextureRegion[] sprites = new TextureRegion[9];
+	@Override
+	public float getMaxLinearSpeed () { return maxLinearSpeed;}
+	@Override
+	public void setMaxLinearSpeed (float maxLinearSpeed) {this.maxLinearSpeed = maxLinearSpeed;	}
+	@Override
+	public float getMaxLinearAcceleration () {return maxLinearAcceleration;}
+	@Override
+	public void setMaxLinearAcceleration (float maxLinearAcceleration) {this.maxLinearAcceleration = maxLinearAcceleration;}
+	@Override
+	public float getMaxAngularSpeed () {	return maxAngularSpeed;}
+	@Override
+	public void setMaxAngularSpeed (float maxAngularSpeed) {this.maxAngularSpeed = maxAngularSpeed;}
 
-		for (int i = 0; i < sprites.length; i++) {
-			sprites[i] = new TextureRegion(tex, i * 64, animationRow * 64, 64,
-					64);
+	@Override
+	public float getMaxAngularAcceleration () {return maxAngularAcceleration;}
+
+	@Override
+	public void setMaxAngularAcceleration (float maxAngularAcceleration) {this.maxAngularAcceleration = maxAngularAcceleration;	}
+	
+	
+	
+	
+	///////////
+	protected void applySteering (SteeringAcceleration<Vector2> steering, float deltaTime) {
+		boolean anyAccelerations = false;
+		// Update position and linear velocity.
+		if (!steeringOutput.linear.isZero()) {
+			Vector2 force = steeringOutput.linear.scl(deltaTime);
+			body.applyForceToCenter(force, true);
+			anyAccelerations = true;
+		}
+		// Update orientation and angular velocity
+		if (isIndependentFacing()) {
+			if (steeringOutput.angular != 0) {
+				body.applyTorque(steeringOutput.angular * deltaTime, true);
+				anyAccelerations = true;
+			}
+		}
+		else {
+			// If we haven't got any velocity, then we can do nothing.
+			Vector2 linVel = getLinearVelocity();
+			if (!linVel.isZero(MathUtils.FLOAT_ROUNDING_ERROR)) {
+				float newOrientation = vectorToAngle(linVel);
+				body.setAngularVelocity((newOrientation - getAngularVelocity()) * deltaTime); // this is superfluous if independentFacing is always true
+				body.setTransform(body.getPosition(), newOrientation);
+			}
 		}
 
-		sprite.getAnimation().setFrames(sprites, 1 / 12f);
+		if (anyAccelerations) {
+			// body.activate();
 
-		sprite.setWidth(sprites[0].getRegionWidth());
-		sprite.setHeight(sprites[0].getRegionHeight());
-	}
+			// TODO:
+			// Looks like truncating speeds here after applying forces doesn't work as expected.
+			// We should likely cap speeds form inside an InternalTickCallback, see
+			// http://www.bulletphysics.org/mediawiki-1.5.8/index.php/Simulation_Tick_Callbacks
 
-
-	public Body getBody() {
-		return body;
-	}
-	public int getEnemyHitPower() {
-		return enemyHitPower;
-	}
-
-
-	public void setEnemyHitPower(int enemyHitPower) {this.enemyHitPower = enemyHitPower;}
-
-
-	public int getAnimationRow() {return animationRow;}
-
-
-	public void setAnimationRow(int animationRow) {this.animationRow = animationRow;}
+			// Cap the linear speed
+			Vector2 velocity = body.getLinearVelocity();
+		
+			float currentSpeedSquare = velocity.len2();
+			float maxLinearSpeed = getMaxLinearSpeed();
 	
+			
+			if (currentSpeedSquare > maxLinearSpeed * maxLinearSpeed) {
+				body.setLinearVelocity(velocity.scl(maxLinearSpeed / (float)Math.sqrt(currentSpeedSquare)));
+			}
+
+			// Cap the angular speed
+			float maxAngVelocity = getMaxAngularSpeed();
+		
+			if (body.getAngularVelocity() > maxAngVelocity) {
+				body.setAngularVelocity(maxAngVelocity);
+				
+			}
+		}
+	}
+///////////////////////////////////////////////////
+
 	
-}
+	}

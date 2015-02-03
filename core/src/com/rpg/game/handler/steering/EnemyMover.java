@@ -1,4 +1,4 @@
-package com.rpg.game.handler;
+package com.rpg.game.handler.steering;
 
 import static com.rpg.game.handler.B2DVars.PPM;
 
@@ -9,6 +9,10 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.entities.creature.Creature;
+import com.rpg.game.handler.B2DVars;
+import com.rpg.game.handler.EnemyContainer;
+import com.rpg.game.handler.GameMaps;
+import com.rpg.game.handler.MyTimer;
 import com.rpg.game.pathfinding.AStarPathFinder;
 import com.rpg.game.pathfinding.Path;
 import com.rpg.game.pathfinding.PathFinder;
@@ -45,6 +49,20 @@ public class EnemyMover {
 	}
 
 	public void pathStarter(Creature creature) {
+		
+		
+		
+		
+		
+		if(creature.getTarget().isCollision()){
+			System.out.println("kolizja");
+			usItDone=true;
+			iterator = 0;
+			iterator2 = 0;
+		
+		}
+		
+		
 
 			if(usItDone){
 
@@ -75,16 +93,21 @@ public class EnemyMover {
 				if (path != null) {//if path is not null
 
 					if (path.getLength() != iterator) {
-								
-						bm = new BodyMover(
-								creature.getBody().getPosition().x,
-								creature.getBody().getPosition().y,
-								path.getStep(iterator).getX() * B2DVars.MTT + B2DVars.MTT/2,
-								path.getStep(iterator).getY() * B2DVars.MTT + B2DVars.MTT/2,1);
+			
+							creature.getTarget().getBody().setTransform(
+									path.getStep(iterator).getX() * B2DVars.MTT + B2DVars.MTT/2,
+									path.getStep(iterator).getY() * B2DVars.MTT + B2DVars.MTT/2,
+									creature.getTarget().getBody().getAngle());
+
+							bm = new BodyMover(
+									creature.getBody().getPosition().x,
+									creature.getBody().getPosition().y,
+									creature.getTarget().getPosition().x,
+									creature.getTarget().getPosition().y,1);
 						
 						creature.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
-					
 						
+
 						if (bm.atDestynation()) {
 							iterator++;iterator2=0;}
 						

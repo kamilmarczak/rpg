@@ -1,4 +1,4 @@
-package com.rpg.game.handler;
+package com.rpg.game.handler.steering;
 
 public class BodyMover {
 	double movementX=0;

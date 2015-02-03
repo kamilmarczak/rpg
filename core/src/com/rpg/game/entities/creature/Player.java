@@ -1,31 +1,79 @@
 package com.rpg.game.entities.creature;
 
+import com.badlogic.gdx.ai.steer.behaviors.Face;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.handler.B2DVars;
-import com.rpg.game.handler.BodyMover;
 import com.rpg.game.handler.MyTimer;
+import com.rpg.game.handler.steering.BodyMover;
+import com.rpg.game.handler.steering.EnemyMover;
+import com.rpg.game.handler.steering.PlayerControler;
 import com.rpg.game.state.Play;
 
 public class Player extends Creature {
-	private String textureName = "player";
+	
 	private static String bodyTAG = "player";
 	private static String sensorTAG = "playerSensor";
-	private static int playerHP = 100;
+	private static short categoryBit =B2DVars.BIT_PLAYER;
+	private static int maskBits = 
+			B2DVars.BIT_ENEMY
+			| B2DVars.BIT_DOOR 
+			| B2DVars.BIT_PORTAL_FORWARD
+			| B2DVars.BIT_PORTAL_BACK 
+			| B2DVars.BIT_COLLECTA;
+	static boolean isSensor = false;
+
+	private  int animationRow=0;
 	private int type = 3;
+	private String textureName = "player";
+	private int playerHp=100;
+	private PlayerControler pc=new PlayerControler();;
 
+
+
+
+	//
+	
+
+	public int getAnimationRow() {return animationRow;}
+	public void setAnimationRow(int animationRow) {this.animationRow = animationRow;}
+
+	
 	public Player(float x, float y) {
-		super(x, y, bodyTAG, sensorTAG, B2DVars.BIT_PLAYER, B2DVars.BIT_ENEMY
-				| B2DVars.BIT_DOOR | B2DVars.BIT_PORTAL_FORWARD
-				| B2DVars.BIT_PORTAL_BACK | B2DVars.COLLECTA, false);
-		playAnimation(getAnimationRow(), textureName);
-
+		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor);
+		sprite.playAnimation(animationRow, textureName);
+		setHealth(playerHp);
+		
+		this.setMaxAngularAcceleration(1000000);
+		this.setMaxAngularSpeed(35);
+		this.setIndependentFacing(true);
+		this.setTagged(false);
+		this.setSteeringBehavior(faceSB);
+		
+	
 	}
 
+	final Face<Vector2> faceSB = new Face<Vector2>(this, this.getTarget()) 
+			.setTimeToTarget(0.001f) 
+			.setAlignTolerance(0.001f) 
+			.setDecelerationRadius(MathUtils.degreesToRadians * 360);
+
+			
+		
+
+	
+	
+	
+	
+	
+	
 	@Override
 	public void render(SpriteBatch sb) {
 		sprite.render(sb);
+		
 
 	}
 
@@ -37,9 +85,44 @@ public class Player extends Creature {
 
 	@Override
 	public void update(float dt) {
-		damage();
+		//damage();
+		
 	
+		sprite.update(dt);
+		if (steeringBehavior != null) {
+			
+			// Calculate steering acceleration
+			steeringBehavior.calculateSteering(steeringOutput);
+
+			/*
+			 * Here you might want to add a motor control layer filtering steering accelerations.
+			 * 
+			 * For instance, a car in a driving game has physical constraints on its movement: it cannot turn while stationary; the
+			 * faster it moves, the slower it can turn (without going into a skid); it can brake much more quickly than it can
+			 * accelerate; and it only moves in the direction it is facing (ignoring power slides).
+			 */
+			
+			// Apply steering acceleration
+			applySteering(steeringOutput, dt);
+		}
+		pc.startControl(this);
+		
 	}
+	
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public void damage() {
 
@@ -117,14 +200,13 @@ public class Player extends Creature {
 	
 	public float getPlayerPositionX() {return body.getPosition().x;}
 	public float getPlayerPositionY() {return body.getPosition().y;}
-	public static int getPlayerHP() {	return playerHP;}
-	public static void setPlayerHP(int playerHP) {	Player.playerHP = playerHP;}
 	public static void setTimerForAtt() {	mt.start();}
-	boolean isSensor = false;
+	
+	
+	
+	
+	
+	
 
-	public String getEnemyTextureName() {
-
-		return textureName;
-	}
 
 }
