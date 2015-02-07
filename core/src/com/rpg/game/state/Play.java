@@ -44,6 +44,7 @@ import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
 import com.rpg.game.handler.MyTimer;
+import com.rpg.game.handler.input.Targeting;
 import com.rpg.game.handler.steering.PlayerControler;
 
 
@@ -52,7 +53,7 @@ import com.rpg.game.handler.steering.PlayerControler;
 public class Play extends GameState {
 
 	
-	private static boolean debug = false ,wasTagged= false;
+	private static boolean debug = false ;
 	private Box2DDebugRenderer b2dRenderer;
 	private static MyContactListener cl;
 	public static World world;
@@ -60,8 +61,7 @@ public class Play extends GameState {
 	private Array<Teleport> teleports;
 	private ShapeRenderer shapeRenderer ;
 	private Array<Door> doors;
-	private Vector2 tempSpawn, targetTemp;
-	private Creature tagHolder;
+	private Targeting targeting;
 
 	
 	
@@ -73,9 +73,7 @@ public class Play extends GameState {
 	private int enemyIerator=10;
 	private MyTimer myTimerSmallEnemy= new MyTimer(1);
 	// pathfinding
-		private boolean justPresed= false;
-		private Creature tagHolder2 =null;
-		private boolean targetIsnotEnemy= false;
+
 		
 	//private GameMaps gameMaps = new GameMaps();
 
@@ -112,7 +110,7 @@ public class Play extends GameState {
 						 0,(gameMap.getHeightInTiles() * GameMaps.getTileSize()) / PPM);
 		// Set up HUD
 		hud = new HUD(player);
-
+targeting= new Targeting();
 	}
 
 	
@@ -191,69 +189,6 @@ public class Play extends GameState {
 	
 	
 	
-	public void handleInput() {
-
-		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			if(justPresed){
-				justPresed=false;
-				
-
-				targetTemp= new Vector2(cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM,
-						cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
-				
-				for(int i=0; i<EnemyContainer.GETSMALLENEMY().size;i++){
-					if(EnemyContainer.GETSMALLENEMY().get(i).getBody().getPosition().dst2(targetTemp)<.06f){
-
-						if(EnemyContainer.GETSMALLENEMY().get(i).isTagged()){wasTagged=true;}else {wasTagged=false;}
-						if(tagHolder!=null)tagHolder.setTagged(false);
-						tagHolder= EnemyContainer.GETSMALLENEMY().get(i);
-					
-					}else {
-						targetIsnotEnemy=true;
-					}
-			}
-				while (tagHolder!=null && Play.getPlayer().getBody().getPosition().dst(tagHolder.getPosition())>5) {
-					tagHolder.setTagged(false);
-					tagHolder=null;		
-				}
-				if(tagHolder==null){
-					System.out.println("target null");
-						 Condition.setMoving(true);
-			}else if (tagHolder!=null&& !tagHolder.isTagged() &&!wasTagged) {
-					tagHolder.setTagged(true);
-					 Condition.setMoving(false);
-			}else if(tagHolder!=null&&wasTagged) {
-					 Condition.setMoving(true);
-				}else if (targetIsnotEnemy) {
-					Condition.setMoving(true);
-				}
-				Condition.setLastClickX  (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
-				Condition.setLastClickY (cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
-			
-
-				}
-
-		}else {
-			justPresed=true;
-		}
-		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-			 float x= (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
-		float y=(cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
-			 player.getTarget().getBody().setTransform(x, y,  player.getTarget().getBody().getAngle());
-		}
-		
-		
-
-		
-		
-		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-			if(debug== true){
-				debug= false;
-			}else {
-				debug= true;
-			}
-		}
-	}
 
 	
 
@@ -493,6 +428,18 @@ public class Play extends GameState {
 			GameMaps.setResTyp("terrain");
 			gsm.setState(GameStateManager.PLAY);
 		}
+	}
+	@Override
+	public void handleInput() {
+	targeting.handleInput(cam);
+		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+			if(debug== true){
+				debug= false;
+			}else {
+				debug= true;
+			}
+		}
+		
 	}
 	
 	
