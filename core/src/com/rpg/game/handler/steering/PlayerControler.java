@@ -58,8 +58,6 @@ public class PlayerControler {
 						 path =finder.findPath(creature, playerXforMap, playerYforMap,  lastClickX, lastClickY);
 					}
 
-
-		 
 			if(path!=null){
 			 if(path.getLength()!=iterator){
 				 
@@ -70,23 +68,14 @@ public class PlayerControler {
 						 creature.getTarget().getBody().getAngle());
 				 
 			 bm = new BodyMover(playerX, playerY,
-					 path.getStep(iterator).getX()*B2DVars.MTT+B2DVars.MTT/2,
-					 path.getStep(iterator).getY()*B2DVars.MTT+B2DVars.MTT/2,
-					 2);
-			 
-	
-			 
-			 
-			 
-			 
-			 
-			 
-			 		
-			if(bm.atDestynation()){iterator++;}
-			}
-		
+					 creature.getTarget().getBody().getPosition().x,
+					 creature.getTarget().getBody().getPosition().y,2);
 
-			
+			 		
+			if(bm.atDestynation())
+			{iterator++;} 
+			 }
+
 			 if(path.getLength()>iterator2){
 				 Circle ciclce = new Circle((path.getX(iterator2)*B2DVars.MTT+B2DVars.MTT/2)*PPM, 
 						 					(path.getY(iterator2)*B2DVars.MTT+B2DVars.MTT/2 )*PPM, 32f);
@@ -97,10 +86,6 @@ public class PlayerControler {
 						
 					}
 
-
-	
-	
-		
 		//is moving
 		if(Condition.isMoving()){
 		//	animationChecker();
@@ -112,16 +97,12 @@ public class PlayerControler {
 				//aniChecker(0);
 				//atack
 			 }else {
-				//Play.player.getBody().setLinearVelocity((float)bm.getMovementX(),(float)bm.getMovementY());
+
 			//	aniChecker(9);
 				if(mt.hasCompleted()){
 					Condition.setPlayerIsAttacking(false);
 				}
-				
-			 
-			}
-
-			
+			}	
 		}
 		//is not moving
 			if(!Condition.isMoving()){

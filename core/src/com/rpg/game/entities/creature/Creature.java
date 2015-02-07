@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.HealthBar;
+import com.rpg.game.entities.Mark;
 import com.rpg.game.handler.B2DSprite;
 import com.rpg.game.handler.BodyCreator;
 import com.rpg.game.handler.steering.Target;
@@ -18,6 +19,7 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	
 	
 	protected HealthBar healthBar;
+	protected Mark mark;
 	protected BodyCreator bodyCreator; 
 	protected  B2DSprite sprite;
 	protected Body body;
@@ -39,7 +41,7 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	public SteeringBehavior<Vector2> getSteeringBehavior () {return steeringBehavior;}
 	public void setSteeringBehavior (SteeringBehavior<Vector2> steeringBehavior) {this.steeringBehavior = steeringBehavior;}
 	float boundingRadius= 1;
-	boolean tagged;
+	boolean tagged ,collide=false;
 	///
 	
 	
@@ -176,6 +178,13 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 		}
 	}
 ///////////////////////////////////////////////////
+
+	public boolean isCollisionEnemys() {
+		return collide;
+	}
+	public void setCollisionEnemys(boolean collide) {
+		this.collide = collide;
+	}
 
 	
 	}

@@ -37,7 +37,7 @@ public class MyContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-	System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
+	//System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
 
 		if (fa == null || fb == null)
 			return;
@@ -136,7 +136,12 @@ public class MyContactListener implements ContactListener {
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		if (fa.getUserData().equals("enemy")&& fb.getUserData().equals("enemy")) {
-	Gdx.app.debug("MyCollision", "Enemycollide");
+			((Creature)fa.getBody().getUserData()).setCollisionEnemys(true);
+			((Creature)fb.getBody().getUserData()).setCollisionEnemys(true);
+		
+
+
+
 		}
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -215,6 +220,10 @@ public class MyContactListener implements ContactListener {
 
 		}
 		if (fa.getUserData().equals("enemy")&& fb.getUserData().equals("enemy")) {
+			((Creature)fa.getBody().getUserData()).setCollisionEnemys(false);
+			((Creature)fb.getBody().getUserData()).setCollisionEnemys(false);
+			
+
 
 
 		}

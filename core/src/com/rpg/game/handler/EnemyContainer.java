@@ -7,16 +7,16 @@ import com.rpg.game.entities.creature.Creature;
 public class EnemyContainer {
 	
 	
-	private static  Array<Entity> SMALLENEMY = new Array<Entity>();
-	private static   Array<Entity> TARGETS = new Array<Entity>();
+	private static  Array<Creature> SMALLENEMY = new Array<Creature>();
+	private static   Array<Creature> TARGETS = new Array<Creature>();
 
 	
-	public static  Array<Entity> getTARGETS() {
+	public static  Array<Creature> getTARGETS() {
 		return TARGETS;
 	}
 
-	public static Array<Entity> GETSMALLENEMY() {return SMALLENEMY;}
-	public void SETSMALLENEMY(Array<Entity> smallEnemy) {EnemyContainer.SMALLENEMY = smallEnemy;}
+	public static Array<Creature> GETSMALLENEMY() {return SMALLENEMY;}
+	public void SETSMALLENEMY(Array<Creature> smallEnemy) {EnemyContainer.SMALLENEMY = smallEnemy;}
 
 	
 }

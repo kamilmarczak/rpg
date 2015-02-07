@@ -4,6 +4,8 @@ import static com.rpg.game.handler.B2DVars.PPM;
 
 import java.util.Random;
 
+import sun.awt.windows.WLightweightFramePeer;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.steer.behaviors.CollisionAvoidance;
@@ -32,6 +34,7 @@ import com.rpg.game.AdultGame;
 import com.rpg.game.entities.Door;
 import com.rpg.game.entities.HUD;
 import com.rpg.game.entities.Teleport;
+import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.entities.creature.SmallCoyote;
 import com.rpg.game.handler.B2DVars;
@@ -49,7 +52,7 @@ import com.rpg.game.handler.steering.PlayerControler;
 public class Play extends GameState {
 
 	
-	private static boolean debug = false;
+	private static boolean debug = false ,wasTagged= false;
 	private Box2DDebugRenderer b2dRenderer;
 	private static MyContactListener cl;
 	public static World world;
@@ -57,6 +60,8 @@ public class Play extends GameState {
 	private Array<Teleport> teleports;
 	private ShapeRenderer shapeRenderer ;
 	private Array<Door> doors;
+	private Vector2 tempSpawn, targetTemp;
+	private Creature tagHolder;
 
 	
 	
@@ -65,10 +70,12 @@ public class Play extends GameState {
 	private HUD hud;
 
 	private GameMaps gameMap;
-	private int enemyIerator=250;
+	private int enemyIerator=10;
 	private MyTimer myTimerSmallEnemy= new MyTimer(1);
 	// pathfinding
 		private boolean justPresed= false;
+		private Creature tagHolder2 =null;
+		private boolean targetIsnotEnemy= false;
 		
 	//private GameMaps gameMaps = new GameMaps();
 
@@ -108,24 +115,52 @@ public class Play extends GameState {
 
 	}
 
+	
+	
+	
+	
+	private void createPlayer() {
+		
+		player = new Player(2, 2);
+		
+	}
+	
+	
+	
 	private void createEnemy(int iletenmy) {
+
 		if(iletenmy>EnemyContainer.GETSMALLENEMY().size)
 		{
-		//	if(myTimerSmallEnemy.hasCompleted()){
-			if(true){
-				
-			SmallCoyote smalCoy = new SmallCoyote(randInt(0, 2500), randInt(0,2500));
+			int x =randInt(0, 60);
+			int y =randInt(0,60);
 			
+			/*non overlapping spawn*/
+			// tempSpawn = new Vector2(x*B2DVars.MTT, y*B2DVars.MTT);
+			
+/*			for(int i=0; i<EnemyContainer.GETSMALLENEMY().size;i++){
+				if(EnemyContainer.GETSMALLENEMY().get(i).getBody().getPosition().dst2(tempSpawn)<.4f){
+					
+					 x =randInt(0, 60);
+					 y =randInt(0,60);
+						 tempSpawn = new Vector2(x*B2DVars.MTT, y*B2DVars.MTT);
+						i=0;
+				}
+				
+			}*/
+			
+
+			if(myTimerSmallEnemy.hasCompleted()){
+				myTimerSmallEnemy.start();
+			SmallCoyote smalCoy = new SmallCoyote(x,y );
 			EnemyContainer.GETSMALLENEMY().add(smalCoy);
 			smalCoy.getBody().setUserData(smalCoy);
-			EnemyContainer.GETSMALLENEMY().add(smalCoy);
+
+
+			}
 			
-
-
 			
-			myTimerSmallEnemy.start();
-
-			}}
+			
+		}
 
 	}
 	
@@ -157,39 +192,54 @@ public class Play extends GameState {
 	
 	
 	public void handleInput() {
-		
-			Condition.setPlayerPositionX( player.getBody().getPosition().x);
-			Condition.setPlayerPositionY( player.getBody().getPosition().y);
-	
 
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			
-			
-			
-		
 			if(justPresed){
 				justPresed=false;
-			
-			 Condition.setLastClickX  (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
-			 Condition.setLastClickY (cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
-	
-			 Condition.setMoving(true);
+				
+
+				targetTemp= new Vector2(cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM,
+						cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
+				
+				for(int i=0; i<EnemyContainer.GETSMALLENEMY().size;i++){
+					if(EnemyContainer.GETSMALLENEMY().get(i).getBody().getPosition().dst2(targetTemp)<.06f){
+
+						if(EnemyContainer.GETSMALLENEMY().get(i).isTagged()){wasTagged=true;}else {wasTagged=false;}
+						if(tagHolder!=null)tagHolder.setTagged(false);
+						tagHolder= EnemyContainer.GETSMALLENEMY().get(i);
+					
+					}else {
+						targetIsnotEnemy=true;
+					}
 			}
-		
+				while (tagHolder!=null && Play.getPlayer().getBody().getPosition().dst(tagHolder.getPosition())>5) {
+					tagHolder.setTagged(false);
+					tagHolder=null;		
+				}
+				if(tagHolder==null){
+					System.out.println("target null");
+						 Condition.setMoving(true);
+			}else if (tagHolder!=null&& !tagHolder.isTagged() &&!wasTagged) {
+					tagHolder.setTagged(true);
+					 Condition.setMoving(false);
+			}else if(tagHolder!=null&&wasTagged) {
+					 Condition.setMoving(true);
+				}else if (targetIsnotEnemy) {
+					Condition.setMoving(true);
+				}
+				Condition.setLastClickX  (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
+				Condition.setLastClickY (cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
+			
+
+				}
+
 		}else {
 			justPresed=true;
 		}
-		
 		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-			
-			
 			 float x= (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
 		float y=(cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
-			
 			 player.getTarget().getBody().setTransform(x, y,  player.getTarget().getBody().getAngle());
-		
-
-		
 		}
 		
 		
@@ -222,6 +272,7 @@ public class Play extends GameState {
 		for (int i = 0; i < doors.size; i++) {doors.get(i).update(dt);}
 		for (int i = 0; i <EnemyContainer.GETSMALLENEMY().size; i++) {
 		//	ed.directionChecker(i);
+			//System.out.println(EnemyContainer.GETSMALLENEMY().get(i).getBody().getPosition());
 			EnemyContainer.GETSMALLENEMY().get(i).update(dt);}
 	
 		//create enemy
@@ -273,12 +324,7 @@ public class Play extends GameState {
 				shapeRenderer.circle(PlayerControler.getTrace().get(j).x, PlayerControler.getTrace().get(j).y, PlayerControler.getTrace().get(j).radius-1);
 				shapeRenderer.setColor(255,255,255,1);
 			}
-/*			for (int j = 0; j < em.getEnemyTrace().size; j++) {
-				
-				shapeRenderer.setColor(0,255,255,1);
-				shapeRenderer.circle(em.getEnemyTrace().get(j).x, em.getEnemyTrace().get(j).y, em.getEnemyTrace().get(j).radius-1);
-				shapeRenderer.setColor(255,255,255,1);
-			}*/
+
 			
 			shapeRenderer.end();
 			
@@ -293,8 +339,13 @@ public class Play extends GameState {
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).render(sb);}
 		for (int j = 0; j < doors.size; j++) {doors.get(j).render(sb);}
 		//for (int i = 0; i <player.getCoinsArray().size; i++) {player.getCoinsArray().get(i).render(sb);}
-		for (int j = 0; j < EnemyContainer.GETSMALLENEMY().size; j++) {EnemyContainer.GETSMALLENEMY().get(j).render(sb);}
 		
+		
+		if(!debug){
+
+		
+		for (int j = 0; j < EnemyContainer.GETSMALLENEMY().size; j++) {EnemyContainer.GETSMALLENEMY().get(j).render(sb);}
+		}
 
 		//draw HUD
 		sb.setProjectionMatrix(hudCam.combined);
@@ -333,19 +384,6 @@ public class Play extends GameState {
 	public void dispose() {
 		GameMaps.getTileMap().dispose();
 	
-
-	}
-
-	private void createPlayer() {
-
-		//player = new Player(body);
-		player = new Player(1000, 1000);
-	// target = new Target(100, 100);
-		 
-	
-		
-	
-	//	player.playAnimation(4,player.getEnemyTextureName());
 
 	}
 

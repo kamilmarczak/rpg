@@ -2,15 +2,14 @@ package com.rpg.game.handler;
 
 import static com.rpg.game.handler.B2DVars.PPM;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.rpg.game.state.Play;
 
 public class BodyCreator {
@@ -46,7 +45,7 @@ public BodyCreator(float x,float y, String bodyTAG,String sensorTAG, short categ
 
 	
 		// BodyDef
-		bdef.position.set(x/ PPM, y / PPM);
+		bdef.position.set(x*B2DVars.MTT, y*B2DVars.MTT );
 		bdef.type = BodyType.DynamicBody;
 		bdef.fixedRotation = false;
 	    body = world.createBody(bdef);
@@ -72,14 +71,12 @@ public BodyCreator(float x,float y, String bodyTAG,String sensorTAG, short categ
 		circle.dispose();
 		sensroShape.dispose();
 	
+			}
 
-
-		
-	}
 public BodyCreator(float x,float y) {
 	
 	bdef.active=true;
-	bdef.position.set(x/ PPM, y / PPM);
+	bdef.position.set(x*B2DVars.MTT, y*B2DVars.MTT );
 	bdef.type = BodyType.DynamicBody;
 	bdef.fixedRotation = true;
 	
@@ -90,8 +87,6 @@ public BodyCreator(float x,float y) {
 	fdef.filter.categoryBits= B2DVars.BIT_TARGET;
 	fdef.filter.maskBits= B2DVars.BIT_TARGET;
 	body.createFixture(fdef).setUserData(targetTag);
-    
-
 }
 
 

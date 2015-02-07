@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
-public class HealthBar extends Actor {
+public class HealthBar  {
 
     private NinePatchDrawable loadingBarBackground;
 

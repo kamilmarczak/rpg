@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.rpg.game.entities.HealthBar;
+import com.rpg.game.entities.Mark;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.steering.EnemyMover;
 
@@ -16,6 +17,7 @@ public class SmallCoyote extends Creature {
 	private static String bodyTAG = "enemy";
 	static boolean isSensor = false;
 	private static String sensorTAG="sensorEnemy";
+
 	
 	
 	
@@ -38,7 +40,10 @@ public class SmallCoyote extends Creature {
 		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor);
 		sprite.playAnimation(animationRow, textureName);
 		healthBar= new HealthBar();
+		mark= new Mark(this.getBody());
+	
 		setEnemyHitPower(1);
+		
 		setHealth(smallCoyoteHp);
 		em = new EnemyMover();
 		
@@ -69,6 +74,13 @@ public class SmallCoyote extends Creature {
 		int pozY=(int) (body.getPosition().y * B2DVars.PPM - sprite.getHeight() / 2);
 		healthBar.draw(sb,pozX,pozY ,sprite.getWidth(),sprite.getHeight(),getHealth()/100);
 		sb.end();
+		
+		if(tagged){
+		
+			mark.render(sb);
+			
+		}
+		
 
 		
 	}
@@ -78,6 +90,9 @@ public class SmallCoyote extends Creature {
 
 	@Override
 	public void update(float dt) {
+		
+		
+			mark.update(dt);
 	sprite.update(dt);
 	if (steeringBehavior != null) {
 		

@@ -37,12 +37,6 @@ public class Target extends Entity implements Steerable<Vector2>  {
 	
 	
 	///
-	
-	
-	
-	
-	
-	
 
 	public Target(float x, float y) {
 		super(x, y);

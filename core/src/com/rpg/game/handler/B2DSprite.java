@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.rpg.game.AdultGame;
+import com.rpg.game.entities.creature.Creature;
 
 public class B2DSprite  {
 	
@@ -24,6 +25,12 @@ public class B2DSprite  {
 	
 			}
 	
+
+
+	public B2DSprite(Creature creatur) {
+		this.body = creatur.getBody();
+	}
+
 
 
 	public void setAnimation(TextureRegion reg, float delay) {	
@@ -71,8 +78,7 @@ public class B2DSprite  {
 		TextureRegion[] sprites = new TextureRegion[9];
 
 		for (int i = 0; i < sprites.length; i++) {
-			sprites[i] = new TextureRegion(tex, i * 64, animationRow * 64, 64,
-					64);
+			sprites[i] = new TextureRegion(tex, i * 64, animationRow * 64, 64,64);
 		}
 
 		getAnimation().setFrames(sprites, 1 / 12f);
@@ -89,46 +95,14 @@ public class B2DSprite  {
 	
 
 	
-	public int getAnimationRow() {
-		return animationRow;
-	}
-
-
-
-	public void setAnimationRow(int animationRow) {
-		this.animationRow = animationRow;
-	}
-
-
-
+	public int getAnimationRow() {return animationRow;}
+	public void setAnimationRow(int animationRow) {this.animationRow = animationRow;}
 	public Body getBody() { return body; }
 	public Vector2 getPosition() { return getBody().getPosition(); }
-	
-	
 	public float getWidth() { return width; }
 	public float getHeight() { return height; }
-
-
-
-	public Animation getAnimation() {
-		return animation;
-	}
-
-
-
-	public void setAnimation(Animation animation) {
-		this.animation = animation;
-	}
-
-
-
-	public void setWidth(float width) {
-		this.width = width;
-	}
-
-
-
-	public void setHeight(float height) {
-		this.height = height;
-	}
+	public Animation getAnimation() {return animation;	}
+	public void setAnimation(Animation animation) {this.animation = animation;}
+	public void setWidth(float width) {this.width = width;}
+	public void setHeight(float height) {this.height = height;}
 }

@@ -20,31 +20,22 @@ import com.rpg.game.pathfinding.PathFinder;
 public class EnemyMover {
 
 	private GameMaps map = new GameMaps();
-	private MyTimer mt;
+	
 	private PathFinder finder;
 	private Path path;
 	private int iterator = 0, iterator2 = 0;
-
-
-
 	private BodyMover bm;
 	private boolean usItDone = true;
-	private Vector2 enemDestVestor;
-
-	public Vector2 getEnemDestVestor() {
-		return enemDestVestor;
-	}
-
-	public void setEnemDestVestor(Vector2 enemDestVestor) {
-		this.enemDestVestor = enemDestVestor;
-	}
-
 	private Array<Circle> enemyTrace = new Array<Circle>();
+
+	
+	
 
 	public EnemyMover() {
 
 		finder = new AStarPathFinder(map, 100, true);
-		mt = new MyTimer(1);
+	
+		
 
 	}
 
@@ -55,20 +46,32 @@ public class EnemyMover {
 		
 		
 		if(creature.getTarget().isCollision()){
-			System.out.println("kolizja");
+		//	System.out.println("kolizja");
 			usItDone=true;
 			iterator = 0;
 			iterator2 = 0;
-		
+			
+			
 		}
+		if(creature.isCollisionEnemys()){
+			
+			creature.getTarget().getBody().setTransform(creature.getBody().getPosition().x,creature.getBody().getPosition().y,0);
+			
+			
+		}
+
+			
+
+
+	
 		
 		
 
 			if(usItDone){
 
 				
-				int enemyNextX = randInt((int)creature.getBody().getPosition().x-5,(int) creature.getBody().getPosition().x+5);
-				int enemyNextY =  randInt((int)creature.getBody().getPosition().y-5,(int) creature.getBody().getPosition().y+5);
+				int enemyNextX = randInt((int)creature.getBody().getPosition().x-10,(int) creature.getBody().getPosition().x+10);
+				int enemyNextY =  randInt((int)creature.getBody().getPosition().y-10,(int) creature.getBody().getPosition().y+10);
 				iterator=0;
 	
 				
@@ -93,11 +96,11 @@ public class EnemyMover {
 				if (path != null) {//if path is not null
 
 					if (path.getLength() != iterator) {
-			
+						
 							creature.getTarget().getBody().setTransform(
 									path.getStep(iterator).getX() * B2DVars.MTT + B2DVars.MTT/2,
 									path.getStep(iterator).getY() * B2DVars.MTT + B2DVars.MTT/2,
-									creature.getTarget().getBody().getAngle());
+									0);
 
 							bm = new BodyMover(
 									creature.getBody().getPosition().x,
@@ -106,6 +109,8 @@ public class EnemyMover {
 									creature.getTarget().getPosition().y,1);
 						
 						creature.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
+						
+					
 						
 
 						if (bm.atDestynation()) {

@@ -25,24 +25,20 @@ public class BodyMover {
 	}
 
 
-	public float getMovementX() {
-		return  (float) movementX;
-	}
-public boolean atDestynation(){
+	public boolean atDestynation(){
 	
-	if(distance<0.1)
+	if(distance<0.2)
 	{
 		movementY=0;
 		movementX=0;
 	return true;
 	}else {
+		
 		return false;
 	}
 }
 
-
-	public float getMovementY() {
-		return  (float) movementY;
-	}
+public float getMovementX() {return  (float) movementX;}
+public float getMovementY() {return  (float) movementY;}
 
 }
