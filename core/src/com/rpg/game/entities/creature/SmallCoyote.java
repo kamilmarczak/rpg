@@ -1,5 +1,7 @@
 package com.rpg.game.entities.creature;
 
+import java.util.Random;
+
 import com.badlogic.gdx.ai.steer.behaviors.Face;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -8,6 +10,7 @@ import com.rpg.game.entities.HealthBar;
 import com.rpg.game.entities.Mark;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.steering.EnemyMover;
+import com.rpg.game.state.Play;
 
 public class SmallCoyote extends Creature {
 	
@@ -17,6 +20,7 @@ public class SmallCoyote extends Creature {
 	private static String bodyTAG = "enemy";
 	static boolean isSensor = false;
 	private static String sensorTAG="sensorEnemy";
+	private boolean stopMovment=true;
 
 	
 	
@@ -25,6 +29,11 @@ public class SmallCoyote extends Creature {
 	private int type=3;
 	private EnemyMover em;
 	private int animationRow=0;
+
+
+
+
+
 	private static short categoryBit =B2DVars.BIT_ENEMY;
 	
 	private static int maskBits = 
@@ -63,6 +72,22 @@ public class SmallCoyote extends Creature {
 		this.setSteeringBehavior(faceSB);
 		
 
+	}
+
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	public EnemyMover getEm() {
+		return em;
 	}
 
 	@Override
@@ -112,9 +137,48 @@ public class SmallCoyote extends Creature {
 		// Apply steering acceleration
 		applySteering(steeringOutput, dt);
 	}
-	em.pathStarter((Creature)body.getUserData());
+	
+	if(isTargetRandom()){
+	em.pathStarter((Creature)body.getUserData(), 
+			randInt((int)this.getBody().getPosition().x-10,(int) this.getBody().getPosition().x+10),
+			randInt((int)this.getBody().getPosition().y-10,(int) this.getBody().getPosition().y+10));
+	stopMovment=true;
+
+	}else {
+		
+		em.pathStarter((Creature)body.getUserData(), 
+				Play.getPlayer().getBody().getPosition().x,
+				Play.getPlayer().getBody().getPosition().y);
+		if(stopMovment){
+			em.setReset(true);
+			stopMovment=false;
+		}else {
+			em.setReset(false);
+		}
+		
 		
 	}
+	}
+	
+
+	
+	
+	public static int randInt(int min, int max) {
+
+
+	    Random rand = new Random();
+
+
+	    int randomNum = rand.nextInt((max - min) + 1) + min;
+
+	    return randomNum;
+	}
+	
+	
+	
+	
+	
+	
 
 
 }

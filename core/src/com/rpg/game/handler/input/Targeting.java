@@ -24,7 +24,12 @@ public class Targeting {
 	
 	}
 	public void handleInput(Camera cam) {
-
+		
+		
+		while (tagHolder!=null && Play.getPlayer().getBody().getPosition().dst2(tagHolder.getPosition())>16) {
+			tagHolder.setTagged(false);
+			tagHolder=null;		
+		}
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			if(justPresed){
 				justPresed=false;
@@ -47,11 +52,8 @@ public class Targeting {
 						//if you cliced on  not enemys position
 						Condition.setMoving(true);
 					}
-			}// when enemy  is out of range
-				while (tagHolder!=null && Play.getPlayer().getBody().getPosition().dst(tagHolder.getPosition())>3) {
-					tagHolder.setTagged(false);
-					tagHolder=null;		
-				}
+			}/// when enemy  is out of range
+				
 				
 				//if enemy is null
 				if(tagHolder==null){

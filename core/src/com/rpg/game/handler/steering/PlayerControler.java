@@ -66,6 +66,7 @@ public class PlayerControler {
 						 path.getStep(iterator).getX()*B2DVars.MTT+B2DVars.MTT/2,
 						 path.getStep(iterator).getY()*B2DVars.MTT+B2DVars.MTT/2,
 						 creature.getTarget().getBody().getAngle());
+			
 				 
 			 bm = new BodyMover(playerX, playerY,
 					 creature.getTarget().getBody().getPosition().x,

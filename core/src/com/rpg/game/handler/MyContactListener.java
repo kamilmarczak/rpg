@@ -1,6 +1,5 @@
 package com.rpg.game.handler;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -37,7 +36,7 @@ public class MyContactListener implements ContactListener {
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
-	//System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
+	System.out.println(fa.getUserData()+ ","+ fb.getUserData()) ;
 
 		if (fa == null || fb == null)
 			return;
@@ -109,29 +108,21 @@ public class MyContactListener implements ContactListener {
 		}
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		if (fa.getUserData().equals("enemy")
-				&& fb.getUserData().equals("playerSensor")) {
+		if (fa.getUserData().equals("sensorEnemy")&& fb.getUserData().equals("player")) {
 			fallow.add(fa.getBody());
 		}
-		if (fb.getUserData().equals("enemy")
-				&& fa.getUserData().equals("playerSensor")) {
+		if (fb.getUserData().equals("sensorEnemy")&& fa.getUserData().equals("player")) {
 			fallow.add(fb.getBody());
 			
 		}
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		if (fa.getUserData().equals("sensorEnemy")&& fb.getUserData().equals("enemy")) {
-
-
-
 		}
-		
 		
 		if (fa.getUserData().equals("target")&& fb.getUserData().equals("target")) {
 			((Target)fa.getBody().getUserData()).setCollision(true);
-			((Target)fb.getBody().getUserData()).setCollision(true);
+			//((Target)fb.getBody().getUserData()).setCollision(true);
 			
-
-
 		}
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -139,8 +130,6 @@ public class MyContactListener implements ContactListener {
 			((Creature)fa.getBody().getUserData()).setCollisionEnemys(true);
 			((Creature)fb.getBody().getUserData()).setCollisionEnemys(true);
 		
-
-
 
 		}
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -201,19 +190,23 @@ public class MyContactListener implements ContactListener {
 		}
 
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if (fa.getUserData().equals("enemy")
-				&& fb.getUserData().equals("playerSensor")) {
+		if (fa.getUserData().equals("sensorEnemy")&& fb.getUserData().equals("player")) {
+			
+			((Creature)fa.getBody().getUserData()).setTargetRandom(true);
 			fallow.removeValue(fa.getBody(), true);
 
 		}
-		if (fb.getUserData().equals("enemy")
-				&& fa.getUserData().equals("playerSensor")) {
+		if (fb.getUserData().equals("sensorEnemy")&& fa.getUserData().equals("player")) {
+			((Creature)fb.getBody().getUserData()).setTargetRandom(true);
 			fallow.removeValue(fb.getBody(), true);
+			
+			
 		}
 		// /////////////////////////////////////////////////////////////////////////////////////
 		if (fa.getUserData().equals("target")&& fb.getUserData().equals("target")) {
+			
 			((Target)fa.getBody().getUserData()).setCollision(false);
-			((Target)fb.getBody().getUserData()).setCollision(false);
+		
 			
 			
 

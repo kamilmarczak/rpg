@@ -15,6 +15,7 @@ import com.rpg.game.handler.BodyCreator;
 import com.rpg.game.handler.steering.Target;
 import com.rpg.game.pathfinding.Mover;
 
+
 public abstract class Creature extends Entity implements Mover, Steerable<Vector2>{
 	
 	
@@ -27,7 +28,9 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	private int enemyHitPower=0;
 	private boolean isFighting= false;
 	private Target target;
+	private boolean targetRandom= true;
 	
+
 	//limiter 
 	protected  boolean independentFacing;
 	float maxLinearSpeed;
@@ -63,7 +66,9 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	private void createTarget(float x, float y){target= new Target(x, y);}
 	
 	
-	
+
+	public boolean isTargetRandom() {return targetRandom;}
+	public void setTargetRandom(boolean targetRandom) {this.targetRandom = targetRandom;}
 	public int getEnemyHitPower() {return enemyHitPower;}
 	public void setEnemyHitPower(int enemyHitPower) {this.enemyHitPower = enemyHitPower;}
 	public Body getBody() {return body;}

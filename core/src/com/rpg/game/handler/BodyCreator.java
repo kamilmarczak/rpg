@@ -55,16 +55,17 @@ public BodyCreator(float x,float y, String bodyTAG,String sensorTAG, short categ
 
 		polygon.set(vertices);
 		fdef.shape = polygon;
+
 		fdef.isSensor = isSensor;
 		fdef.filter.categoryBits= categoryBit;
 		fdef.filter.maskBits=  (short) maskBits ;
 	
-		fdef.density=1;
+		fdef.density=0.01f;
 		fdef.friction=0;
 		body.createFixture(fdef).setUserData(bodyTAG);
 		
 		// Player's sensor
-		circle.setRadius(100/PPM);
+		circle.setRadius(300/PPM);
 		fdef.shape = circle;
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData(sensorTAG);

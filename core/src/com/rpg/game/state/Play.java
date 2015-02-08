@@ -44,8 +44,10 @@ import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
 import com.rpg.game.handler.MyTimer;
+import com.rpg.game.handler.actions.Fallow;
 import com.rpg.game.handler.input.Targeting;
 import com.rpg.game.handler.steering.PlayerControler;
+import com.sun.corba.se.impl.copyobject.FallbackObjectCopierImpl;
 
 
 
@@ -62,6 +64,7 @@ public class Play extends GameState {
 	private ShapeRenderer shapeRenderer ;
 	private Array<Door> doors;
 	private Targeting targeting;
+	private Fallow fallow;
 
 	
 	
@@ -70,7 +73,7 @@ public class Play extends GameState {
 	private HUD hud;
 
 	private GameMaps gameMap;
-	private int enemyIerator=10;
+	private int enemyIerator=100;
 	private MyTimer myTimerSmallEnemy= new MyTimer(1);
 	// pathfinding
 
@@ -111,6 +114,7 @@ public class Play extends GameState {
 		// Set up HUD
 		hud = new HUD(player);
 targeting= new Targeting();
+fallow= new Fallow();
 	}
 
 	
@@ -198,6 +202,8 @@ targeting= new Targeting();
 		handleInput();
 		teleportingLogic();		
 		player.update(dt);
+		fallow.proximityCheck();
+		
 //		coinColector();
 		
 		
@@ -432,6 +438,7 @@ targeting= new Targeting();
 	@Override
 	public void handleInput() {
 	targeting.handleInput(cam);
+	
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			if(debug== true){
 				debug= false;

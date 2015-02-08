@@ -27,7 +27,7 @@ public class EnemyMover {
 	private BodyMover bm;
 	private boolean usItDone = true;
 	private Array<Circle> enemyTrace = new Array<Circle>();
-
+	private boolean reset=false;
 	
 	
 
@@ -39,18 +39,18 @@ public class EnemyMover {
 
 	}
 
-	public void pathStarter(Creature creature) {
+	public void pathStarter(Creature creature,float enemyNextX, float enemyNextY ) {
 		
 		
 		
 		
 		
-		if(creature.getTarget().isCollision()){
+		if(creature.getTarget().isCollision()||reset){
 		//	System.out.println("kolizja");
 			usItDone=true;
 			iterator = 0;
 			iterator2 = 0;
-			
+			reset=false;
 			
 		}
 		if(creature.isCollisionEnemys()){
@@ -62,16 +62,9 @@ public class EnemyMover {
 
 			
 
-
-	
-		
-		
-
 			if(usItDone){
 
-				
-				int enemyNextX = randInt((int)creature.getBody().getPosition().x-10,(int) creature.getBody().getPosition().x+10);
-				int enemyNextY =  randInt((int)creature.getBody().getPosition().y-10,(int) creature.getBody().getPosition().y+10);
+			
 				iterator=0;
 	
 				
@@ -106,7 +99,7 @@ public class EnemyMover {
 									creature.getBody().getPosition().x,
 									creature.getBody().getPosition().y,
 									creature.getTarget().getPosition().x,
-									creature.getTarget().getPosition().y,1);
+									creature.getTarget().getPosition().y,10);
 						
 						creature.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
 						
@@ -150,6 +143,10 @@ public class EnemyMover {
 	
 
 	
+	public void setReset(boolean reset) {
+		this.reset = reset;
+	}
+
 	public BodyMover getBm() {
 		return bm;
 	}
@@ -174,16 +171,7 @@ public class EnemyMover {
 		return enemyTrace;
 	}
 
-	public static int randInt(int min, int max) {
 
-
-	    Random rand = new Random();
-
-
-	    int randomNum = rand.nextInt((max - min) + 1) + min;
-
-	    return randomNum;
-	}
 	
 	
 	
