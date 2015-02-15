@@ -25,12 +25,15 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	protected  B2DSprite sprite;
 	protected Body body;
 	private float health;
-	private int enemyHitPower=0;
+	private float enemyHitPower=0;
 	private boolean isFighting= false;
 	private Target target;
 	private boolean targetRandom= true;
+	protected boolean inCombat=false;
 	
 
+	public boolean isInCombat() {return inCombat;}
+	public void setInCombat(boolean inCombat) {this.inCombat = inCombat;}
 	//limiter 
 	protected  boolean independentFacing;
 	float maxLinearSpeed;
@@ -69,13 +72,13 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 
 	public boolean isTargetRandom() {return targetRandom;}
 	public void setTargetRandom(boolean targetRandom) {this.targetRandom = targetRandom;}
-	public int getEnemyHitPower() {return enemyHitPower;}
+	public float getEnemyHitPower() {return enemyHitPower;}
 	public void setEnemyHitPower(int enemyHitPower) {this.enemyHitPower = enemyHitPower;}
 	public Body getBody() {return body;}
 	public boolean isFighting() {return isFighting;}
 	public void setFighting(boolean isFighting) {this.isFighting = isFighting;}
 	public float getHealth() {return health;}
-	public void setHealth(int health) {this.health = health;}
+	public void setHealth(float health) {	if(health<0){health=0;}this.health = health;}
 
 	//_________________________________________________________________________
 	//Getter and setters for steering
@@ -190,6 +193,7 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	public void setCollisionEnemys(boolean collide) {
 		this.collide = collide;
 	}
+
 
 	
 	}

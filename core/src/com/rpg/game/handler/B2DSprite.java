@@ -75,7 +75,7 @@ public class B2DSprite  {
 		setAnimationRow(animationRow);
 
 		Texture tex = AdultGame.res.getTexture(textureName);
-		TextureRegion[] sprites = new TextureRegion[9];
+		TextureRegion[] sprites = new TextureRegion[10];
 
 		for (int i = 0; i < sprites.length; i++) {
 			sprites[i] = new TextureRegion(tex, i * 64, animationRow * 64, 64,64);

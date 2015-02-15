@@ -46,7 +46,6 @@ public class EnemyMover {
 		
 		
 		if(creature.getTarget().isCollision()||reset){
-		//	System.out.println("kolizja");
 			usItDone=true;
 			iterator = 0;
 			iterator2 = 0;
@@ -99,7 +98,7 @@ public class EnemyMover {
 									creature.getBody().getPosition().x,
 									creature.getBody().getPosition().y,
 									creature.getTarget().getPosition().x,
-									creature.getTarget().getPosition().y,10);
+									creature.getTarget().getPosition().y,1.2f);
 						
 						creature.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
 						
@@ -143,6 +142,10 @@ public class EnemyMover {
 	
 
 	
+	public Path getPath() {
+		return path;
+	}
+
 	public void setReset(boolean reset) {
 		this.reset = reset;
 	}

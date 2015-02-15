@@ -6,13 +6,15 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
-public class HealthBar  {
+public class HealthBar extends Actor {
 
-    private NinePatchDrawable loadingBarBackground;
-
-    private NinePatchDrawable loadingBar;
+    public NinePatchDrawable loadingBarBackground;
+    public NinePatchDrawable loadingBar;
     private TextureAtlas skinAtlas;
 
     public HealthBar() {
@@ -20,9 +22,9 @@ public class HealthBar  {
         
         NinePatch loadingBarBackgroundPatch = new NinePatch(skinAtlas.findRegion("default-round"), 5, 5, 4, 4);
         NinePatch loadingBarPatch = new NinePatch(skinAtlas.findRegion("default-round-down"), 5, 5, 4, 4);
-        loadingBar = new NinePatchDrawable(loadingBarPatch);
+       loadingBar = new NinePatchDrawable(loadingBarPatch);
         loadingBarBackground = new NinePatchDrawable(loadingBarBackgroundPatch);
-        
+
   
     }
 
@@ -37,11 +39,9 @@ public class HealthBar  {
         loadingBar.draw(batch, x, y+height, hitPoint * width , height /10);
     }
 
-	public void playerHpDraw(SpriteBatch sb, float f, int x, int y) {
-		 loadingBarBackground.draw(sb, x, y, 100 , 20 );
-        loadingBar.draw(sb, x, y, f  , 20);
-		
-	}
+
+	
+
 
 
     

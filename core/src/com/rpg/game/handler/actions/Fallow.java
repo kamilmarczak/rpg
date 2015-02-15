@@ -17,48 +17,19 @@ public Fallow() {
 	public void proximityCheck() {
 			
 
-	//	Array<Body> bodiesDmg = Play.getCl().getDamege();
-		Array<Body> fallowDmg =Play.getCl().getFallow();	
+
+		Array<Body> fallow =Play.getCl().getFallow();	
 		
 
 
 		
 		  //Enemy Fallow player 
-		  for(int j =0; j<fallowDmg.size; j++){
-			// ((Creature) fallowDmg.get(j).getUserData()).getTarget().getBody().setTransform(Play.getPlayer().getPosition(),0);
-			 ((Creature) fallowDmg.get(j).getUserData()).setTargetRandom(false);
-
-			 
-			  
+		  for(int j =0; j<fallow.size; j++){
+	
+			 ((Creature) fallow.get(j).getUserData()).setTargetRandom(false);
 			  
 		  }
 			  
-			  
-/*			  
-		  { Body f =fallowDmg.get(j); bm= new BodyMover(((Entity)
-		  f.getUserData()).getBody().getPosition().x, ((Entity)
-		  f.getUserData()).getBody().getPosition().y, getPlayerPositionX(),
-		  getPlayerPositionY(), 1); ((Entity)
-		  f.getUserData()).getBody().setLinearVelocity
-		  
-		 */
-		
-		// Enemy attack player
-/*		for (int i = 0; i < bodiesDmg.size; i++) {
-			Body b = bodiesDmg.get(i);
-
-			((Entity) b.getUserData()).attack();
-
-			// Player attack
-			if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-				Condition.setPlayerIsAttacking(true);
-				setTimerForAtt();
-
-				((Entity) b.getUserData()).setHitPoint(((Entity) b
-						.getUserData()).getHitPoint() - 0.5f);
-				ishidead((Entity) b.getUserData());
-			}
-		}*/
 
 	}
 }

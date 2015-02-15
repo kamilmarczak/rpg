@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.rpg.game.entities.Entity;
 import com.rpg.game.handler.BodyCreator;
-import com.rpg.game.handler.EnemyContainer;
 
 public class Target extends Entity implements Steerable<Vector2>  {
 	
@@ -121,6 +120,11 @@ public class Target extends Entity implements Steerable<Vector2>  {
 		}
 		public boolean isCollision() {
 			return collision;
+		}
+		@Override
+		public void attack() {
+			// TODO Auto-generated method stub
+			
 		}
 
 

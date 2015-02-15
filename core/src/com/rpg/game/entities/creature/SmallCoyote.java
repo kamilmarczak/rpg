@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.rpg.game.entities.HealthBar;
 import com.rpg.game.entities.Mark;
 import com.rpg.game.handler.B2DVars;
+import com.rpg.game.handler.MyTimer;
 import com.rpg.game.handler.steering.EnemyMover;
 import com.rpg.game.state.Play;
 
@@ -21,6 +22,7 @@ public class SmallCoyote extends Creature {
 	static boolean isSensor = false;
 	private static String sensorTAG="sensorEnemy";
 	private boolean stopMovment=true;
+	private MyTimer atackTimer;
 
 	
 	
@@ -35,12 +37,15 @@ public class SmallCoyote extends Creature {
 
 
 	private static short categoryBit =B2DVars.BIT_ENEMY;
-	
+/*	
+	private static int maskBits = 
+			B2DVars.BIT_ENEMY|
+			B2DVars.BIT_PLAYER;*/
+
+
 	private static int maskBits = 
 			B2DVars.BIT_ENEMY|
 			B2DVars.BIT_PLAYER;
-
-
 
 
 
@@ -50,6 +55,7 @@ public class SmallCoyote extends Creature {
 		sprite.playAnimation(animationRow, textureName);
 		healthBar= new HealthBar();
 		mark= new Mark(this.getBody());
+		atackTimer = new MyTimer(2);
 	
 		setEnemyHitPower(1);
 		
@@ -138,26 +144,49 @@ public class SmallCoyote extends Creature {
 		applySteering(steeringOutput, dt);
 	}
 	
+	
+	
+	
+	
 	if(isTargetRandom()){
+		getBody().setAngularDamping(0);
+		stopMovment=true;
 	em.pathStarter((Creature)body.getUserData(), 
 			randInt((int)this.getBody().getPosition().x-10,(int) this.getBody().getPosition().x+10),
 			randInt((int)this.getBody().getPosition().y-10,(int) this.getBody().getPosition().y+10));
-	stopMovment=true;
 
 	}else {
-		
-		em.pathStarter((Creature)body.getUserData(), 
-				Play.getPlayer().getBody().getPosition().x,
-				Play.getPlayer().getBody().getPosition().y);
-		if(stopMovment){
-			em.setReset(true);
-			stopMovment=false;
+		//NOT RANDOM set on player position
+	
+		if( ((Creature)body.getUserData()).getBody().getPosition().dst2(Play.getPlayer().getPosition())<.6f){
+			((Creature)body.getUserData()).getBody().setAngularDamping(.2f);
+			em.pathStarter((Creature)body.getUserData(), 
+					getBody().getPosition().x,
+					getBody().getPosition().y);
+			
 		}else {
-			em.setReset(false);
+	if(	em.getPath()!=null){
+	
+			em.pathStarter((Creature)body.getUserData(), 
+					Play.getPlayer().getBody().getPosition().x,
+					Play.getPlayer().getBody().getPosition().y);
+			}else {
+
+				em.pathStarter((Creature)body.getUserData(), 
+						Play.getPlayer().getPosition().x,
+						Play.getPlayer().getPosition().y);
+					}
 		}
+
+		
+		if(stopMovment){
+	
+			em.setReset(true);stopMovment=false;
+		}else {em.setReset(false);}
 		
 		
 	}
+	attack();
 	}
 	
 
@@ -173,11 +202,21 @@ public class SmallCoyote extends Creature {
 
 	    return randomNum;
 	}
-	
-	
-	
-	
-	
+
+
+
+	@Override
+	public void attack() {
+
+	if(inCombat&&atackTimer.hasCompleted()){
+
+		Play.getPlayer().setHealth(Play.getPlayer().getHealth()-getEnemyHitPower());
+		atackTimer.start();
+		
+		
+	}
+		
+	}
 	
 
 

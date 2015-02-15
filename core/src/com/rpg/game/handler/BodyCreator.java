@@ -47,6 +47,7 @@ public BodyCreator(float x,float y, String bodyTAG,String sensorTAG, short categ
 		// BodyDef
 		bdef.position.set(x*B2DVars.MTT, y*B2DVars.MTT );
 		bdef.type = BodyType.DynamicBody;
+		bdef.fixedRotation=true;
 		bdef.fixedRotation = false;
 	    body = world.createBody(bdef);
 
@@ -60,12 +61,12 @@ public BodyCreator(float x,float y, String bodyTAG,String sensorTAG, short categ
 		fdef.filter.categoryBits= categoryBit;
 		fdef.filter.maskBits=  (short) maskBits ;
 	
-		fdef.density=0.01f;
+		fdef.density=.7f;
 		fdef.friction=0;
 		body.createFixture(fdef).setUserData(bodyTAG);
 		
 		// Player's sensor
-		circle.setRadius(300/PPM);
+		circle.setRadius(150/PPM);
 		fdef.shape = circle;
 		fdef.isSensor = true;
 		body.createFixture(fdef).setUserData(sensorTAG);

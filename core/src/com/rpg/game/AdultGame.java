@@ -14,6 +14,7 @@ import com.rpg.game.handler.Content;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyInput;
 import com.rpg.game.handler.MyInputProcessor;
+import com.rpg.game.state.Play;
 
 public class AdultGame implements ApplicationListener {
 	public static final String TITLE = "I LOVE JAVA";
@@ -47,6 +48,7 @@ public class AdultGame implements ApplicationListener {
 		res.loadTexture("img/coin.png", "coins");
 		res.loadTexture("img/hud.png", "hud");
 		res.loadTexture("img/target.png", "mark");
+		res.loadTexture("img/npc.png", "npc");
 	
 	
 		cam = new BoundedCamera();
@@ -55,8 +57,8 @@ public class AdultGame implements ApplicationListener {
 	//	cam.setToOrtho(false, G_WIDTH, G_HEIGHT);
 		viewport = new ScreenViewport(cam);
 		
-		hudCam = new OrthographicCamera();
-		hudCam.setToOrtho(false, G_WIDTH/1.5f, G_HEIGHT/1.5f);
+		hudCam = new OrthographicCamera();;
+		
 		sb = new SpriteBatch();
 		gsm = new GameStateManager(this);
 		b2dCam.setToOrtho(false, AdultGame.G_WIDTH / PPM, AdultGame.G_HEIGHT/ PPM);
@@ -83,6 +85,11 @@ public class AdultGame implements ApplicationListener {
 		
 		viewport.update(width, height, false);
 		b2dCam.setToOrtho(false, width / PPM, height/ PPM);
+
+
+		
+	//	hudCam.setToOrtho(false, width, height);
+		
 
 	
 

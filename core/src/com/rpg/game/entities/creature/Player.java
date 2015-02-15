@@ -1,5 +1,7 @@
 package com.rpg.game.entities.creature;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.steer.behaviors.Face;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -28,8 +30,12 @@ public class Player extends Creature {
 
 	private  int animationRow=0;
 	private int type = 3;
-	private String textureName = "player";
+	private String textureName = "npc";
+//	private String textureName = "player";
 	private int playerHp=100;
+	private MyTimer atackTimer;
+	
+	
 	private PlayerControler pc=new PlayerControler();;
 
 
@@ -46,6 +52,8 @@ public class Player extends Creature {
 		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor);
 		sprite.playAnimation(animationRow, textureName);
 		setHealth(playerHp);
+		setEnemyHitPower(10);
+		atackTimer= new MyTimer(1);
 		
 		this.setMaxAngularAcceleration(1000000);
 		this.setMaxAngularSpeed(35);
@@ -61,14 +69,6 @@ public class Player extends Creature {
 			.setAlignTolerance(0.001f) 
 			.setDecelerationRadius(MathUtils.degreesToRadians * 360);
 
-			
-		
-
-	
-	
-	
-	
-	
 	
 	@Override
 	public void render(SpriteBatch sb) {
@@ -86,7 +86,7 @@ public class Player extends Creature {
 	@Override
 	public void update(float dt) {
 		//damage();
-		
+		attack();
 	
 		sprite.update(dt);
 		if (steeringBehavior != null) {
@@ -112,16 +112,6 @@ public class Player extends Creature {
 
 
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 
 	public void damage() {
@@ -201,6 +191,23 @@ public class Player extends Creature {
 	public float getPlayerPositionX() {return body.getPosition().x;}
 	public float getPlayerPositionY() {return body.getPosition().y;}
 	public static void setTimerForAtt() {	mt.start();}
+	
+	
+	
+	@Override
+	public void attack() {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+		if(Play.getMyInputHandler().getTagHolder()!=null&& atackTimer.hasCompleted()){
+		if(Play.getMyInputHandler().getTagHolder().getPosition().dst2(Play.getPlayer().getPosition())>1){
+		Play.getMyInputHandler().getTagHolder().setHealth(Play.getMyInputHandler().getTagHolder().getHealth()-getEnemyHitPower() );
+		atackTimer.start();
+		
+		
+				}
+			}
+		}
+		
+	}
 	
 	
 	

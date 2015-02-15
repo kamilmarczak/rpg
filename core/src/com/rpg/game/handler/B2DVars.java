@@ -16,6 +16,7 @@ public class B2DVars {
 	public static final short BIT_COLLECTA = 64;
 	public static final short BIT_PLAYER_SENSOR =128;
 	public static final short BIT_TARGET =256;
+	public static final short BIT_NPC =512;
 	
 	//Enemy type
 	public static int SMALLENEMY =1,COIN =2, PLAYER =3;

@@ -6,7 +6,7 @@ public class BodyMover {
 	double distance ;
 	
 	
-	public BodyMover(float startPozX,float startPozY,float destX,float destY,int speed) {
+	public BodyMover(float startPozX,float startPozY,float destX,float destY,float speed) {
 	
 		
 		

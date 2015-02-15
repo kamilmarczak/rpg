@@ -1,0 +1,33 @@
+
+actionbuttons.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+activegun-down
+  rotate: false
+  xy: 1, 1
+  size: 77, 51
+  orig: 77, 51
+  offset: 0, 0
+  index: -1
+activeknife-down
+  rotate: false
+  xy: 80, 1
+  size: 77, 51
+  orig: 77, 51
+  offset: 0, 0
+  index: -1
+noactivegun-up
+  rotate: false
+  xy: 159, 1
+  size: 77, 51
+  orig: 77, 51
+  offset: 0, 0
+  index: -1
+noactiveknife-up
+  rotate: false
+  xy: 238, 1
+  size: 77, 51
+  orig: 77, 51
+  offset: 0, 0
+  index: -1

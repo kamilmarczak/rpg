@@ -4,21 +4,15 @@ import static com.rpg.game.handler.B2DVars.PPM;
 
 import java.util.Random;
 
-import sun.awt.windows.WLightweightFramePeer;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.ai.steer.behaviors.CollisionAvoidance;
-import com.badlogic.gdx.ai.steer.behaviors.PrioritySteering;
-import com.badlogic.gdx.ai.steer.behaviors.Wander;
-import com.badlogic.gdx.ai.steer.limiters.LinearAccelerationLimiter;
-import com.badlogic.gdx.ai.tests.steer.box2d.Box2dRadiusProximity;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -29,30 +23,36 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.rpg.game.AdultGame;
 import com.rpg.game.entities.Door;
 import com.rpg.game.entities.HUD;
 import com.rpg.game.entities.Teleport;
-import com.rpg.game.entities.creature.Creature;
+import com.rpg.game.entities.creature.Npc;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.entities.creature.SmallCoyote;
 import com.rpg.game.handler.B2DVars;
-import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.EnemyContainer;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
 import com.rpg.game.handler.MyTimer;
+import com.rpg.game.handler.actions.Attack;
 import com.rpg.game.handler.actions.Fallow;
-import com.rpg.game.handler.input.Targeting;
+import com.rpg.game.handler.input.MyInputHandler;
 import com.rpg.game.handler.steering.PlayerControler;
-import com.sun.corba.se.impl.copyobject.FallbackObjectCopierImpl;
 
 
 
 
-public class Play extends GameState {
+public class Play extends GameState  {
 
 	
 	private static boolean debug = false ;
@@ -63,17 +63,21 @@ public class Play extends GameState {
 	private Array<Teleport> teleports;
 	private ShapeRenderer shapeRenderer ;
 	private Array<Door> doors;
-	private Targeting targeting;
+	private static MyInputHandler myImputHandler;
 	private Fallow fallow;
+	private Attack attack;
+	private Stage stage;
+	private Npc npc;
 
 	
+	////
 	
 
 
-	private HUD hud;
+	private static HUD hud;
 
 	private GameMaps gameMap;
-	private int enemyIerator=100;
+	private int enemyIerator=10;
 	private MyTimer myTimerSmallEnemy= new MyTimer(1);
 	// pathfinding
 
@@ -104,26 +108,36 @@ public class Play extends GameState {
 		cam.setBounds(0, gameMap.getWidthInTiles() * GameMaps.getTileSize(), 0,	gameMap.getHeightInTiles() * GameMaps.getTileSize());
 		// create player
 		createPlayer();
-	
+		createNpc();
 		// create portal
 		creatPortal();
 		// set up b2dcamera
 		b2dCam.setToOrtho(false, AdultGame.G_WIDTH / PPM, AdultGame.G_HEIGHT/ PPM);
 		b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
 						 0,(gameMap.getHeightInTiles() * GameMaps.getTileSize()) / PPM);
+
+		
+		myImputHandler= new MyInputHandler();
 		// Set up HUD
-		hud = new HUD(player);
-targeting= new Targeting();
-fallow= new Fallow();
+		stage = new Stage(new ScreenViewport(hudCam));
+		hud = new HUD(player,stage);
+		attack= new Attack();
+		InputMultiplexer im = new InputMultiplexer(stage,myImputHandler);
+		Gdx.input.setInputProcessor(im);
+		fallow= new Fallow();
+	
 	}
 
 	
-	
-	
+
 	
 	private void createPlayer() {
 		
 		player = new Player(2, 2);
+		
+	}
+	private  void createNpc(){
+		npc= new Npc(1, 1);
 		
 	}
 	
@@ -136,19 +150,7 @@ fallow= new Fallow();
 			int x =randInt(0, 60);
 			int y =randInt(0,60);
 			
-			/*non overlapping spawn*/
-			// tempSpawn = new Vector2(x*B2DVars.MTT, y*B2DVars.MTT);
-			
-/*			for(int i=0; i<EnemyContainer.GETSMALLENEMY().size;i++){
-				if(EnemyContainer.GETSMALLENEMY().get(i).getBody().getPosition().dst2(tempSpawn)<.4f){
-					
-					 x =randInt(0, 60);
-					 y =randInt(0,60);
-						 tempSpawn = new Vector2(x*B2DVars.MTT, y*B2DVars.MTT);
-						i=0;
-				}
-				
-			}*/
+	
 			
 
 			if(myTimerSmallEnemy.hasCompleted()){
@@ -165,18 +167,7 @@ fallow= new Fallow();
 		}
 
 	}
-	
-	
 
-
-
-
-
-	
-	
-	
-	
-	
 	
 
 	public static int randInt(int min, int max) {
@@ -191,7 +182,7 @@ fallow= new Fallow();
 	}
 	
 	
-	
+
 	
 
 	
@@ -203,8 +194,11 @@ fallow= new Fallow();
 		teleportingLogic();		
 		player.update(dt);
 		fallow.proximityCheck();
-		
+		attack.atackAvalibleChek();
 //		coinColector();
+		hud.update();
+		npc.update(dt);
+		
 		
 		
 		
@@ -218,17 +212,24 @@ fallow= new Fallow();
 	
 		//create enemy
 		createEnemy(enemyIerator);
+		
+		  
+		
 	}
 	
 	
 
 
 
+	public static HUD getHud() {
+		return hud;
+	}
 	public void render() {
 	
 		// camera follow player
 		cam.setPosition(player.getPlayerPositionX()* PPM, player.getPlayerPositionY()* PPM);
 		cam.update();
+		hudCam.update();
 
 		// draw tile
 		if(!debug){
@@ -269,13 +270,13 @@ fallow= new Fallow();
 			
 			shapeRenderer.end();
 			
-			
 		}
 
 		// draw player
 		sb.setProjectionMatrix(cam.combined);
 		player.render(sb);
-		
+//npc		
+		npc.render(sb);
 		// draw portal
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).render(sb);}
 		for (int j = 0; j < doors.size; j++) {doors.get(j).render(sb);}
@@ -292,6 +293,7 @@ fallow= new Fallow();
 		sb.setProjectionMatrix(hudCam.combined);
 		hud.render(sb);
 		
+		stage.draw();
 
 
 		}
@@ -437,7 +439,8 @@ fallow= new Fallow();
 	}
 	@Override
 	public void handleInput() {
-	targeting.handleInput(cam);
+	
+		myImputHandler.handleInput(cam);
 	
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			if(debug== true){
@@ -451,7 +454,10 @@ fallow= new Fallow();
 	
 	
 	
-	
+	public static MyInputHandler getMyInputHandler() {
+		return myImputHandler;
+	}
+
 	
 	
 	
