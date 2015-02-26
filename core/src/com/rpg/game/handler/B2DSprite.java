@@ -78,7 +78,7 @@ public class B2DSprite  {
 		TextureRegion[] sprites = new TextureRegion[10];
 
 		for (int i = 0; i < sprites.length; i++) {
-			sprites[i] = new TextureRegion(tex, i * 64, animationRow * 64, 64,64);
+			sprites[i] = new TextureRegion(tex, i * 128, animationRow * 128, 128,128);
 		}
 
 		getAnimation().setFrames(sprites, 1 / 12f);

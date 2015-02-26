@@ -40,15 +40,15 @@ public class AdultGame implements ApplicationListener {
 
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 		res = new Content();
-		res.loadTexture("img/professor_walk.png", "player");
+		res.loadTexture("img/template.png", "player");
 		res.loadTexture("img/portal.png", "portal");
 		res.loadTexture("img/portal2.png", "portal2");
 		res.loadTexture("img/door.png", "door");
-		res.loadTexture("img/enemySmall.png", "enemySmall");
+		res.loadTexture("img/npc2.png", "enemySmall");
 		res.loadTexture("img/coin.png", "coins");
 		res.loadTexture("img/hud.png", "hud");
 		res.loadTexture("img/target.png", "mark");
-		res.loadTexture("img/npc.png", "npc");
+		res.loadTexture("img/npc1.png", "npc");
 	
 	
 		cam = new BoundedCamera();

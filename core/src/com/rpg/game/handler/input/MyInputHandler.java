@@ -3,11 +3,12 @@ package com.rpg.game.handler.input;
 import static com.rpg.game.handler.B2DVars.PPM;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.rpg.game.entities.creature.Creature;
+import com.rpg.game.entities.creature.Player;
+import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.EnemyContainer;
 import com.rpg.game.state.Play;
@@ -33,7 +34,7 @@ public class MyInputHandler implements InputProcessor {
 	}
 	
 	private void update(){
-		if (tagHolder!=null && Play.getPlayer().getBody().getPosition().dst2(tagHolder.getPosition())>16) {
+		if (tagHolder!=null && Play.getPlayer().getBody().getPosition().dst2(tagHolder.getPosition())>100) {
 			tagHolder.setTagged(false);
 			tagHolder=null;		
 		}
@@ -65,16 +66,18 @@ public class MyInputHandler implements InputProcessor {
 
 
 				justPresed=false;
-				targetTemp= new Vector2(cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM,
-						cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
+/*				targetTemp= new Vector2(
+						cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM,
+						cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);*/
 				
-				
+				targetTemp= new Vector2(cam.position.x/PPM-(cam.viewportWidth/2/PPM*B2DVars.getZOOM())+Gdx.input.getX()*B2DVars.getZOOM()/PPM,
+						cam.position.y/PPM-(cam.viewportHeight/2/PPM*B2DVars.getZOOM())+(cam.viewportHeight*B2DVars.getZOOM()/PPM)-Gdx.input.getY()*B2DVars.getZOOM()/PPM);
 				
 				
 				//check all enemys
 				for(int i=0; i<EnemyContainer.GETSMALLENEMY().size;i++){
 					//if you cliced on enemy position
-					if(EnemyContainer.GETSMALLENEMY().get(i).getBody().getPosition().dst2(targetTemp)<.06f){
+					if(EnemyContainer.GETSMALLENEMY().get(i).getBody().getPosition().dst2(targetTemp)<.9f){
 
 						if(EnemyContainer.GETSMALLENEMY().get(i).isTagged()){wasTagged=true;}else {wasTagged=false;}
 						if(tagHolder!=null)tagHolder.setTagged(false);
@@ -82,7 +85,7 @@ public class MyInputHandler implements InputProcessor {
 					
 					}else {
 						//if you cliced on  not enemys position
-						Condition.setMoving(true);
+						Player.setMoving(true);
 					}
 			}/// when enemy  is out of range
 				
@@ -90,28 +93,32 @@ public class MyInputHandler implements InputProcessor {
 				//if enemy is null
 				if(tagHolder==null){
 				
-						 Condition.setMoving(true);
+						 Player.setMoving(true);
 						 //when it not null is taged and was not taged before
 			}else if (tagHolder!=null&& !tagHolder.isTagged() &&!wasTagged) {
 					tagHolder.setTagged(true);
-					 Condition.setMoving(false);
+					Player.setMoving(false);
 					 
 				
 			}
-				Condition.setLastClickX  (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
-				Condition.setLastClickY (cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
-			
 
+			
+				Condition.setLastClickX  (cam.position.x/PPM-(cam.viewportWidth/2/PPM*B2DVars.getZOOM())+Gdx.input.getX()*B2DVars.getZOOM()/PPM );
+				Condition.setLastClickY (cam.position.y/PPM-(cam.viewportHeight/2/PPM*B2DVars.getZOOM())+(cam.viewportHeight*B2DVars.getZOOM()/PPM)-Gdx.input.getY()*B2DVars.getZOOM()/PPM);
+			
+				
+				
+				
 				//}
 
 	/*	}else {
 			justPresed=true;
 		}*/
-		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+/*		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
 			 float x= (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
 		float y=(cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
 			 Play.player.getTarget().getBody().setTransform(x, y,  Play.player.getTarget().getBody().getAngle());
-		}
+		}*/
 		
 		
 		
@@ -140,7 +147,8 @@ public class MyInputHandler implements InputProcessor {
 	}
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
+		B2DVars.setZOOM(B2DVars.getZOOM()+amount /25f);
+	System.out.println(B2DVars.getZOOM());
 		return false;
 	}
 	

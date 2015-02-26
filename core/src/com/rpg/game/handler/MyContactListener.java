@@ -87,14 +87,14 @@ public class MyContactListener implements ContactListener {
 				&& fb.getUserData().equals("player")) {
 			damage.add(fa.getBody());
 
-			((SmallCoyote) fa.getBody().getUserData()).setFighting(true);
+			//((SmallCoyote) fa.getBody().getUserData()).setFighting(true);
 		}
 		if (fb.getUserData().equals("enemy")
 				&& fa.getUserData().equals("player")) {
 
 			damage.add(fb.getBody());
 
-			((SmallCoyote) fb.getBody().getUserData()).setFighting(true);
+			//((SmallCoyote) fb.getBody().getUserData()).setFighting(true);
 
 		}
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,14 +176,14 @@ public class MyContactListener implements ContactListener {
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		if (fa.getUserData().equals("enemy")
 				&& fb.getUserData().equals("player")) {
-			((SmallCoyote) fa.getBody().getUserData()).setFighting(false);
+		//	((SmallCoyote) fa.getBody().getUserData()).setFighting(false);
 			damage.removeValue(fa.getBody(), true);
 			isPlayerInRange = false;
 
 		}
 		if (fb.getUserData().equals("enemy")
 				&& fa.getUserData().equals("player")) {
-			((SmallCoyote) fb.getBody().getUserData()).setFighting(false);
+			//((SmallCoyote) fb.getBody().getUserData()).setFighting(false);
 
 			damage.removeValue(fb.getBody(), true);
 			isPlayerInRange = false;

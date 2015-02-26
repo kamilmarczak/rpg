@@ -37,21 +37,21 @@ public class BoundedCamera extends OrthographicCamera {
 
 	private void fixBounds() {
 
-		if (position.x < xmin + viewportWidth / 2) {
-			position.x = xmin + viewportWidth / 2;
+		if (position.x < xmin + viewportWidth / 2*B2DVars.getZOOM()) {
+			position.x = xmin + viewportWidth / 2*B2DVars.getZOOM();
 
 		}
-		if (position.x > xmax - viewportWidth / 2) {
-			position.x = xmax - viewportWidth / 2;
+		if (position.x > xmax - viewportWidth / 2*B2DVars.getZOOM()) {
+			position.x = xmax - viewportWidth / 2*B2DVars.getZOOM();
 
 		}
 
-		if (position.y < ymin + viewportHeight / 2) {
-			position.y = ymin + viewportHeight / 2;
+		if (position.y < ymin + viewportHeight / 2*B2DVars.getZOOM()) {
+			position.y = ymin + viewportHeight / 2*B2DVars.getZOOM();
 		}
 
-		if (position.y > ymax - viewportHeight / 2) {
-			position.y = ymax - viewportHeight / 2;
+		if (position.y > ymax - viewportHeight / 2*B2DVars.getZOOM()) {
+			position.y = ymax - viewportHeight / 2*B2DVars.getZOOM();
 
 		}
 	}

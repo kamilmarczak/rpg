@@ -70,7 +70,7 @@ public class GameMaps implements TileBasedMap {
 				Cell cell = mapLayer.getCell(col, row);
 				if (cell == null)continue;
 				if (cell.getTile() == null)continue;
-				if(cell.getTile().getProperties().containsKey("trawa")){
+				if(cell.getTile().getProperties().containsKey("walkable")){
 				terrain[col][row]=GRASS;
 				  bounds.add(new Rectangle(col * tileSize, row * tileSize, tileSize, tileSize));
 			

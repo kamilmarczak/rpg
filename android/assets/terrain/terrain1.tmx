@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="64" tileheight="64" nextobjectid="3">
  <tileset firstgid="1" name="grass" tilewidth="64" tileheight="64">
   <properties>
    <property name="grass" value=""/>
@@ -7,7 +7,11 @@
   <image source="grass.png" width="1280" height="1280"/>
   <terraintypes>
    <terrain name="Water" tile="84"/>
-   <terrain name="Grass" tile="1"/>
+   <terrain name="Grass" tile="1">
+    <properties>
+     <property name="walkable" value=""/>
+    </properties>
+   </terrain>
   </terraintypes>
   <tile id="0" terrain="1,1,1,1">
    <properties>
@@ -84,15 +88,292 @@
   <tile id="104" terrain="0,0,0,0"/>
   <tile id="105" terrain="0,0,0,0"/>
  </tileset>
+ <tileset firstgid="401" name="tiles" tilewidth="64" tileheight="64">
+  <image source="tiles.png" width="1280" height="1280"/>
+  <terraintypes>
+   <terrain name="dirt" tile="0">
+    <properties>
+     <property name="walkable" value=""/>
+    </properties>
+   </terrain>
+   <terrain name="New Terrain" tile="41">
+    <properties>
+     <property name="walkable" value=""/>
+    </properties>
+   </terrain>
+   <terrain name="New Terrain" tile="112"/>
+   <terrain name="stons" tile="147"/>
+  </terraintypes>
+  <tile id="0" terrain="0,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="1" terrain="0,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="2" terrain="0,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="3" terrain="0,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="4" terrain="0,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="5" terrain="0,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="6" terrain="0,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="7" terrain="0,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="8" terrain="0,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="20" terrain="0,0,0,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="21" terrain="0,0,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="22" terrain="0,0,1,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="23" terrain="0,0,0,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="24" terrain="0,0,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="25" terrain="0,0,1,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="26" terrain="1,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="27" terrain="1,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="28" terrain="1,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="40" terrain="0,1,0,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="41" terrain="1,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="42" terrain="1,0,1,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="43" terrain="0,1,0,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="44" terrain="1,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="45" terrain="1,0,1,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="46" terrain="1,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="47" terrain="1,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="48" terrain="1,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="60" terrain="0,1,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="61" terrain="1,1,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="62" terrain="1,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="63" terrain="0,1,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="64" terrain="1,1,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="65" terrain="1,0,0,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="80" terrain="1,1,1,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="81" terrain="1,1,0,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="82" terrain="1,1,1,0">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="83" terrain="1,1,0,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="84" terrain="0,0,0,3"/>
+  <tile id="85" terrain="0,0,3,3"/>
+  <tile id="86" terrain="0,0,3,0"/>
+  <tile id="87" terrain="3,3,3,0"/>
+  <tile id="88" terrain="3,3,0,3"/>
+  <tile id="89" terrain="2,2,2,0"/>
+  <tile id="90" terrain="2,2,0,2"/>
+  <tile id="91" terrain="0,0,0,2"/>
+  <tile id="92" terrain="0,0,2,2"/>
+  <tile id="93" terrain="0,0,2,0"/>
+  <tile id="94" terrain="2,2,2,2"/>
+  <tile id="95" terrain="2,2,2,2"/>
+  <tile id="96" terrain="2,2,2,2"/>
+  <tile id="97" terrain="2,2,2,2"/>
+  <tile id="98" terrain="2,2,2,2"/>
+  <tile id="99" terrain="2,2,2,2"/>
+  <tile id="100" terrain="1,0,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="101" terrain="0,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="102" terrain="1,0,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="103" terrain="0,1,1,1">
+   <properties>
+    <property name="walkable" value=""/>
+   </properties>
+  </tile>
+  <tile id="104" terrain="0,3,0,3"/>
+  <tile id="105" terrain="3,3,3,3"/>
+  <tile id="106" terrain="3,0,3,0"/>
+  <tile id="107" terrain="3,0,3,3"/>
+  <tile id="108" terrain="0,3,3,3"/>
+  <tile id="109" terrain="2,0,2,2"/>
+  <tile id="110" terrain="0,2,2,2"/>
+  <tile id="111" terrain="0,2,0,2"/>
+  <tile id="112" terrain="2,2,2,2"/>
+  <tile id="113" terrain="2,0,2,0"/>
+  <tile id="114" terrain="2,2,2,2"/>
+  <tile id="115" terrain="2,2,2,2"/>
+  <tile id="116" terrain="2,2,2,2"/>
+  <tile id="117" terrain="2,2,2,2"/>
+  <tile id="118" terrain="2,2,2,2"/>
+  <tile id="119" terrain="2,2,2,2"/>
+  <tile id="124" terrain="0,3,0,0"/>
+  <tile id="125" terrain="3,3,0,0"/>
+  <tile id="126" terrain="3,0,0,0"/>
+  <tile id="131" terrain="0,2,0,0"/>
+  <tile id="132" terrain="2,2,0,0"/>
+  <tile id="133" terrain="2,0,0,0"/>
+  <tile id="146" terrain="3,3,3,3"/>
+  <tile id="147" terrain="3,3,3,3"/>
+  <tile id="148" terrain="3,3,3,3"/>
+  <tile id="149" terrain="3,3,3,3"/>
+  <tile id="150" terrain="3,3,3,3"/>
+  <tile id="151" terrain="3,3,3,3"/>
+  <tile id="152" terrain="3,3,3,3"/>
+ </tileset>
  <layer name="Ground" width="60" height="60">
   <data encoding="base64" compression="gzip">
-   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
+   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
   </data>
  </layer>
  <objectgroup name="Teleport">
-  <object type="forward" x="766" y="3586" width="62" height="57">
+  <object id="1" type="forward" x="766" y="3586" width="62" height="57">
    <ellipse/>
   </object>
-  <object type="doorEnter" x="1034.92" y="3189.42" width="183.927" height="188.315"/>
+  <object id="2" type="doorEnter" x="1034.92" y="3189.42" width="183.927" height="188.315"/>
  </objectgroup>
+ <layer name="roof" width="60" height="60">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2YCwrDIAxA2/vfYnqabWfodpQ5WCEL6uY+aOJ7ECxSig9jtC4LAPybw/pZWAXffATRxgl8vcxvwNe1L/n8Xu2yCr6vXfG1g/at+QcnvrXQntZ9tzT2S4qraO99xxSnFOdH/7Y+vwsAMDLy/1fuUVG0nsjtz7tndO4r5zng23V8elw6F1u/l8vjWXxHWr+6vnzrK8+Tpeee6Pko+Xvh1/k8OrP55taYbnuvOYAe1M5UVmpAS90q+VqqebP5ttzBefBtIXcX7dm3tpezhwMAAAAAAAAAgDVuyhDWCkA4AAA=
+  </data>
+ </layer>
 </map>

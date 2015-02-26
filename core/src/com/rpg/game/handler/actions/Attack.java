@@ -5,18 +5,29 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.entities.creature.Creature;
+import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.Condition;
+import com.rpg.game.handler.MyTimer;
 import com.rpg.game.state.Play;
 
 public class Attack {
+	private MyTimer  timer;
 
 	
 	public Attack() {
 		atackAvalibleChek();
 		buttonsSetter();
+		timer= new MyTimer(1);
 	}
 		
-	
+	public void update(){
+		
+		if(timer.hasCompleted()){
+			Player.setAttackingMelee(false);
+			Player.setAttackingRange(false);
+		}
+		
+	}
 	
 	
 	public void atackAvalibleChek(){	
@@ -54,6 +65,7 @@ public class Attack {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				meleeAtack();
+
 				
 			}
 		});
@@ -63,7 +75,10 @@ public class Attack {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				Player.setAttackingRange(true);
 				rangeAtack();
+				timer.start();
+
 				
 			}
 		});
@@ -79,7 +94,10 @@ public class Attack {
 			
 			//set agro
 			Play.getMyInputHandler().getTagHolder().setTargetRandom(false);
-			
+			//face
+			Play.getPlayer().getTarget().getBody().setTransform(
+					Play.getMyInputHandler().getTagHolder().getPosition().x,
+					Play.getMyInputHandler().getTagHolder().getPosition().y, 0);
 			//atack
 			Play.getMyInputHandler().getTagHolder().setHealth(Play.getMyInputHandler().getTagHolder().getHealth()-Play.getPlayer().getEnemyHitPower());
 		
@@ -88,13 +106,24 @@ public class Attack {
 	}
 	
 	private void meleeAtack(){
+		Player.setAttackingMelee(true);
+		// when is targeted and  dyst from player to target is  less than  <6
 		if(	Play.getMyInputHandler().getTagHolder()!=null&& Play.getMyInputHandler().getTagHolder().getPosition().dst2(Play.getPlayer().getPosition())<.6f){
+			Play.getPlayer().setInRange(true);
 			//set player to face enemy
 			Play.getPlayer().getTarget().getBody()
 			.setTransform(Play.getMyInputHandler().getTagHolder().getPosition().x,
 					Play.getMyInputHandler().getTagHolder().getPosition().y, 0);
 			Play.getMyInputHandler().getTagHolder().setHealth(Play.getMyInputHandler().getTagHolder().getHealth()-Play.getPlayer().getEnemyHitPower());
+			timer.start();
+
+			
+			
+			
+			
 		}else if(Play.getMyInputHandler().getTagHolder()!=null&& Play.getMyInputHandler().getTagHolder().getPosition().dst2(Play.getPlayer().getPosition())>.6f){
+			Play.getPlayer().setInRange(false);
+			
 			Condition.setLastClickX(Play.getMyInputHandler().getTagHolder().getPosition().x);
 			Condition.setLastClickY(Play.getMyInputHandler().getTagHolder().getPosition().y);
 			

@@ -26,12 +26,39 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	protected Body body;
 	private float health;
 	private float enemyHitPower=0;
-	private boolean isFighting= false;
+	
 	private Target target;
 	private boolean targetRandom= true;
 	protected boolean inCombat=false;
-	
+	private static  boolean isMoving = false;
+	private static  boolean isAttackingMelee = false;
+	private static  boolean isAttackingRange = false;
+	private static  boolean inRange = false;
 
+	public boolean isInRange() {
+		return inRange;
+	}
+	public void setInRange(boolean inRange) {
+		Creature.inRange = inRange;
+	}
+	public boolean isAttackingMelee() {
+		return isAttackingMelee;
+	}
+	public static void setAttackingMelee(boolean isAttackingMelee) {
+		Creature.isAttackingMelee = isAttackingMelee;
+	}
+	public boolean isAttackingRange() {
+		return isAttackingRange;
+	}
+	public static void setAttackingRange(boolean isAttackingRange) {
+		Creature.isAttackingRange = isAttackingRange;
+	}
+	public boolean isMoving() {
+		return isMoving;
+	}
+	public static void setMoving(boolean isMoving) {
+		Creature.isMoving = isMoving;
+	}
 	public boolean isInCombat() {return inCombat;}
 	public void setInCombat(boolean inCombat) {this.inCombat = inCombat;}
 	//limiter 
@@ -64,6 +91,7 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 		body= new BodyCreator( x,  y, bodyTAG , sensorTAG,  categoryBit,  maskBits,  isSensor).getBody();
 		createTarget(x, y);
 		sprite= new B2DSprite(body);
+		
 
 	}
 	private void createTarget(float x, float y){target= new Target(x, y);}
@@ -75,8 +103,7 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	public float getEnemyHitPower() {return enemyHitPower;}
 	public void setEnemyHitPower(int enemyHitPower) {this.enemyHitPower = enemyHitPower;}
 	public Body getBody() {return body;}
-	public boolean isFighting() {return isFighting;}
-	public void setFighting(boolean isFighting) {this.isFighting = isFighting;}
+
 	public float getHealth() {return health;}
 	public void setHealth(float health) {	if(health<0){health=0;}this.health = health;}
 

@@ -5,6 +5,7 @@ import static com.rpg.game.handler.B2DVars.PPM;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.entities.creature.Creature;
+import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.GameMaps;
@@ -48,6 +49,11 @@ public class PlayerControler {
 		
 		 lastClickX=(int) (Condition.getLastClickX()/B2DVars.MTT);
 		 lastClickY=(int) (Condition.getLastClickY()/B2DVars.MTT);
+		 
+
+		 
+		 
+		 
 
 					if ((lastFindX != lastClickX) || (lastFindY != lastClickY)) {
 						lastFindX = lastClickX;
@@ -75,7 +81,10 @@ public class PlayerControler {
 			 		
 			if(bm.atDestynation())
 			{iterator++;} 
-			 }
+			 }else {
+				 Player.setMoving(false);
+			}
+
 
 			 if(path.getLength()>iterator2){
 				 Circle ciclce = new Circle((path.getX(iterator2)*B2DVars.MTT+B2DVars.MTT/2)*PPM, 
@@ -87,13 +96,63 @@ public class PlayerControler {
 						
 					}
 
+			
+			
+			
+			
+			
+			
+			
+			
+			
+	
+			
+
+				if(creature.isMoving()){
+					Player.setAnimationRow(0);
+					creature.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
+				}
+				if(!creature.isMoving()&&!creature.isAttackingRange()&&!creature.isAttackingMelee()){
+					Player.setAnimationRow(1);
+					
+					
+				}
+				if(!creature.isMoving()&&creature.isAttackingMelee()&&creature.isInRange()){
+					Player.setAnimationRow(2);
+
+				}
+				
+				if(!creature.isMoving()&&creature.isAttackingMelee()&&!creature.isInRange()){
+					Player.setAnimationRow(0);
+					creature.setMoving(true);
+					
+
+				}
+				
+				
+				if(!creature.isMoving()&&creature.isAttackingRange()){
+					Player.setAnimationRow(3);
+
+				}
+		
+			
+			
+			
+			
+			
+			
+			
+			
+/*			
+			
+			
 		//is moving
-		if(Condition.isMoving()){
+		if(Player.isMoving()){
 		//	animationChecker();
 			//not att
 			if(!Condition.isPlayerIsAttacking()){
 			//body mover
-				
+				.setAnimationRow(0);
 				creature.getBody().setLinearVelocity(bm.getMovementX(),bm.getMovementY());
 				//aniChecker(0);
 				//atack
@@ -106,7 +165,7 @@ public class PlayerControler {
 			}	
 		}
 		//is not moving
-			if(!Condition.isMoving()){
+			if(!Player.isMoving()){
 				
 				//if not moving and not attacking
 				if(!Condition.isPlayerIsAttacking()){
@@ -126,10 +185,33 @@ public class PlayerControler {
 
 					}
 				}	
-			}
+			}*/
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			//	
 			
 	}
+	
+
+	
+	
+	
 	
 
 		public static Array<Circle> getTrace() {
@@ -137,15 +219,8 @@ public class PlayerControler {
 	}
 
 
-
-/*		// dont start animation over and over again
-		public static void aniChecker(int i) {
-			if (numerAnimacii  != i) {
+	
 		
-				Play.player.playAnimation(i,Play.player.getEnemyTextureName());
-				numerAnimacii = i;
-				
-				
-			}
-		}*/
+		
+		
 }

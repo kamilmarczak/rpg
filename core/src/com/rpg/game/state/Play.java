@@ -110,6 +110,7 @@ public class Play extends GameState  {
 		createPlayer();
 		createNpc();
 		// create portal
+	
 		creatPortal();
 		// set up b2dcamera
 		b2dCam.setToOrtho(false, AdultGame.G_WIDTH / PPM, AdultGame.G_HEIGHT/ PPM);
@@ -198,6 +199,7 @@ public class Play extends GameState  {
 //		coinColector();
 		hud.update();
 		npc.update(dt);
+		attack.update();
 		
 		
 		
@@ -228,6 +230,7 @@ public class Play extends GameState  {
 	
 		// camera follow player
 		cam.setPosition(player.getPlayerPositionX()* PPM, player.getPlayerPositionY()* PPM);
+		cam.zoom=B2DVars.getZOOM();
 		cam.update();
 		hudCam.update();
 
@@ -238,7 +241,7 @@ public class Play extends GameState  {
 		}
 		
 		if (debug) {
-			
+			b2dCam.zoom=B2DVars.getZOOM();		
 			b2dCam.setPosition(cam.position.x/ PPM- (b2dCam.viewportWidth / PPM - (b2dCam.viewportWidth / PPM)),
 					cam.position.y / PPM - (b2dCam.viewportHeight / PPM)+ (b2dCam.viewportHeight / PPM));
 			
@@ -272,9 +275,6 @@ public class Play extends GameState  {
 			
 		}
 
-		// draw player
-		sb.setProjectionMatrix(cam.combined);
-		player.render(sb);
 //npc		
 		npc.render(sb);
 		// draw portal
@@ -296,6 +296,9 @@ public class Play extends GameState  {
 		stage.draw();
 
 
+		// draw player
+		sb.setProjectionMatrix(cam.combined);
+		player.render(sb);
 		}
 
 
@@ -362,7 +365,7 @@ public class Play extends GameState  {
 				cfdef.shape = cshape;
 				cfdef.isSensor = true;
 				cfdef.filter.maskBits = B2DVars.BIT_PLAYER;
-
+				
 				if (a.equals("forward")) {
 					cfdef.filter.categoryBits = B2DVars.BIT_PORTAL_FORWARD;
 					body.createFixture(cfdef).setUserData("portalForward");
@@ -442,13 +445,39 @@ public class Play extends GameState  {
 	
 		myImputHandler.handleInput(cam);
 	
-		if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+	if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 			if(debug== true){
 				debug= false;
 			}else {
 				debug= true;
 			}
 		}
+	/*
+		if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+//run
+			player.setAnimationRow(0);
+	
+			
+			
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+//idle
+			player.setAnimationRow(1);
+			
+			
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+//atack knife
+			player.setAnimationRow(2);
+			
+			
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+//atack gun
+			player.setAnimationRow(3);
+			
+			
+		}*/
 		
 	}
 	

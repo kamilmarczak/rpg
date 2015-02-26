@@ -1,12 +1,25 @@
 package com.rpg.game.handler;
 
+
 public class B2DVars {
 	
+	public static void setZOOM(float zOOM) {
+		if(zOOM<.2)return;
+		if(zOOM>2)return;
+		ZOOM = zOOM;
+	}
+
 	//pixel ratio
 	public static final float PPM = 100;
 	public static final float MTT = 0.64f;
+	private static float ZOOM = 2;
+	
 
 	
+	public static float getZOOM() {
+		return ZOOM;
+	}
+
 	//category bits
 	public static final short BIT_PLAYER =2;
 	public static final short BIT_DOOR = 4;
