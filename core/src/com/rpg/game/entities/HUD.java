@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -15,15 +17,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.rpg.game.AdultGame;
 import com.rpg.game.entities.creature.Player;
+import com.rpg.game.handler.B2DVars;
+import com.rpg.game.handler.ContendHolder;
 
 
 public class HUD {
 	
 
-	private TextureRegion crystal;
+	private TextureRegion coinHud;
 	private TextureRegion[] font;
 	private HealthBar hp;
 	private Player player;
+	private Image coinImage, fontImage, previesImage ;
+	private Group group;
 
 	//stage2d
 private Stage stage;
@@ -40,25 +46,43 @@ private Stage stage;
 		this.stage= stage;
 		hp= new HealthBar();
 		this.player = player;
+		group= new Group();
+		group.setSize(110*B2DVars.INTERFACESCALE, 15*B2DVars.INTERFACESCALE);
+		
 		
 		Texture tex = AdultGame.res.getTexture("hud");
+		coinHud = new TextureRegion(tex, 100, 0, 128, 128);
+		coinImage = new Image(coinHud);
+		coinImage.setScale(.1f*B2DVars.INTERFACESCALE);
 		
-		//	container = new TextureRegion(tex, 0, 0, 32, 32);
 		
-		/*		blocks = new TextureRegion[3];
-		for(int i = 0; i < blocks.length; i++) {
-			blocks[i] = new TextureRegion(tex, 32 + i * 16, 0, 16, 16);
-		}*/
 		
-		crystal = new TextureRegion(tex, 80, 0, 16, 16);
+		
+		/**
+		 * 1.gracz sprawdza  dystans  od obiektu na wartwie dach
+		 * 2.  gracz spprawdza czy  znaiduje sie na dachu i go wylacza
+		 * 3. dach jest obiektem  i znika gry jest kontakt z graczem lub enemy
+		 * 4.
+		 * 
+		 * 
+		 * 
+		 * */
+		
+		
+		
+		
+		
 		
 		font = new TextureRegion[11];
 		for(int i = 0; i < 6; i++) {
 			font[i] = new TextureRegion(tex, 32 + i * 9, 16, 9, 9);
+		
 		}
 		for(int i = 0; i < 5; i++) {
 			font[i + 6] = new TextureRegion(tex, 32 + i * 9, 25, 9, 9);
 		}
+
+		
 		buttons();
 	}
 	
@@ -122,7 +146,7 @@ private Stage stage;
     
         table.align(Align.center|Align.top);
         table.add(healthSlider).center().top().fillX().pad(5).expand();
-	   table.add().expand();
+        table.add(group).pad(5).center().left().top().expand();
         table.add().expand();
         table.row();
         table.add();
@@ -165,12 +189,15 @@ private Stage stage;
 
 	
 		// draw crystal
-		sb.draw(crystal,  stage.getWidth()-stage.getWidth()/8, stage.getHeight()-stage.getHeight()/18);
+	//	sb.draw(coinHud,  stage.getWidth()-stage.getWidth()/8, stage.getHeight()-stage.getHeight()/18);
 		
 		// draw crystal amount
 		//drawString(sb, player.getCOINS() + " / " + player.getTotalCrystals(), 132, 211);
-		drawString(sb, " "+1000+" " , stage.getWidth()-stage.getWidth()/10, stage.getHeight()-stage.getHeight()/18);
+		group.clear();
+		group.addActor(coinImage);
+		drawString(sb, " "+ContendHolder.getCashAmount()+" " , stage.getWidth()-stage.getWidth()/10, stage.getHeight()-stage.getHeight()/18);
 		sb.end();
+	
 		
 		
 	}
@@ -178,11 +205,19 @@ private Stage stage;
 	private void drawString(SpriteBatch sb, String s, float x, float y) {
 		for(int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
-			if(c == '/') c = 10;
-			else if(c >= '0' && c <= '9') c -= '0';
+		//	if(c == '/') c = 10;
+			//else if(c >= '0' && c <= '9') c -= '0';
+			 if(c >= '0' && c <= '9') c -= '0';
 			else continue;
-			sb.draw(font[c], x + i * 9, y);
+		//	sb.draw(font[c], x + i * 9, y);
+			//fontImage= new Image(font[c]);
+			 fontImage =new Image(new TextureRegion(font[c], 0, 0, 9, 9));
+			 fontImage.scaleBy(B2DVars.INTERFACESCALE);
+			fontImage.setPosition(i*12*B2DVars.INTERFACESCALE,0 );
+			group.addActor(fontImage);
 		}
+	//	
+		
 	}
 
 

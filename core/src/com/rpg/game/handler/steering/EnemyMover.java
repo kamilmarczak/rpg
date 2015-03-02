@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.handler.B2DVars;
-import com.rpg.game.handler.EnemyContainer;
+import com.rpg.game.handler.ContendHolder;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.MyTimer;
 import com.rpg.game.pathfinding.AStarPathFinder;
@@ -41,8 +41,8 @@ public class EnemyMover {
 
 	public void pathStarter(Creature creature,float enemyNextX, float enemyNextY ) {
 		
-		
-		
+		if(creature.getTarget()==null)return;
+	
 		
 		
 		if(creature.getTarget().isCollision()||reset){

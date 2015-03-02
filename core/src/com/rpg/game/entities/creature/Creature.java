@@ -7,11 +7,15 @@ import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.rpg.game.entities.Coin;
 import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.HealthBar;
 import com.rpg.game.entities.Mark;
 import com.rpg.game.handler.B2DSprite;
+import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyCreator;
+import com.rpg.game.handler.ContendHolder;
 import com.rpg.game.handler.steering.Target;
 import com.rpg.game.pathfinding.Mover;
 
@@ -20,6 +24,9 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	
 	
 	protected HealthBar healthBar;
+	public HealthBar getHealthBar() {
+		return healthBar;
+	}
 	protected Mark mark;
 	protected BodyCreator bodyCreator; 
 	protected  B2DSprite sprite;
@@ -34,6 +41,14 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	private static  boolean isAttackingMelee = false;
 	private static  boolean isAttackingRange = false;
 	private static  boolean inRange = false;
+	private boolean inContacWithRoof= false;
+	public boolean isInContacWithRoof() {
+		return inContacWithRoof;
+	}
+	public void setInContacWithRoof(boolean inContacWithRoof) {
+		this.inContacWithRoof = inContacWithRoof;
+	}
+	private Coin  coins;
 
 	public boolean isInRange() {
 		return inRange;
@@ -95,7 +110,7 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 
 	}
 	private void createTarget(float x, float y){target= new Target(x, y);}
-	
+	public abstract void attack();
 	
 
 	public boolean isTargetRandom() {return targetRandom;}
@@ -214,11 +229,21 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	}
 ///////////////////////////////////////////////////
 
+	
+	
+	
 	public boolean isCollisionEnemys() {
 		return collide;
 	}
 	public void setCollisionEnemys(boolean collide) {
 		this.collide = collide;
+	}
+	
+	
+	public void drop() {
+	coins= 	new Coin(body.getPosition().x/B2DVars.MTT, body.getPosition().y/B2DVars.MTT);
+	ContendHolder.getCoins().add(coins);
+		
 	}
 
 

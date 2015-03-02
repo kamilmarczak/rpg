@@ -118,14 +118,8 @@ public class Target extends Entity implements Steerable<Vector2>  {
 			
 			
 		}
-		public boolean isCollision() {
-			return collision;
-		}
-		@Override
-		public void attack() {
-			// TODO Auto-generated method stub
-			
-		}
+		public boolean isCollision() {	return collision;	}
+
 
 
 

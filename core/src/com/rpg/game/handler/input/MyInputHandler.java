@@ -10,7 +10,7 @@ import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.Condition;
-import com.rpg.game.handler.EnemyContainer;
+import com.rpg.game.handler.ContendHolder;
 import com.rpg.game.state.Play;
 
 public class MyInputHandler implements InputProcessor {
@@ -45,6 +45,9 @@ public class MyInputHandler implements InputProcessor {
 		return tagHolder;
 	}
 	
+	public void setTagHolder(Creature tagHolder) {
+		this.tagHolder = tagHolder;
+	}
 	@Override
 	public boolean keyDown(int keycode) {
 		// TODO Auto-generated method stub
@@ -75,13 +78,13 @@ public class MyInputHandler implements InputProcessor {
 				
 				
 				//check all enemys
-				for(int i=0; i<EnemyContainer.GETSMALLENEMY().size;i++){
+				for(int i=0; i<ContendHolder.getENEMIES().size;i++){
 					//if you cliced on enemy position
-					if(EnemyContainer.GETSMALLENEMY().get(i).getBody().getPosition().dst2(targetTemp)<.9f){
+					if(ContendHolder.getENEMIES().get(i).getBody().getPosition().dst2(targetTemp)<.9f){
 
-						if(EnemyContainer.GETSMALLENEMY().get(i).isTagged()){wasTagged=true;}else {wasTagged=false;}
+						if(ContendHolder.getENEMIES().get(i).isTagged()){wasTagged=true;}else {wasTagged=false;}
 						if(tagHolder!=null)tagHolder.setTagged(false);
-						tagHolder= EnemyContainer.GETSMALLENEMY().get(i);
+						tagHolder= ContendHolder.getENEMIES().get(i);
 					
 					}else {
 						//if you cliced on  not enemys position
@@ -148,7 +151,7 @@ public class MyInputHandler implements InputProcessor {
 	@Override
 	public boolean scrolled(int amount) {
 		B2DVars.setZOOM(B2DVars.getZOOM()+amount /25f);
-	System.out.println(B2DVars.getZOOM());
+
 		return false;
 	}
 	

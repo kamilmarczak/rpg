@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.entities.creature.SmallCoyote;
 import com.rpg.game.handler.steering.Target;
+import com.rpg.game.state.Play;
 
 public class MyContactListener implements ContactListener {
 
@@ -29,8 +30,9 @@ public class MyContactListener implements ContactListener {
 	public MyContactListener() {
 		super();
 		damage = new Array<Body>();
-		coins = new Array<Body>();
-		fallow = new Array<Body>();
+		//coins = new Array<Body>();
+	fallow = new Array<Body>();
+		
 	}
 
 	public void beginContact(Contact contact) {
@@ -132,6 +134,26 @@ public class MyContactListener implements ContactListener {
 		
 
 		}
+		
+		
+		
+		
+		if (fa.getUserData().equals("player")&& fb.getUserData().equals("roof")||
+				fb.getUserData().equals("player")&& fa.getUserData().equals("roof")) {
+	Play.setVisibleRoof(false);
+		
+
+		}
+		
+		
+		if (fa.getUserData().equals("enemy")&& fb.getUserData().equals("roof")) {
+			((Creature)fa.getBody().getUserData()).setInContacWithRoof(true);
+		}
+		if (fb.getUserData().equals("enemy")&& fa.getUserData().equals("roof")) {
+			((Creature)fb.getBody().getUserData()).setInContacWithRoof(true);
+		}
+		
+		
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	}
@@ -219,6 +241,18 @@ public class MyContactListener implements ContactListener {
 
 
 
+		}
+		if (fa.getUserData().equals("player")&& fb.getUserData().equals("roof")||
+				fb.getUserData().equals("player")&& fa.getUserData().equals("roof")) {
+	Play.setVisibleRoof(true);
+		
+
+		}
+		if (fa.getUserData().equals("enemy")&& fb.getUserData().equals("roof")) {
+			((Creature)fa.getBody().getUserData()).setInContacWithRoof(false);
+		}
+		if (fb.getUserData().equals("enemy")&& fa.getUserData().equals("roof")) {
+			((Creature)fb.getBody().getUserData()).setInContacWithRoof(false);
 		}
 
 	}

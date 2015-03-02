@@ -8,6 +8,7 @@ import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.MyTimer;
+import com.rpg.game.handler.steering.Target;
 import com.rpg.game.state.Play;
 
 public class Attack {
@@ -27,6 +28,7 @@ public class Attack {
 			Player.setAttackingRange(false);
 		}
 		
+		
 	}
 	
 	
@@ -37,7 +39,8 @@ public class Attack {
 		
 		  for(int j =0; j<attack.size; j++)
 		  {
-	
+			//  if(attack.get(j).getUserData()!=null&& !attack.get(j).getUserData().getClass().equals(Target.class))
+			  
 			if( (((Creature) attack.get(j).getUserData())).getBody().getPosition().dst2(Play.getPlayer().getBody().getPosition())<.6f){
 				
 				((Creature) attack.get(j).getUserData()).setInCombat(true);
@@ -82,11 +85,7 @@ public class Attack {
 				
 			}
 		});
-		
-		
-		
-		
-		
+
 	}
 	private void rangeAtack(){
 		if(	Play.getMyInputHandler().getTagHolder()!=null){

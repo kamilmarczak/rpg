@@ -12,7 +12,8 @@ public class B2DVars {
 	//pixel ratio
 	public static final float PPM = 100;
 	public static final float MTT = 0.64f;
-	private static float ZOOM = 2;
+	private static float ZOOM = 1;
+	public static float INTERFACESCALE = 2;
 	
 
 	
@@ -30,6 +31,7 @@ public class B2DVars {
 	public static final short BIT_PLAYER_SENSOR =128;
 	public static final short BIT_TARGET =256;
 	public static final short BIT_NPC =512;
+	public static final short BIT_ROOF =1024;
 	
 	//Enemy type
 	public static int SMALLENEMY =1,COIN =2, PLAYER =3;

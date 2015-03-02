@@ -23,29 +23,33 @@ public class SmallCoyote extends Creature {
 	private static String sensorTAG="sensorEnemy";
 	private boolean stopMovment=true;
 	private MyTimer atackTimer;
+	private int currentAnimationRow;
+	private boolean visible= true;
+
 
 	
 	
 	
 	
+	public boolean isVisible() {
+		return visible;
+	}
+
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 	private int type=3;
 	private EnemyMover em;
 	private int animationRow=0;
 
 
-
-
-
 	private static short categoryBit =B2DVars.BIT_ENEMY;
-/*	
-	private static int maskBits = 
-			B2DVars.BIT_ENEMY|
-			B2DVars.BIT_PLAYER;*/
-
 
 	private static int maskBits = 
 			B2DVars.BIT_ENEMY|
-			B2DVars.BIT_PLAYER;
+			B2DVars.BIT_PLAYER|
+			B2DVars.BIT_ROOF;
 
 
 
@@ -81,17 +85,6 @@ public class SmallCoyote extends Creature {
 	}
 
 	
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
 	public EnemyMover getEm() {
 		return em;
 	}
@@ -103,6 +96,7 @@ public class SmallCoyote extends Creature {
 		sb.begin();
 		int pozX=(int)(body.getPosition().x * B2DVars.PPM - sprite.getWidth() / 2);
 		int pozY=(int) (body.getPosition().y * B2DVars.PPM - sprite.getHeight() / 2);
+	
 		healthBar.draw(sb,pozX,pozY ,sprite.getWidth(),sprite.getHeight(),getHealth()/100);
 		sb.end();
 		
@@ -119,11 +113,23 @@ public class SmallCoyote extends Creature {
 	@Override
 	public int getType() {return type;}
 
+	public void setAnimationRow(int animationRow) {
+		this.animationRow = animationRow;
+	}
+
+
 	@Override
 	public void update(float dt) {
+		//if((Creature)body.getUserData()==null)return;
+	//	if(body==null)return;
+		if(animationRow!=currentAnimationRow){
+		sprite.playAnimation(animationRow, textureName);
+		
+		currentAnimationRow=animationRow;
+		}
 		
 		
-			mark.update(dt);
+		mark.update(dt);
 	sprite.update(dt);
 	if (steeringBehavior != null) {
 		
@@ -142,6 +148,8 @@ public class SmallCoyote extends Creature {
 		
 		// Apply steering acceleration
 		applySteering(steeringOutput, dt);
+		
+		visibilityCheck();
 	}
 	
 	
@@ -149,6 +157,7 @@ public class SmallCoyote extends Creature {
 	
 	
 	if(isTargetRandom()){
+		
 		getBody().setAngularDamping(0);
 		stopMovment=true;
 	em.pathStarter((Creature)body.getUserData(), 
@@ -192,6 +201,25 @@ public class SmallCoyote extends Creature {
 
 	
 	
+	private void visibilityCheck() {
+	
+		if(Play.isVisibleRoof()&&isInContacWithRoof()){
+			
+			
+			
+			this.setVisible(false);
+			setAnimationRow(8);	
+			healthBar.setVisible(false);
+		}else {
+			this.setVisible(true);
+		}
+		
+	}
+
+
+
+
+
 	public static int randInt(int min, int max) {
 
 
@@ -209,14 +237,22 @@ public class SmallCoyote extends Creature {
 	public void attack() {
 
 	if(inCombat&&atackTimer.hasCompleted()){
+		//face
+		getTarget().getBody().setTransform(Play.getPlayer().getPlayerPositionX(), Play.getPlayer().getPlayerPositionY(),0);
 
+		setAnimationRow(2);
 		Play.getPlayer().setHealth(Play.getPlayer().getHealth()-getEnemyHitPower());
 		atackTimer.start();
-		
-		
+	}else if (!inCombat&& isVisible()) {
+		setAnimationRow(0);	
 	}
 		
 	}
+@Override
+public void drop() {
+
+	super.drop();
+}
 	
 
 

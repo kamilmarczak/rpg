@@ -7,7 +7,6 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -24,11 +23,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.rpg.game.AdultGame;
@@ -39,12 +33,14 @@ import com.rpg.game.entities.creature.Npc;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.entities.creature.SmallCoyote;
 import com.rpg.game.handler.B2DVars;
-import com.rpg.game.handler.EnemyContainer;
+import com.rpg.game.handler.ContendHolder;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
 import com.rpg.game.handler.MyTimer;
+import com.rpg.game.handler.RoofRemover;
 import com.rpg.game.handler.actions.Attack;
+import com.rpg.game.handler.actions.Death;
 import com.rpg.game.handler.actions.Fallow;
 import com.rpg.game.handler.input.MyInputHandler;
 import com.rpg.game.handler.steering.PlayerControler;
@@ -68,10 +64,26 @@ public class Play extends GameState  {
 	private Attack attack;
 	private Stage stage;
 	private Npc npc;
+	private Death death;
+	private RoofRemover roofRemover;
+	private static boolean  visibleRoof= true;
 
 	
 	////
 	
+
+
+
+
+
+
+	public static boolean isVisibleRoof() {
+		return visibleRoof;
+	}
+	public static void setVisibleRoof(boolean visibleRoof) {
+		Play.visibleRoof = visibleRoof;
+	}
+
 
 
 	private static HUD hud;
@@ -95,6 +107,7 @@ public class Play extends GameState  {
 
 	public Play(GameStateManager gsm) {
 		super(gsm);
+
 		shapeRenderer=new ShapeRenderer();
 		//enemyContainer= new EnemyContainer();
 		// set up box2d
@@ -126,6 +139,8 @@ public class Play extends GameState  {
 		InputMultiplexer im = new InputMultiplexer(stage,myImputHandler);
 		Gdx.input.setInputProcessor(im);
 		fallow= new Fallow();
+		death= new Death();
+		roofRemover= new RoofRemover();
 	
 	}
 
@@ -146,7 +161,7 @@ public class Play extends GameState  {
 	
 	private void createEnemy(int iletenmy) {
 
-		if(iletenmy>EnemyContainer.GETSMALLENEMY().size)
+		if(iletenmy>ContendHolder.getENEMIES().size)
 		{
 			int x =randInt(0, 60);
 			int y =randInt(0,60);
@@ -157,7 +172,7 @@ public class Play extends GameState  {
 			if(myTimerSmallEnemy.hasCompleted()){
 				myTimerSmallEnemy.start();
 			SmallCoyote smalCoy = new SmallCoyote(x,y );
-			EnemyContainer.GETSMALLENEMY().add(smalCoy);
+			ContendHolder.getENEMIES().add(smalCoy);
 			smalCoy.getBody().setUserData(smalCoy);
 
 
@@ -191,6 +206,21 @@ public class Play extends GameState  {
 
 	public void update(float dt) {
 		world.step(AdultGame.STEP, 6, 2);
+	
+		death.update();
+		
+		
+
+/*		for(int i=0; i<Death.getENEMIESTOREMOVE().size;i++){
+			if(!world.isLocked()){
+				
+		world.destroyBody(	Death.getENEMIESTOREMOVE().get(i).getBody());
+		world.destroyBody(Death.getENEMIESTOREMOVE().get(i).getTarget().getBody());
+		Death.getENEMIESTOREMOVE().removeIndex(i);
+			}
+		}
+*/
+	
 		handleInput();
 		teleportingLogic();		
 		player.update(dt);
@@ -204,20 +234,25 @@ public class Play extends GameState  {
 		
 		
 		
+		
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).update(dt);}
 		//for (int i = 0; i < player.getCoinsArray().size; i++) {	player.getCoinsArray().get(i).update(dt);}
 		for (int i = 0; i < doors.size; i++) {doors.get(i).update(dt);}
-		for (int i = 0; i <EnemyContainer.GETSMALLENEMY().size; i++) {
-		//	ed.directionChecker(i);
-			//System.out.println(EnemyContainer.GETSMALLENEMY().get(i).getBody().getPosition());
-			EnemyContainer.GETSMALLENEMY().get(i).update(dt);}
+		for (int i = 0; i <ContendHolder.getENEMIES().size; i++) {
+			ContendHolder.getENEMIES().get(i).update(dt);}
 	
 		//create enemy
 		createEnemy(enemyIerator);
 		
 		  
+		for (int i = 0; i <ContendHolder.getCoins().size; i++) {
+			ContendHolder.getCoins().get(i).update(dt);}
 		
 	}
+	  
+	
+
+	
 	
 	
 
@@ -237,6 +272,8 @@ public class Play extends GameState  {
 		// draw tile
 		if(!debug){
 		gameMap.getTmr().setView(cam);
+
+		gameMap.getTmr().getMap().getLayers().get("roof").setVisible(visibleRoof);
 		gameMap.getTmr().render();
 		}
 		
@@ -286,7 +323,7 @@ public class Play extends GameState  {
 		if(!debug){
 
 		
-		for (int j = 0; j < EnemyContainer.GETSMALLENEMY().size; j++) {EnemyContainer.GETSMALLENEMY().get(j).render(sb);}
+		for (int j = 0; j < ContendHolder.getENEMIES().size; j++) {ContendHolder.getENEMIES().get(j).render(sb);}
 		}
 
 		//draw HUD
@@ -295,10 +332,12 @@ public class Play extends GameState  {
 		
 		stage.draw();
 
-
 		// draw player
 		sb.setProjectionMatrix(cam.combined);
 		player.render(sb);
+//draw coins
+		for (int i = 0; i <ContendHolder.getCoins().size; i++) {
+			ContendHolder.getCoins().get(i).render(sb);}
 		}
 
 
@@ -452,80 +491,17 @@ public class Play extends GameState  {
 				debug= true;
 			}
 		}
-	/*
-		if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-//run
-			player.setAnimationRow(0);
 	
-			
-			
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-//idle
-			player.setAnimationRow(1);
-			
-			
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-//atack knife
-			player.setAnimationRow(2);
-			
-			
-		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-//atack gun
-			player.setAnimationRow(3);
-			
-			
-		}*/
 		
 	}
 	
-	
+
 	
 	public static MyInputHandler getMyInputHandler() {
 		return myImputHandler;
 	}
 
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 
 }

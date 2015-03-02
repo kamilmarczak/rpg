@@ -21,12 +21,18 @@ public class Player extends Creature {
 	private static String bodyTAG = "player";
 	private static String sensorTAG = "playerSensor";
 	private static short categoryBit =B2DVars.BIT_PLAYER;
+	
 	private static int maskBits = 
 			B2DVars.BIT_ENEMY
 			| B2DVars.BIT_DOOR 
 			| B2DVars.BIT_PORTAL_FORWARD
 			| B2DVars.BIT_PORTAL_BACK 
-			| B2DVars.BIT_COLLECTA;
+			| B2DVars.BIT_COLLECTA
+			|B2DVars.BIT_ROOF;
+	
+	
+	
+	
 	static boolean isSensor = false;
 
 	private static  int animationRow=3;
@@ -145,21 +151,21 @@ public class Player extends Creature {
 
 	}
 
-/*	public void ishidead(Entity entity) {
+	/*	public void ishidead(Entity entity) {
 
-		if (entity.getHitPoint() <= 0) {
+	if (entity.getHitPoint() <= 0) {
 
-			float posX = entity.getBody().getPosition().x;
-			float posY = entity.getBody().getPosition().y;
+		float posX = entity.getBody().getPosition().x;
+		float posY = entity.getBody().getPosition().y;
 
-			createCoin(posX, posY, B2DVars.COIN);
-			entity.getHp().getSkinAtlas().dispose();
-			EnemyContainer.GETSMALLENEMY().removeValue(entity, false);
-			Play.getWorld().destroyBody(entity.getBody());
+		createCoin(posX, posY, B2DVars.COIN);
+		entity.getHp().getSkinAtlas().dispose();
+		EnemyContainer.GETSMALLENEMY().removeValue(entity, false);
+		Play.getWorld().destroyBody(entity.getBody());
 
-		}
+	}
 
-	}*/
+}*/
 
 /*	public void createCoin(float posX, float posY, int money) {
 

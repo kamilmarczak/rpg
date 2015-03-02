@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.handler.MyContactListener;
+import com.rpg.game.handler.steering.Target;
 import com.rpg.game.state.Play;
 
 public class Fallow {
@@ -25,7 +26,7 @@ public Fallow() {
 		
 		  //Enemy Fallow player 
 		  for(int j =0; j<fallow.size; j++){
-	
+		//  if(fallow.get(j).getUserData()!=null&& !fallow.get(j).getUserData().getClass().equals(Target.class))
 			 ((Creature) fallow.get(j).getUserData()).setTargetRandom(false);
 			  
 		  }
