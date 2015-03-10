@@ -2,17 +2,12 @@ package com.rpg.game.handler.steering;
 
 import static com.rpg.game.handler.B2DVars.PPM;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.handler.B2DVars;
-import com.rpg.game.handler.ContendHolder;
 import com.rpg.game.handler.GameMaps;
-import com.rpg.game.handler.MyTimer;
 import com.rpg.game.pathfinding.AStarPathFinder;
 import com.rpg.game.pathfinding.Path;
 import com.rpg.game.pathfinding.PathFinder;
@@ -28,6 +23,7 @@ public class EnemyMover {
 	private boolean usItDone = true;
 	private Array<Circle> enemyTrace = new Array<Circle>();
 	private boolean reset=false;
+	
 	
 	
 

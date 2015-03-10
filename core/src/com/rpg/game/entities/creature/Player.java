@@ -6,13 +6,10 @@ import com.badlogic.gdx.ai.steer.behaviors.Face;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.physics.box2d.World;
+import com.rpg.game.data.Data;
 import com.rpg.game.handler.B2DVars;
-import com.rpg.game.handler.Condition;
 import com.rpg.game.handler.MyTimer;
-import com.rpg.game.handler.steering.BodyMover;
-import com.rpg.game.handler.steering.EnemyMover;
 import com.rpg.game.handler.steering.PlayerControler;
 import com.rpg.game.state.Play;
 
@@ -38,7 +35,7 @@ public class Player extends Creature {
 	private static  int animationRow=3;
 	private int type = 3;
 	private String textureName = "player";
-	private int playerHp=100;
+	
 	private MyTimer atackTimer;
 	private int currentAnimationRow;
 	
@@ -49,16 +46,16 @@ public class Player extends Creature {
 	public static void setAnimationRow(int animationRow) {Player.animationRow = animationRow;}
 
 	
-	public Player(float x, float y) {
-		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor);
+	public Player(float x, float y,World world,Data data ) {
+		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor,world);
 		sprite.playAnimation(animationRow, textureName);
 		
-		setHealth(playerHp);
-		setEnemyHitPower(10);
+		setHealth(data.getPlayerHp());
+		setHitPower(10);
 		atackTimer= new MyTimer(2);
 		
-		this.setMaxAngularAcceleration(1000000);
-		this.setMaxAngularSpeed(35);
+		this.setMaxAngularAcceleration(100000);
+		this.setMaxAngularSpeed(10);
 		this.setIndependentFacing(true);
 		this.setTagged(false);
 		this.setSteeringBehavior(faceSB);
@@ -67,9 +64,9 @@ public class Player extends Creature {
 	}
 
 	final Face<Vector2> faceSB = new Face<Vector2>(this, this.getTarget()) 
-			.setTimeToTarget(0.001f) 
-			.setAlignTolerance(0.001f) 
-			.setDecelerationRadius(MathUtils.degreesToRadians * 360);
+			.setTimeToTarget(0.0003f) 
+			.setAlignTolerance(0.01f) 
+			.setDecelerationRadius(MathUtils.degreesToRadians * 60);
 
 	
 	@Override
@@ -87,6 +84,7 @@ public class Player extends Creature {
 
 	@Override
 	public void update(float dt) {
+
 
 		if(animationRow!=currentAnimationRow){
 		sprite.playAnimation(animationRow, textureName);
@@ -112,15 +110,28 @@ public class Player extends Creature {
 			applySteering(steeringOutput, dt);
 		}
 		pc.startControl(this);
+		targetFace();
 		
+	}
+	
+	
+	private void targetFace(){
+		
+		if(!this.isMoving()&& Play.getMyInputHandler().getTagHolder()!=null){
+			
+			getTarget().getBody().setTransform(Play.getMyInputHandler().getTagHolder().getBody().getPosition().x, Play.getMyInputHandler().getTagHolder().getBody().getPosition().y, 0);
+			
+			
+			
+		}
 	}
 
 
 	public void damage() {
-
+/*
 		Array<Body> bodiesDmg = Play.getCl().getDamege();
 		Array<Body> fallowDmg = Play.getCl().getFallow();
-
+*/
 		/*
 		 * //Enemy Fallow player for(int j =0; j<fallowDmg.size; j++){ Body f =
 		 * fallowDmg.get(j); bm= new BodyMover(((Entity)
@@ -180,7 +191,7 @@ public class Player extends Creature {
 	
 	
 	private static MyTimer mt=new MyTimer(1);
-	private static BodyMover bm;
+//	private static BodyMover bm;
 	
 /*	private static int COINS = 0;
 	private Array<Coin> coinsArray=new Array<Coin>();
@@ -198,16 +209,16 @@ public class Player extends Creature {
 	
 	@Override
 	public void attack() {
-		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+/*		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
 		if(Play.getMyInputHandler().getTagHolder()!=null&& atackTimer.hasCompleted()){
 		if(Play.getMyInputHandler().getTagHolder().getPosition().dst2(Play.getPlayer().getPosition())>1){
-		Play.getMyInputHandler().getTagHolder().setHealth(Play.getMyInputHandler().getTagHolder().getHealth()-getEnemyHitPower() );
+		Play.getMyInputHandler().getTagHolder().setHealth(Play.getMyInputHandler().getTagHolder().getHealth()-getHitPower() );
 		
 		
 		
 				}
 			}
-		}
+		}*/
 		
 	}
 	

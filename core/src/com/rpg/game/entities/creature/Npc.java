@@ -1,6 +1,7 @@
 package com.rpg.game.entities.creature;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.handler.B2DVars;
 
 public class Npc extends Creature{
@@ -22,8 +23,8 @@ public class Npc extends Creature{
 	public void setAnimationRow(int animationRow) {this.animationRow = animationRow;}
 
 
-	public Npc(float x, float y) {
-		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor);
+	public Npc(float x, float y,World world,Player player) {
+		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor,world);
 		sprite.playAnimation(animationRow, textureName);
 	}
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.entities.Entity;
 import com.rpg.game.handler.BodyCreator;
 
@@ -32,14 +33,15 @@ public class Target extends Entity implements Steerable<Vector2>  {
 	private Body body;
 
 
+
 	
 	
 	
 	///
 
-	public Target(float x, float y) {
+	public Target(float x, float y,World world) {
 		super(x, y);
-		body= new BodyCreator(x, y).getBody();
+		body= new BodyCreator(x, y,world).getBody();
 		body.setUserData(Target.this);
 		//EnemyContainer.getTARGETS().add(this);
 	

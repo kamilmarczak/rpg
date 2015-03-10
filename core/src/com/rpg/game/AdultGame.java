@@ -49,6 +49,8 @@ public class AdultGame implements ApplicationListener {
 		res.loadTexture("img/hud.png", "hud");
 		res.loadTexture("img/target.png", "mark");
 		res.loadTexture("img/npc1.png", "npc");
+		res.loadTexture("img/bullet.png", "bullet");
+		res.loadTexture("img/mainmenu.png", "mainmenu");
 	
 	
 		cam = new BoundedCamera();

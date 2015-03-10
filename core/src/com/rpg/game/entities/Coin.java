@@ -2,11 +2,12 @@ package com.rpg.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
+import com.rpg.game.data.Data;
+import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.B2DSprite;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyCreator;
-import com.rpg.game.handler.ContendHolder;
-import com.rpg.game.state.Play;
 
 public class Coin extends Entity {
 	private Body body;
@@ -16,6 +17,10 @@ public class Coin extends Entity {
 	private String sensorTAG="sensorCoin";
 	private  B2DSprite sprite;
 	private int animationRow=0;
+	private World world;
+	private Player player;
+	private Data data;
+
 	
 	
 	private static short categoryBit =B2DVars.BIT_COLLECTA;
@@ -23,9 +28,14 @@ public class Coin extends Entity {
 			B2DVars.BIT_PLAYER;
 	
 
-	public Coin(float x, float y) {
+	public Coin(float x, float y,World world,Player player,Data data) {
 		super(x, y);
-		body= new BodyCreator( x,  y, bodyTAG , sensorTAG,  categoryBit,  maskBits,  isSensor).getBody();
+		this.world=world;
+		this.player=player;
+		this.data= data;
+	
+		
+		body= new BodyCreator( x,  y, bodyTAG , sensorTAG,  categoryBit,  maskBits,  isSensor, world).getBody();
 		sprite= new B2DSprite(body);
 		sprite.playAnimation(animationRow, textureName);
 	}
@@ -43,12 +53,11 @@ public class Coin extends Entity {
 		
 	}
 	private void checkDistToPlayer(){
-		if(Play.getPlayer().getPosition().dst2(body.getPosition())<.6f){
-			ContendHolder.getCoins().removeValue(this, false);
-			if(!Play.getWorld().isLocked()){
-			Play.getWorld().destroyBody(body);
-			}
-			ContendHolder.addCashAmount(1);
+		if(player.getPosition().dst2(body.getPosition())<.6f){
+			data.getCoins().removeValue(this, false);
+			world.destroyBody(body);
+	
+			data.addCashAmount(1);
 			
 			
 		}

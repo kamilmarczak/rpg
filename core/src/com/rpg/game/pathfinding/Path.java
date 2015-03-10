@@ -83,7 +83,7 @@ public class Path {
 	}
 	
 	/**
-	 * Remove um step específico.
+	 * Remove um step especfico.
 	 * @param index
 	 */
 	public void removeStep(int index){

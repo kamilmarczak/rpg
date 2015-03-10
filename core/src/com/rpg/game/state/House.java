@@ -49,7 +49,7 @@ public class House extends GameState {
 		 	//create world
 		 cam.setBounds(0, tileMapWidth * tileSize, 0, tileMapHeight * tileSize);
 		 world = new World(new Vector2(0, 0), true);
-			cl = new MyContactListener();
+		//	cl = new MyContactListener();
 			world.setContactListener(cl);
 			
 			

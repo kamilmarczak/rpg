@@ -18,7 +18,6 @@ import com.rpg.game.pathfinding.PathFinder;
 public class PlayerControler {
 
 	private BodyMover bm;
-	private MyTimer mt;
 	private int  playerXforMap,playerYforMap,iterator=0,iterator2=0,lastClickX,lastClickY;
 
 	//pathfinding 
@@ -33,7 +32,7 @@ public class PlayerControler {
 
 	
 	public PlayerControler() {
-		 mt = new MyTimer(1);
+	
 			//path
 			finder = new AStarPathFinder(map, 100, true);
 		
@@ -55,7 +54,7 @@ public class PlayerControler {
 		 
 		 
 
-					if ((lastFindX != lastClickX) || (lastFindY != lastClickY)) {
+					if ((lastFindX != lastClickX) && creature.isMoving() || (lastFindY != lastClickY)&& creature.isMoving())  {
 						lastFindX = lastClickX;
 						lastFindY = lastClickY;
 						iterator=0;
@@ -75,8 +74,8 @@ public class PlayerControler {
 			
 				 
 			 bm = new BodyMover(playerX, playerY,
-					 creature.getTarget().getBody().getPosition().x,
-					 creature.getTarget().getBody().getPosition().y,2);
+					 path.getStep(iterator).getX()*B2DVars.MTT+B2DVars.MTT/2,
+					 path.getStep(iterator).getY()*B2DVars.MTT+B2DVars.MTT/2,2);
 
 			 		
 			if(bm.atDestynation())

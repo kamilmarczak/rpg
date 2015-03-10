@@ -10,15 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.rpg.game.AdultGame;
+import com.rpg.game.data.Data;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.B2DVars;
-import com.rpg.game.handler.ContendHolder;
 
 
 public class HUD {
@@ -39,13 +39,16 @@ private Stage stage;
 	private ButtonStyle buttonStyleGun, buttonStyleKnife;
 	private Table table;
 	private Slider healthSlider;
+	private Data data;
 	
 	
 	
-	public HUD(Player player,Stage stage) {
+	public HUD(Player player,Stage stage,Data data) {
 		this.stage= stage;
 		hp= new HealthBar();
 		this.player = player;
+		this.data = data;
+		
 		group= new Group();
 		group.setSize(110*B2DVars.INTERFACESCALE, 15*B2DVars.INTERFACESCALE);
 		
@@ -54,24 +57,7 @@ private Stage stage;
 		coinHud = new TextureRegion(tex, 100, 0, 128, 128);
 		coinImage = new Image(coinHud);
 		coinImage.setScale(.1f*B2DVars.INTERFACESCALE);
-		
-		
-		
-		
-		/**
-		 * 1.gracz sprawdza  dystans  od obiektu na wartwie dach
-		 * 2.  gracz spprawdza czy  znaiduje sie na dachu i go wylacza
-		 * 3. dach jest obiektem  i znika gry jest kontakt z graczem lub enemy
-		 * 4.
-		 * 
-		 * 
-		 * 
-		 * */
-		
-		
-		
-		
-		
+
 		
 		font = new TextureRegion[11];
 		for(int i = 0; i < 6; i++) {
@@ -195,7 +181,7 @@ private Stage stage;
 		//drawString(sb, player.getCOINS() + " / " + player.getTotalCrystals(), 132, 211);
 		group.clear();
 		group.addActor(coinImage);
-		drawString(sb, " "+ContendHolder.getCashAmount()+" " , stage.getWidth()-stage.getWidth()/10, stage.getHeight()-stage.getHeight()/18);
+		drawString(sb, " "+data.getCashAmount()+" " , stage.getWidth()-stage.getWidth()/10, stage.getHeight()-stage.getHeight()/18);
 		sb.end();
 	
 		

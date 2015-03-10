@@ -19,7 +19,7 @@ public class BodyCreator {
 	private FixtureDef fdef = new FixtureDef();
 	private CircleShape sensroShape= new CircleShape(), circle= new CircleShape();;
 	private PolygonShape polygon = new PolygonShape();
-	private World world =Play.getWorld(); 
+	private World world;
 	private  String targetTag="target";
 
 
@@ -41,8 +41,8 @@ public class BodyCreator {
             new Vector2(right, bottom).rotate(180),
             new Vector2(left, bottom).rotate(180)
     };
-public BodyCreator(float x,float y, String bodyTAG,String sensorTAG, short categoryBit ,int maskBits, boolean isSensor){
-
+public BodyCreator(float x,float y, String bodyTAG,String sensorTAG, short categoryBit ,int maskBits, boolean isSensor,World world){
+this.world=world;
 	
 		// BodyDef
 		bdef.position.set(x*B2DVars.MTT, y*B2DVars.MTT );
@@ -75,19 +75,19 @@ public BodyCreator(float x,float y, String bodyTAG,String sensorTAG, short categ
 	
 			}
 
-public BodyCreator(float x,float y) {
-	
+public BodyCreator(float x,float y,World world) {
+	this.world=world;
 	bdef.active=true;
 	bdef.position.set(x*B2DVars.MTT, y*B2DVars.MTT );
-	bdef.type = BodyType.DynamicBody;
+	bdef.type = BodyType.StaticBody;
 	bdef.fixedRotation = true;
 	
 
-    body = world.createBody(bdef);
-    circle.setRadius(5/PPM);
+    circle.setRadius(50/PPM);
 	fdef.shape = circle;
 	fdef.filter.categoryBits= B2DVars.BIT_TARGET;
 	fdef.filter.maskBits= B2DVars.BIT_TARGET;
+	body = world.createBody(bdef);
 	body.createFixture(fdef).setUserData(targetTag);
 }
 

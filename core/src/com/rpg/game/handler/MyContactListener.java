@@ -7,32 +7,38 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
+import com.rpg.game.entities.Bullets;
 import com.rpg.game.entities.creature.Creature;
-import com.rpg.game.entities.creature.SmallCoyote;
+import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.steering.Target;
 import com.rpg.game.state.Play;
 
 public class MyContactListener implements ContactListener {
 
 	// private int numFootContacts;
-	private Array<Body> bodiesToRemove;
 	private Array<Body> damage;
 	private Array<Body> fallow;
-	private Array<Body> coins;
+	private Array<Body> buletsToRemoves;
 	private boolean isPlayerTeleportingForward;
 	private boolean isPlayerTeleportingBack;
 	private boolean isPlayerEnterinHouse;
 	private boolean isPlayerExitingHouse;
 	private boolean isPlayerInRange;
+	private Player player;
 
 	
 
-	public MyContactListener() {
+	public MyContactListener(Player player) {
 		super();
+		this.player= player;
 		damage = new Array<Body>();
-		//coins = new Array<Body>();
-	fallow = new Array<Body>();
+		buletsToRemoves = new Array<Body>();
+		fallow = new Array<Body>();
 		
+	}
+
+	public Array<Body> getBuletsToRemoves() {
+		return buletsToRemoves;
 	}
 
 	public void beginContact(Contact contact) {
@@ -100,15 +106,6 @@ public class MyContactListener implements ContactListener {
 
 		}
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if (fa.getUserData() != null && fa.getUserData().equals("coin")
-				&& fb.getUserData().equals("player")) {
-			coins.add(fa.getBody());
-		}
-		if (fb.getUserData() != null && fb.getUserData().equals("coin")
-				&& fa.getUserData().equals("player")) {
-			coins.add(fb.getBody());
-		}
-		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		if (fa.getUserData().equals("sensorEnemy")&& fb.getUserData().equals("player")) {
 			fallow.add(fa.getBody());
@@ -131,20 +128,16 @@ public class MyContactListener implements ContactListener {
 		if (fa.getUserData().equals("enemy")&& fb.getUserData().equals("enemy")) {
 			((Creature)fa.getBody().getUserData()).setCollisionEnemys(true);
 			((Creature)fb.getBody().getUserData()).setCollisionEnemys(true);
-		
 
 		}
-		
-		
-		
+			
 		
 		if (fa.getUserData().equals("player")&& fb.getUserData().equals("roof")||
 				fb.getUserData().equals("player")&& fa.getUserData().equals("roof")) {
-	Play.setVisibleRoof(false);
-		
+			Play.setVisibleRoof(false);
 
 		}
-		
+		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		if (fa.getUserData().equals("enemy")&& fb.getUserData().equals("roof")) {
 			((Creature)fa.getBody().getUserData()).setInContacWithRoof(true);
@@ -152,10 +145,36 @@ public class MyContactListener implements ContactListener {
 		if (fb.getUserData().equals("enemy")&& fa.getUserData().equals("roof")) {
 			((Creature)fb.getBody().getUserData()).setInContacWithRoof(true);
 		}
-		
-		
 		// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+		if (fa.getUserData().equals("enemy")&& fb.getUserData().equals("bullet")) {
+			((Creature)fa.getBody().getUserData()).setHealth(((Creature)fa.getBody().getUserData()).getHealth()-player.getHitPower());
+			((Creature)fa.getBody().getUserData()).setTargetRandom(false);
+			buletsToRemoves.add(fb.getBody());
+		
+		}
+			
+		if (fb.getUserData().equals("enemy")&& fa.getUserData().equals("bullet")) {
+			((Creature)fb.getBody().getUserData()).setHealth(((Creature)fb.getBody().getUserData()).getHealth()-player.getHitPower());
+			((Creature)fb.getBody().getUserData()).setTargetRandom(false);
+			buletsToRemoves.add(fa.getBody());
+		}
+		
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		if (fa.getUserData().equals("wall")&& fb.getUserData().equals("bullet")) {
+			
+			buletsToRemoves.add(fb.getBody());
+		
+		}
+			
+		if (fb.getUserData().equals("wall")&& fa.getUserData().equals("bullet")) {
+			
+			buletsToRemoves.add(fa.getBody());
+		}
+		
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 
 	public void endContact(Contact contact) {
@@ -228,9 +247,6 @@ public class MyContactListener implements ContactListener {
 		if (fa.getUserData().equals("target")&& fb.getUserData().equals("target")) {
 			
 			((Target)fa.getBody().getUserData()).setCollision(false);
-		
-			
-			
 
 
 		}
@@ -264,17 +280,13 @@ public class MyContactListener implements ContactListener {
 	}
 
 	// public boolean playerCanJump() { return numFootContacts > 0; }
-	public Array<Body> getBodies() {
-		return bodiesToRemove;
-	}
+
 
 	public Array<Body> getDamege() {
 		return damage;
 	}
 
-	public Array<Body> getCoins() {
-		return coins;
-	}
+
 
 	public boolean isPlayerTeleportingForward() {
 		return isPlayerTeleportingForward;
@@ -297,8 +309,8 @@ public class MyContactListener implements ContactListener {
 	}
 
 	public void preSolve(Contact contact, Manifold oldManifold) {
-		Fixture fa = contact.getFixtureA();
-		Fixture fb = contact.getFixtureB();
+		//Fixture fa = contact.getFixtureA();
+		//Fixture fb = contact.getFixtureB();
 
 
 	}

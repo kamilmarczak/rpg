@@ -809,47 +809,47 @@ public class Useless {
 	if (MyInput.isPressed(MyInput.UP)) {
 		player.playAnimation(0);
 		player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, .5f);
-		listaPrzycisków.add(1);
+		listaPrzyciskw.add(1);
 		
 	}
 	if (MyInput.isPressed(MyInput.DOWN)) {
 		player.playAnimation(2);
 		player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, -.5f);
-		listaPrzycisków.add(1);
+		listaPrzyciskw.add(1);
 	}
 	
 	if (MyInput.isPressed(MyInput.LEFT))  {
 		player.playAnimation(1);
 		player.getBody().setLinearVelocity(-.5f,player.getBody().getLinearVelocity().y);
-		listaPrzycisków.add(1);
+		listaPrzyciskw.add(1);
 	}		
 	if (MyInput.isPressed(MyInput.RIGHT)) {
 
 		player.playAnimation(3);
 		player.getBody().setLinearVelocity(.5f,	player.getBody().getLinearVelocity().y);
-		listaPrzycisków.add(1);
+		listaPrzyciskw.add(1);
 	}
 
 	
 	
 
 	if (MyInput.isReleased(MyInput.UP)) {
-		listaPrzycisków.remove(listaPrzycisków.size()-1);
+		listaPrzyciskw.remove(listaPrzyciskw.size()-1);
 		player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, 0);
 		player.playAnimation(4);
 	}
 	if (MyInput.isReleased(MyInput.DOWN)) {
-		listaPrzycisków.remove(listaPrzycisków.size()-1);
+		listaPrzyciskw.remove(listaPrzyciskw.size()-1);
 		player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, 0);
 		player.playAnimation(4);
 	}
 	if (MyInput.isReleased(MyInput.LEFT)) {
-		listaPrzycisków.remove(listaPrzycisków.size()-1);
+		listaPrzyciskw.remove(listaPrzyciskw.size()-1);
 		player.getBody().setLinearVelocity(0,player.getBody().getLinearVelocity().y);
 		player.playAnimation(4);
 	}
 	if (MyInput.isReleased(MyInput.RIGHT)) {
-		listaPrzycisków.remove(listaPrzycisków.size()-1);
+		listaPrzyciskw.remove(listaPrzyciskw.size()-1);
 		player.getBody().setLinearVelocity(0,player.getBody().getLinearVelocity().y);
 		player.playAnimation(4);
 	}

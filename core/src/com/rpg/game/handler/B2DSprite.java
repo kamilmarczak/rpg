@@ -1,5 +1,6 @@
 package com.rpg.game.handler;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,6 +17,7 @@ public class B2DSprite  {
 	private float width;
 	private float height;
 	private int animationRow=0;
+	private Texture texure;
 
 	
 	public B2DSprite(Body body) {
@@ -29,6 +31,13 @@ public class B2DSprite  {
 
 	public B2DSprite(Creature creatur) {
 		this.body = creatur.getBody();
+	}
+
+
+
+	public B2DSprite(OrthographicCamera cam) {
+		this.width= cam.viewportWidth*B2DVars.getZOOM();
+		this.height= cam.viewportHeight*B2DVars.getZOOM();
 	}
 
 
@@ -70,6 +79,32 @@ public class B2DSprite  {
 	
 	}
 	
+	
+	
+	
+	public void renderBackground(SpriteBatch sb) {
+
+		sb.begin();
+	
+		sb.draw(texure,0 ,0,width,height); // 
+
+		sb.end();
+	
+
+	
+	}
+	
+	
+	public  void backgroundDraw( String textureName) {
+
+		texure= AdultGame.res.getTexture(textureName);
+	}
+	
+	
+	
+	
+	
+	
 	public  void playAnimation(int animationRow, String textureName) {
 
 		setAnimationRow(animationRow);
@@ -87,9 +122,22 @@ public class B2DSprite  {
 		setHeight(sprites[0].getRegionHeight());
 	}
 
-	
-	
-	
+	public  void imageDraw( String textureName) {
+
+
+
+		Texture tex = AdultGame.res.getTexture(textureName);
+		TextureRegion[] sprites = new TextureRegion[1];
+
+
+			sprites[0] = new TextureRegion(tex, 0, 0, 128,128);
+		
+
+		getAnimation().setFrames(sprites, 1 / 12f);
+
+		setWidth(sprites[0].getRegionWidth());
+		setHeight(sprites[0].getRegionHeight());
+	}
 	
 	
 	

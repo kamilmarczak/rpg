@@ -2,10 +2,7 @@ package com.rpg.game.handler.actions;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.rpg.game.entities.Entity;
 import com.rpg.game.entities.creature.Creature;
-import com.rpg.game.handler.MyContactListener;
-import com.rpg.game.handler.steering.Target;
 import com.rpg.game.state.Play;
 
 public class Fallow {

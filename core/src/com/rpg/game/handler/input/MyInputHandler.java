@@ -6,35 +6,36 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
+import com.rpg.game.data.Data;
 import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.Condition;
-import com.rpg.game.handler.ContendHolder;
-import com.rpg.game.state.Play;
 
 public class MyInputHandler implements InputProcessor {
 	
-	private Vector2 tempSpawn, targetTemp;
+	private Vector2  targetTemp;
 	private Creature tagHolder;
 
 //	private Creature tagHolder2 =null;
-	private boolean targetIsnotEnemy= false,wasTagged= false,justPresed= false;
+	private boolean wasTagged= false;
 	private Camera cam;
+	private Data data;
 	
 	
 	public MyInputHandler() {
 
 	
 	}
-	public void handleInput(Camera cam) {
+	public void handleInput(Camera cam,Player player,Data data) {
 		this.cam=cam;
-		update();
+		this.data=data;
+		update(player);
 
 	}
 	
-	private void update(){
-		if (tagHolder!=null && Play.getPlayer().getBody().getPosition().dst2(tagHolder.getPosition())>100) {
+	private void update(Player player){
+		if (tagHolder!=null && player.getBody().getPosition().dst2(tagHolder.getPosition())>100) {
 			tagHolder.setTagged(false);
 			tagHolder=null;		
 		}
@@ -50,7 +51,7 @@ public class MyInputHandler implements InputProcessor {
 	}
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 	@Override
@@ -67,24 +68,19 @@ public class MyInputHandler implements InputProcessor {
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		
 
-
-				justPresed=false;
-/*				targetTemp= new Vector2(
-						cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM,
-						cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);*/
 				
 				targetTemp= new Vector2(cam.position.x/PPM-(cam.viewportWidth/2/PPM*B2DVars.getZOOM())+Gdx.input.getX()*B2DVars.getZOOM()/PPM,
 						cam.position.y/PPM-(cam.viewportHeight/2/PPM*B2DVars.getZOOM())+(cam.viewportHeight*B2DVars.getZOOM()/PPM)-Gdx.input.getY()*B2DVars.getZOOM()/PPM);
 				
 				
 				//check all enemys
-				for(int i=0; i<ContendHolder.getENEMIES().size;i++){
+				for(int i=0; i<data.getENEMIES().size;i++){
 					//if you cliced on enemy position
-					if(ContendHolder.getENEMIES().get(i).getBody().getPosition().dst2(targetTemp)<.9f){
+					if(data.getENEMIES().get(i).getBody().getPosition().dst2(targetTemp)<.9f){
 
-						if(ContendHolder.getENEMIES().get(i).isTagged()){wasTagged=true;}else {wasTagged=false;}
+						if(data.getENEMIES().get(i).isTagged()){wasTagged=true;}else {wasTagged=false;}
 						if(tagHolder!=null)tagHolder.setTagged(false);
-						tagHolder= ContendHolder.getENEMIES().get(i);
+						tagHolder= data.getENEMIES().get(i);
 					
 					}else {
 						//if you cliced on  not enemys position
@@ -108,23 +104,7 @@ public class MyInputHandler implements InputProcessor {
 			
 				Condition.setLastClickX  (cam.position.x/PPM-(cam.viewportWidth/2/PPM*B2DVars.getZOOM())+Gdx.input.getX()*B2DVars.getZOOM()/PPM );
 				Condition.setLastClickY (cam.position.y/PPM-(cam.viewportHeight/2/PPM*B2DVars.getZOOM())+(cam.viewportHeight*B2DVars.getZOOM()/PPM)-Gdx.input.getY()*B2DVars.getZOOM()/PPM);
-			
-				
-				
-				
-				//}
 
-	/*	}else {
-			justPresed=true;
-		}*/
-/*		if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-			 float x= (cam.position.x/PPM-(cam.viewportWidth/2/PPM)+Gdx.input.getX()/PPM );
-		float y=(cam.position.y/PPM-(cam.viewportHeight/2/PPM)+(cam.viewportHeight/PPM)-Gdx.input.getY()/PPM);
-			 Play.player.getTarget().getBody().setTransform(x, y,  Play.player.getTarget().getBody().getAngle());
-		}*/
-		
-		
-		
 		
 
 		return false;

@@ -10,12 +10,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.state.Play;
 
-public class RoofRemover {
+public class BuildingHandler {
 	
-	public RoofRemover() {
-		creatRoof();
+	public BuildingHandler(World world) { 
+		creatRoof(world);
+		creatWalls(world);
 	
 	}
 	
@@ -25,7 +27,7 @@ public class RoofRemover {
 	
 	
 	
-	private void creatRoof() {
+	private void creatRoof(World world) {
 
 		//teleports = new Array<Teleport>();
 	//	doors = new Array<Door>();
@@ -46,7 +48,7 @@ public class RoofRemover {
 				float width = ((RectangleMapObject) mo).getRectangle().width/PPM/2;
 				float height = ((RectangleMapObject) mo).getRectangle().height/PPM/2;
 				cdef.position.set(x +width , y +height );
-				Body body = Play.getWorld().createBody(cdef);
+				Body body = world.createBody(cdef);
 				FixtureDef cfdef = new FixtureDef();
 				PolygonShape pshape = new PolygonShape();
 				pshape.setAsBox(width, height);
@@ -63,7 +65,43 @@ public class RoofRemover {
 		}
 	}
 	
-	
+	private void creatWalls(World world) {
+
+		//teleports = new Array<Teleport>();
+	//	doors = new Array<Door>();
+		MapLayer ml = GameMaps.getTileMap().getLayers().get("wallsobj");
+		if (ml == null)
+			return;
+
+		for (MapObject mo : ml.getObjects()) {
+
+			if (mo instanceof RectangleMapObject) {
+
+				BodyDef cdef = new BodyDef();
+				cdef.type = BodyType.StaticBody;
+		
+				
+				float x =((RectangleMapObject) mo).getRectangle().getX()/PPM;
+				float y =((RectangleMapObject) mo).getRectangle().getY()/PPM;
+				float width = ((RectangleMapObject) mo).getRectangle().width/PPM/2;
+				float height = ((RectangleMapObject) mo).getRectangle().height/PPM/2;
+				cdef.position.set(x +width , y +height );
+				Body body = world.createBody(cdef);
+				FixtureDef cfdef = new FixtureDef();
+				PolygonShape pshape = new PolygonShape();
+				pshape.setAsBox(width, height);
+				cfdef.shape = pshape;
+				cfdef.isSensor = true;
+				cfdef.filter.categoryBits = B2DVars.BIT_ROOF;
+				cfdef.filter.maskBits =B2DVars.BIT_BULET;
+				body.createFixture(cfdef).setUserData("wall");
+				pshape.dispose();
+
+			}
+
+
+		}
+	}
 
 
 }

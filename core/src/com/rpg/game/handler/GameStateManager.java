@@ -5,8 +5,8 @@ import java.util.Stack;
 
 import com.rpg.game.AdultGame;
 import com.rpg.game.state.GameState;
+import com.rpg.game.state.Menu;
 import com.rpg.game.state.Play;
-import com.rpg.game.state.Wormhole;
 
 
 public class GameStateManager {
@@ -25,7 +25,8 @@ public class GameStateManager {
 	public GameStateManager(AdultGame game) {
 		this.game = game;
 		gameStates = new Stack<GameState>();
-		pushState(PLAY);
+		//pushState(PLAY);
+		pushState(MENU);
 	}
 	
 	public void update(float dt) {
@@ -39,10 +40,9 @@ public class GameStateManager {
 	public AdultGame game() { return game; }
 	
 	private GameState getState(int state) {
-		if(state == WORMHOLE) return new Wormhole(this);
 		if(state == PLAY) return new Play(this);
-
-	//	if(state == LEVEL_SELECT) return new LevelSelect(this);
+		if(state == MENU) return new Menu(this);
+		
 	//	if(state == HOUSE) return new House(this);
 		return null;
 	}

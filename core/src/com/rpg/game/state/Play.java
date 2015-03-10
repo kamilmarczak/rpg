@@ -26,6 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.rpg.game.AdultGame;
+import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
+import com.rpg.game.entities.Bullets;
 import com.rpg.game.entities.Door;
 import com.rpg.game.entities.HUD;
 import com.rpg.game.entities.Teleport;
@@ -33,14 +36,12 @@ import com.rpg.game.entities.creature.Npc;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.entities.creature.SmallCoyote;
 import com.rpg.game.handler.B2DVars;
-import com.rpg.game.handler.ContendHolder;
+import com.rpg.game.handler.BuildingHandler;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.GameStateManager;
 import com.rpg.game.handler.MyContactListener;
 import com.rpg.game.handler.MyTimer;
-import com.rpg.game.handler.RoofRemover;
 import com.rpg.game.handler.actions.Attack;
-import com.rpg.game.handler.actions.Death;
 import com.rpg.game.handler.actions.Fallow;
 import com.rpg.game.handler.input.MyInputHandler;
 import com.rpg.game.handler.steering.PlayerControler;
@@ -54,8 +55,8 @@ public class Play extends GameState  {
 	private static boolean debug = false ;
 	private Box2DDebugRenderer b2dRenderer;
 	private static MyContactListener cl;
-	public static World world;
-	public static Player player;
+	public  World world;
+	public  Player player;
 	private Array<Teleport> teleports;
 	private ShapeRenderer shapeRenderer ;
 	private Array<Door> doors;
@@ -64,15 +65,15 @@ public class Play extends GameState  {
 	private Attack attack;
 	private Stage stage;
 	private Npc npc;
-	private Death death;
-	private RoofRemover roofRemover;
+	//private Death death;
+	private BuildingHandler roofRemover;
 	private static boolean  visibleRoof= true;
+	
+	private Data data;
+	private DataManager dataMenager;
 
 	
 	////
-	
-
-
 
 
 
@@ -83,13 +84,14 @@ public class Play extends GameState  {
 	public static void setVisibleRoof(boolean visibleRoof) {
 		Play.visibleRoof = visibleRoof;
 	}
+	public static HUD getHud() {return hud;}
 
 
 
 	private static HUD hud;
 
 	private GameMaps gameMap;
-	private int enemyIerator=10;
+	private int enemyIerator=1;
 	private MyTimer myTimerSmallEnemy= new MyTimer(1);
 	// pathfinding
 
@@ -100,47 +102,62 @@ public class Play extends GameState  {
 	
 	
 	// movment
-	public static Player getPlayer() {return player;}
-	public static World getWorld() {return world;}
+	public  Player getPlayer() {return player;}
+	public  World getWorld() {return world;}
 	public static MyContactListener getCl() {return cl;}
 	
 
 	public Play(GameStateManager gsm) {
 		super(gsm);
 
+		world = new World(new Vector2(0, 0), true); // gravity here
+		
 		shapeRenderer=new ShapeRenderer();
 		//enemyContainer= new EnemyContainer();
 		// set up box2d
-		world = new World(new Vector2(0, 0), true); // gravity here
-		cl = new MyContactListener();
-		world.setContactListener(cl);
+
 		b2dRenderer = new Box2DDebugRenderer();
 		// create Map
 		gameMap = new GameMaps();
 		//gameMap.createMap();
 		cam.setBounds(0, gameMap.getWidthInTiles() * GameMaps.getTileSize(), 0,	gameMap.getHeightInTiles() * GameMaps.getTileSize());
+		
+		data= new Data();
+		dataMenager= new DataManager();
+		//dataMenager.newData(data);
+	//	dataMenager.save(data);
+	//	dataMenager.load(data);
+		
+		data=dataMenager.load(data);
 		// create player
 		createPlayer();
-		createNpc();
+		
+		//createNpc();
 		// create portal
 	
 		creatPortal();
+		cl = new MyContactListener(player);
+		world.setContactListener(cl);
+		
+		
+		
 		// set up b2dcamera
-		b2dCam.setToOrtho(false, AdultGame.G_WIDTH / PPM, AdultGame.G_HEIGHT/ PPM);
-		b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
-						 0,(gameMap.getHeightInTiles() * GameMaps.getTileSize()) / PPM);
+	//	b2dCam.setToOrtho(false, AdultGame.G_WIDTH / PPM, AdultGame.G_HEIGHT/ PPM);
+/*		b2dCam.setBounds(0,(gameMap.getWidthInTiles() * GameMaps.getTileSize()) / PPM,
+						 0,(gameMap.getHeightInTiles() * GameMaps.getTileSize()) / PPM);*/
 
 		
 		myImputHandler= new MyInputHandler();
 		// Set up HUD
 		stage = new Stage(new ScreenViewport(hudCam));
-		hud = new HUD(player,stage);
-		attack= new Attack();
+		hud = new HUD(player,stage, data);
+		attack= new Attack(world, player, data);
 		InputMultiplexer im = new InputMultiplexer(stage,myImputHandler);
 		Gdx.input.setInputProcessor(im);
 		fallow= new Fallow();
-		death= new Death();
-		roofRemover= new RoofRemover();
+	//	death= new Death();
+		roofRemover= new BuildingHandler(world);
+		
 	
 	}
 
@@ -149,11 +166,11 @@ public class Play extends GameState  {
 	
 	private void createPlayer() {
 		
-		player = new Player(2, 2);
+		player = new Player(2, 2, world, data);
 		
 	}
 	private  void createNpc(){
-		npc= new Npc(1, 1);
+		npc= new Npc(1, 1, world,player);
 		
 	}
 	
@@ -161,7 +178,7 @@ public class Play extends GameState  {
 	
 	private void createEnemy(int iletenmy) {
 
-		if(iletenmy>ContendHolder.getENEMIES().size)
+		if(iletenmy>data.getENEMIES().size)
 		{
 			int x =randInt(0, 60);
 			int y =randInt(0,60);
@@ -171,8 +188,8 @@ public class Play extends GameState  {
 
 			if(myTimerSmallEnemy.hasCompleted()){
 				myTimerSmallEnemy.start();
-			SmallCoyote smalCoy = new SmallCoyote(x,y );
-			ContendHolder.getENEMIES().add(smalCoy);
+			SmallCoyote smalCoy = new SmallCoyote(x,y, world,player, data );
+			data.getENEMIES().add(smalCoy);
 			smalCoy.getBody().setUserData(smalCoy);
 
 
@@ -207,60 +224,52 @@ public class Play extends GameState  {
 	public void update(float dt) {
 		world.step(AdultGame.STEP, 6, 2);
 	
-		death.update();
-		
-		
+	//	death.update();
 
-/*		for(int i=0; i<Death.getENEMIESTOREMOVE().size;i++){
-			if(!world.isLocked()){
-				
-		world.destroyBody(	Death.getENEMIESTOREMOVE().get(i).getBody());
-		world.destroyBody(Death.getENEMIESTOREMOVE().get(i).getTarget().getBody());
-		Death.getENEMIESTOREMOVE().removeIndex(i);
-			}
-		}
-*/
 	
 		handleInput();
 		teleportingLogic();		
 		player.update(dt);
 		fallow.proximityCheck();
-		attack.atackAvalibleChek();
+		attack.atackAvalibleChek(player);
 //		coinColector();
 		hud.update();
-		npc.update(dt);
+	//	npc.update(dt);
 		attack.update();
 		
 		
+		for (int i = 0; i < getCl().getBuletsToRemoves().size; i++) {
+			if(((Bullets)getCl().getBuletsToRemoves().get(i).getUserData())!=null){
+			((Bullets)getCl().getBuletsToRemoves().get(i).getUserData()).destroyBullet();
+			}
+			getCl().getBuletsToRemoves().removeIndex(i);
+			//world.destroyBody(getCl().getBuletsToRemoves().get(i));
+		}
 		
 		
 		
+		
+		for (int i = 0; i < data.getBulestsList().size; i++) {data.getBulestsList().get(i).update(dt);}
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).update(dt);}
-		//for (int i = 0; i < player.getCoinsArray().size; i++) {	player.getCoinsArray().get(i).update(dt);}
 		for (int i = 0; i < doors.size; i++) {doors.get(i).update(dt);}
-		for (int i = 0; i <ContendHolder.getENEMIES().size; i++) {
-			ContendHolder.getENEMIES().get(i).update(dt);}
+		for (int i = 0; i <data.getENEMIES().size; i++) {
+			data.getENEMIES().get(i).update(dt);}
 	
 		//create enemy
 		createEnemy(enemyIerator);
 		
 		  
-		for (int i = 0; i <ContendHolder.getCoins().size; i++) {
-			ContendHolder.getCoins().get(i).update(dt);}
+		for (int i = 0; i <data.getCoins().size; i++) {
+			data.getCoins().get(i).update(dt);}
 		
 	}
 	  
 	
 
+
 	
 	
 	
-
-
-
-	public static HUD getHud() {
-		return hud;
-	}
 	public void render() {
 	
 		// camera follow player
@@ -313,7 +322,7 @@ public class Play extends GameState  {
 		}
 
 //npc		
-		npc.render(sb);
+	//	npc.render(sb);
 		// draw portal
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).render(sb);}
 		for (int j = 0; j < doors.size; j++) {doors.get(j).render(sb);}
@@ -323,7 +332,7 @@ public class Play extends GameState  {
 		if(!debug){
 
 		
-		for (int j = 0; j < ContendHolder.getENEMIES().size; j++) {ContendHolder.getENEMIES().get(j).render(sb);}
+		for (int j = 0; j < data.getENEMIES().size; j++) {data.getENEMIES().get(j).render(sb);}
 		}
 
 		//draw HUD
@@ -331,13 +340,16 @@ public class Play extends GameState  {
 		hud.render(sb);
 		
 		stage.draw();
-
+		
+//draw bulets
+		sb.setProjectionMatrix(cam.combined);
+		for (int i = 0; i < data.getBulestsList().size; i++) {data.getBulestsList().get(i).render(sb);}
 		// draw player
 		sb.setProjectionMatrix(cam.combined);
 		player.render(sb);
 //draw coins
-		for (int i = 0; i <ContendHolder.getCoins().size; i++) {
-			ContendHolder.getCoins().get(i).render(sb);}
+		for (int i = 0; i <data.getCoins().size; i++) {
+			data.getCoins().get(i).render(sb);}
 		}
 
 
@@ -482,15 +494,22 @@ public class Play extends GameState  {
 	@Override
 	public void handleInput() {
 	
-		myImputHandler.handleInput(cam);
+		myImputHandler.handleInput(cam, player, data);
 	
 	if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+		
 			if(debug== true){
 				debug= false;
 			}else {
 				debug= true;
 			}
 		}
+	if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+		
+		gsm.setState(GameStateManager.MENU);
+		dataMenager.save(data);
+		
+	}
 	
 		
 	}
