@@ -4,11 +4,13 @@ import static com.rpg.game.handler.B2DVars.PPM;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.handler.BoundedCamera;
 import com.rpg.game.handler.Content;
 import com.rpg.game.handler.GameStateManager;
@@ -27,6 +29,7 @@ public class AdultGame implements ApplicationListener {
 	private OrthographicCamera hudCam;
 	public static Content res;
 	public BoundedCamera b2dCam;
+	private Camera staticCamera;
 	
 	
 
@@ -39,6 +42,7 @@ public class AdultGame implements ApplicationListener {
 
 
 		Gdx.input.setInputProcessor(new MyInputProcessor());
+		Gdx.input.setCatchBackKey(true);
 		res = new Content();
 		res.loadTexture("img/template.png", "player");
 		res.loadTexture("img/portal.png", "portal");
@@ -55,6 +59,7 @@ public class AdultGame implements ApplicationListener {
 	
 		cam = new BoundedCamera();
 		b2dCam = new BoundedCamera();
+		staticCamera = new OrthographicCamera();
 		
 	//	cam.setToOrtho(false, G_WIDTH, G_HEIGHT);
 		viewport = new ScreenViewport(cam);
@@ -99,7 +104,8 @@ public class AdultGame implements ApplicationListener {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
+
+	
 
 	}
 
@@ -121,6 +127,10 @@ public class AdultGame implements ApplicationListener {
 
 	public BoundedCamera getB2dCam() {
 		return b2dCam;
+	}
+
+	public Camera getStaticCamera() {
+		return staticCamera;
 	}
 
 

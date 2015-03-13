@@ -1,16 +1,20 @@
 package com.rpg.game.handler.input;
 
 import static com.rpg.game.handler.B2DVars.PPM;
+import javafx.scene.input.KeyCode;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.Condition;
+import com.rpg.game.handler.GameStateManager;
 
 public class MyInputHandler implements InputProcessor {
 	
@@ -21,15 +25,19 @@ public class MyInputHandler implements InputProcessor {
 	private boolean wasTagged= false;
 	private Camera cam;
 	private Data data;
+	private GameStateManager gsm;
+	private DataManager dataManager;
 	
 	
 	public MyInputHandler() {
 
 	
 	}
-	public void handleInput(Camera cam,Player player,Data data) {
+	public void handleInput(Camera cam,Player player,Data data,GameStateManager gsm,DataManager dataManager) {
 		this.cam=cam;
 		this.data=data;
+		this.gsm=gsm;
+		this.dataManager=dataManager;
 		update(player);
 
 	}
@@ -42,21 +50,26 @@ public class MyInputHandler implements InputProcessor {
 		
 	}
 	
-	public Creature getTagHolder() {
-		return tagHolder;
-	}
+	public Creature getTagHolder() {return tagHolder;}
+	public void setTagHolder(Creature tagHolder) {this.tagHolder = tagHolder;}
 	
-	public void setTagHolder(Creature tagHolder) {
-		this.tagHolder = tagHolder;
-	}
+	
 	@Override
 	public boolean keyDown(int keycode) {
-		
+        if (keycode == Keys.BACK) {
+        	
+        	gsm.pushState(GameStateManager.MENU);
+    		dataManager.save(data);
+    	
+        }
 		return false;
 	}
+	
+	
+	
 	@Override
 	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 	@Override

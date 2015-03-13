@@ -14,7 +14,7 @@ import com.rpg.game.pathfinding.PathFinder;
 
 public class EnemyMover {
 
-	private GameMaps map = new GameMaps();
+	private GameMaps map;
 	
 	private PathFinder finder;
 	private Path path;
@@ -27,9 +27,9 @@ public class EnemyMover {
 	
 	
 
-	public EnemyMover() {
-
-		finder = new AStarPathFinder(map, 100, true);
+	public EnemyMover(GameMaps map) {
+		this.map= map;
+		finder = new AStarPathFinder(map, 20, true);
 	
 		
 

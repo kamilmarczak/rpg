@@ -12,6 +12,7 @@ import com.rpg.game.entities.Coin;
 import com.rpg.game.entities.HealthBar;
 import com.rpg.game.entities.Mark;
 import com.rpg.game.handler.B2DVars;
+import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.MyTimer;
 import com.rpg.game.handler.actions.Death;
 import com.rpg.game.handler.steering.EnemyMover;
@@ -46,7 +47,7 @@ public class SmallCoyote extends Creature {
 	
 	
 	
-	public SmallCoyote(float x, float y,World world,Player player,Data data) {
+	public SmallCoyote(float x, float y,World world,Player player,Data data,GameMaps map) {
 		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor,world);
 		this.data= data;
 		sprite.playAnimation(animationRow, textureName);
@@ -57,7 +58,7 @@ public class SmallCoyote extends Creature {
 		setHealth(smallCoyoteHp);
 		death= new Death(this,world,data);
 		
-		em = new EnemyMover();
+		em = new EnemyMover(map);
 
 		final Face<Vector2> faceSB = new Face<Vector2>(this, this.getTarget()) //
 				.setTimeToTarget(0.0003f) //

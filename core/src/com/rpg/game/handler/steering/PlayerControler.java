@@ -21,7 +21,7 @@ public class PlayerControler {
 	private int  playerXforMap,playerYforMap,iterator=0,iterator2=0,lastClickX,lastClickY;
 
 	//pathfinding 
-	private static GameMaps map = new GameMaps();
+//	private static GameMaps map = new GameMaps();
 	private PathFinder finder;
 	private Path path;
 	private float lastFindX,lastFindY,playerX,playerY ;
@@ -31,7 +31,7 @@ public class PlayerControler {
 	
 
 	
-	public PlayerControler() {
+	public PlayerControler(GameMaps map) {
 	
 			//path
 			finder = new AStarPathFinder(map, 100, true);

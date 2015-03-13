@@ -29,7 +29,9 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	float maxAngularSpeed;
 	float maxAngularAcceleration;
 	protected SteeringBehavior<Vector2> steeringBehavior;
+	
 	protected final SteeringAcceleration<Vector2> steeringOutput = new SteeringAcceleration<Vector2>(new Vector2());
+	
 	float boundingRadius= 1;
 	/////////
 	protected HealthBar healthBar;
@@ -50,7 +52,7 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	private boolean inContacWithRoof= false;
 	boolean tagged ,collide=false;
 	private World world;
-	private Coin  coins;
+
 
 	
 	

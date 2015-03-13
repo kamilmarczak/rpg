@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.data.Data;
 import com.rpg.game.handler.B2DVars;
+import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.MyTimer;
 import com.rpg.game.handler.steering.PlayerControler;
 import com.rpg.game.state.Play;
@@ -35,23 +36,22 @@ public class Player extends Creature {
 	private static  int animationRow=3;
 	private int type = 3;
 	private String textureName = "player";
-	
 	private MyTimer atackTimer;
 	private int currentAnimationRow;
-	
-	
-	private PlayerControler pc=new PlayerControler();;
+	private PlayerControler playercontroler;
 
+	
+	
 	public int getAnimationRow() {return animationRow;}
 	public static void setAnimationRow(int animationRow) {Player.animationRow = animationRow;}
 
 	
-	public Player(float x, float y,World world,Data data ) {
+	public Player(float x, float y,World world,Data data,GameMaps map) {
 		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor,world);
 		sprite.playAnimation(animationRow, textureName);
-		
+		playercontroler=new PlayerControler(map);
 		setHealth(data.getPlayerHp());
-		setHitPower(10);
+		setHitPower(50);
 		atackTimer= new MyTimer(2);
 		
 		this.setMaxAngularAcceleration(100000);
@@ -109,7 +109,7 @@ public class Player extends Creature {
 			// Apply steering acceleration
 			applySteering(steeringOutput, dt);
 		}
-		pc.startControl(this);
+		playercontroler.startControl(this);
 		targetFace();
 		
 	}

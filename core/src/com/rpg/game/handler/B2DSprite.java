@@ -1,5 +1,6 @@
 package com.rpg.game.handler;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +19,7 @@ public class B2DSprite  {
 	private float height;
 	private int animationRow=0;
 	private Texture texure;
-
+	private float x,y;
 	
 	public B2DSprite(Body body) {
 	
@@ -35,10 +36,8 @@ public class B2DSprite  {
 
 
 
-	public B2DSprite(OrthographicCamera cam) {
-		this.width= cam.viewportWidth*B2DVars.getZOOM();
-		this.height= cam.viewportHeight*B2DVars.getZOOM();
-	}
+
+
 
 
 
@@ -74,31 +73,13 @@ public class B2DSprite  {
 		
 		
 		sb.end();
-	
 
-	
 	}
 	
-	
-	
-	
-	public void renderBackground(SpriteBatch sb) {
-
-		sb.begin();
-	
-		sb.draw(texure,0 ,0,width,height); // 
-
-		sb.end();
-	
 
 	
-	}
 	
-	
-	public  void backgroundDraw( String textureName) {
 
-		texure= AdultGame.res.getTexture(textureName);
-	}
 	
 	
 	

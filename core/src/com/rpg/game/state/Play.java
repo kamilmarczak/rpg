@@ -4,9 +4,13 @@ import static com.rpg.game.handler.B2DVars.PPM;
 
 import java.util.Random;
 
+import javafx.scene.text.Font;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -23,6 +27,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.rpg.game.AdultGame;
@@ -91,7 +97,7 @@ public class Play extends GameState  {
 	private static HUD hud;
 
 	private GameMaps gameMap;
-	private int enemyIerator=1;
+	private int enemyIerator=50;
 	private MyTimer myTimerSmallEnemy= new MyTimer(1);
 	// pathfinding
 
@@ -166,7 +172,8 @@ public class Play extends GameState  {
 	
 	private void createPlayer() {
 		
-		player = new Player(2, 2, world, data);
+		player = new Player(data.getPlayerX(), data.getPlayerY(), world, data, gameMap);
+		data.getPlayer().add(player);
 		
 	}
 	private  void createNpc(){
@@ -184,13 +191,13 @@ public class Play extends GameState  {
 			int y =randInt(0,60);
 			
 	
+			SmallCoyote smalCoy = new SmallCoyote(x,y, world,player, data, gameMap );
+			data.getENEMIES().add(smalCoy);
+			smalCoy.getBody().setUserData(smalCoy);
 			
 
 			if(myTimerSmallEnemy.hasCompleted()){
 				myTimerSmallEnemy.start();
-			SmallCoyote smalCoy = new SmallCoyote(x,y, world,player, data );
-			data.getENEMIES().add(smalCoy);
-			smalCoy.getBody().setUserData(smalCoy);
 
 
 			}
@@ -494,7 +501,7 @@ public class Play extends GameState  {
 	@Override
 	public void handleInput() {
 	
-		myImputHandler.handleInput(cam, player, data);
+		myImputHandler.handleInput(cam, player, data, gsm, dataMenager);
 	
 	if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 		
@@ -506,10 +513,11 @@ public class Play extends GameState  {
 		}
 	if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 		
-		gsm.setState(GameStateManager.MENU);
 		dataMenager.save(data);
+		gsm.pushState(GameStateManager.MENU);
 		
 	}
+
 	
 		
 	}
