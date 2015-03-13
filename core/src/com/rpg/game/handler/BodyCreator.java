@@ -52,11 +52,11 @@ this.world=world;
 	    body = world.createBody(bdef);
 
 		// fixtureDef
-		//circle.setRadius(16/PPM);
+		circle.setRadius(16/PPM);
 
 		polygon.set(vertices);
-		fdef.shape = polygon;
-
+		//fdef.shape = polygon;
+		fdef.shape = circle;
 		fdef.isSensor = isSensor;
 		fdef.filter.categoryBits= categoryBit;
 		fdef.filter.maskBits=  (short) maskBits ;

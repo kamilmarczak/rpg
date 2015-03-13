@@ -168,7 +168,7 @@ private Stage stage;
 	
 	
 	public void render(SpriteBatch sb) {
-		  healthSlider.setValue(player.getHealth());
+	 healthSlider.setValue(data.getPlayerHp());
 		sb.begin();
 		healthSlider.draw(sb, 1);
 		

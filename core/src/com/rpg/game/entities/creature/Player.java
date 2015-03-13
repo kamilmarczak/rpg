@@ -52,6 +52,7 @@ public class Player extends Creature {
 		playercontroler=new PlayerControler(map);
 		setHealth(data.getPlayerHp());
 		setHitPower(50);
+		
 		atackTimer= new MyTimer(2);
 		
 		this.setMaxAngularAcceleration(100000);

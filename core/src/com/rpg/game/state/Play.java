@@ -129,12 +129,12 @@ public class Play extends GameState  {
 		cam.setBounds(0, gameMap.getWidthInTiles() * GameMaps.getTileSize(), 0,	gameMap.getHeightInTiles() * GameMaps.getTileSize());
 		
 		data= new Data();
-		dataMenager= new DataManager();
+		dataMenager= new DataManager(data);
 		//dataMenager.newData(data);
 	//	dataMenager.save(data);
 	//	dataMenager.load(data);
 		
-		data=dataMenager.load(data);
+		data=dataMenager.load();
 		// create player
 		createPlayer();
 		

@@ -41,7 +41,7 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	protected Body body;
 	private float health;
 	protected Death death;
-	private float enemyHitPower=0;
+	private int enemyHitPower=0;
 	private Target target;
 	private boolean targetRandom= true;
 	protected boolean inCombat=false;
@@ -172,7 +172,7 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	public abstract void attack();
 	public boolean isTargetRandom() {return targetRandom;}
 	public void setTargetRandom(boolean targetRandom) {this.targetRandom = targetRandom;}
-	public float getHitPower() {return enemyHitPower;}
+	public int getHitPower() {return enemyHitPower;}
 	public void setHitPower(int enemyHitPower) {this.enemyHitPower = enemyHitPower;}
 	public Body getBody() {return body;}
 	public float getHealth() {return health;}

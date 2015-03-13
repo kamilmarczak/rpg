@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -21,6 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.rpg.game.AdultGame;
+import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.handler.B2DSprite;
 import com.rpg.game.handler.GameStateManager;
 
@@ -28,7 +31,7 @@ public class Options extends GameState{
 	
 	private B2DSprite sprite;
 	private Stage stage;
-	private TextButton buttonSetPathfinding,buttonOptions, ByttonBack;
+	private TextButton buttonDiagMovement,buttonReset, buttonBack,buttonOK,buttonCancel;
 	private TextButtonStyle textButtonStyle;
 	private BitmapFont fontBlack, font;
 	private Skin skin;
@@ -36,34 +39,36 @@ public class Options extends GameState{
 	private Table table;
 	private Image background;
 	private Texture texture;
-	private Label label;
-	
+	private Data data;
+	private DataManager dataMenager;
+	private Dialog dialog;
+	private WindowStyle windowStyle;
+	private LabelStyle labelStyle;
+	private GameStateManager gsm;
 	
 
 	public Options(GameStateManager gsm) {
 		super(gsm);
-		
+	this.gsm=gsm;
 		stage= new Stage(new ScreenViewport(staticCamera));
-		
 		Gdx.input.setInputProcessor(stage);
 		texture= AdultGame.res.getTexture("mainmenu");
 		background = new Image(texture);
 		background.setBounds(0, 0, staticCamera.viewportWidth, staticCamera.viewportHeight);
 		stage.addActor(background);
+		data= new Data();
+		dataMenager= new DataManager(data);
+		data=dataMenager.load();
 		buttonCreator();
-		lableCreator();
+
 		menuLayout();
 		buttonSetter();
 
 	}
 	
 	
-	private void lableCreator() {
-		font = new BitmapFont();
-		LabelStyle style = new LabelStyle(font,  Color.valueOf("FF4500"));
-		label= new Label("sss", style);
-		
-	}
+
+
 
 
 	private void buttonCreator(){
@@ -78,9 +83,16 @@ public class Options extends GameState{
         textButtonStyle.up = skin.getDrawable("buttonUP");
         textButtonStyle.down = skin.getDrawable("buttonDOWN");
         //////////////////
-        buttonSetPathfinding = new TextButton("pathfinding OFF", textButtonStyle);
-        buttonOptions=new TextButton("opt one ", textButtonStyle);
-        ByttonBack=new TextButton("Back", textButtonStyle);
+        
+        if(data.isAllowDiagMovement()){
+        buttonDiagMovement = new TextButton("DiagMovement ON ", textButtonStyle);
+        }else {
+        	 buttonDiagMovement = new TextButton("DiagMovement OFF", textButtonStyle);}
+        
+        buttonReset=new TextButton("Reset Game", textButtonStyle);
+        buttonBack=new TextButton("Back", textButtonStyle);
+        buttonOK= new TextButton("OK", textButtonStyle);
+        buttonCancel= new TextButton("Cancel", textButtonStyle);
 	}
 	
 	
@@ -91,30 +103,30 @@ public class Options extends GameState{
 	   table.setHeight(AdultGame.G_HEIGHT);
         table.align(Align.top);
 		table.padTop(AdultGame.G_HEIGHT/12);
-		table.add(buttonSetPathfinding).pad(1).expandX().size(buttonSetPathfinding.getWidth(), buttonSetPathfinding.getHeight());
+		table.add(buttonDiagMovement).pad(1).expandX().size(buttonDiagMovement.getWidth(), buttonDiagMovement.getHeight());
 	//	table.add(label).expandX();
    		table.row();
-		table.add(buttonOptions).pad(1).expandX().size(buttonOptions.getWidth(), buttonOptions.getHeight());
+		table.add(buttonReset).pad(1).expandX().size(buttonReset.getWidth(), buttonReset.getHeight());
 		table.row();
-		table.add(ByttonBack).pad(20).right().bottom().expand().size(ByttonBack.getWidth(), ByttonBack.getHeight());
-		table.debug();
+		table.add(buttonBack).pad(20).right().bottom().expand().size(buttonBack.getWidth(), buttonBack.getHeight());
+	//	table.debug();
 		stage.addActor(table);	
 		
 	}
 	
 	
 	private void buttonSetter(){
-		buttonSetPathfinding.addListener(new ClickListener() {
+		buttonDiagMovement.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 
-				if(buttonSetPathfinding.getText().toString().equals("pathfinding OFF")){
-				buttonSetPathfinding.setText("pathfinding  ON");
-				buttonSetPathfinding.setColor(.9f, .9f, .9f, .8f);
+				if(buttonDiagMovement.getText().toString().equals("DiagMovement OFF")){
+				buttonDiagMovement.setText("DiagMovement  ON");
+				data.setAllowDiagMovement(true);
 				}else {
-					buttonSetPathfinding.setText("pathfinding OFF");
-					buttonSetPathfinding.setColor(1, 1, 1, 1);
+					buttonDiagMovement.setText("DiagMovement OFF");
+					data.setAllowDiagMovement(false);
 				}
 
 				
@@ -125,10 +137,34 @@ public class Options extends GameState{
 		});
 		
 		
-		buttonOptions.addListener(new ClickListener(){
+		buttonReset.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				skin= new Skin(buttonAtlas);
+				windowStyle= new WindowStyle();
+				windowStyle.background = skin.getDrawable("buttonUP");
+				windowStyle.titleFont= new BitmapFont();
+				dialog =new Dialog("", windowStyle);
+				labelStyle= new  LabelStyle();
+				BitmapFont  font = new BitmapFont();
+				font.setScale(4);
+				labelStyle.font= font;
+			//	dialog.align(Align.center);
+				dialog.text(new Label("Delete all saved data?", labelStyle));
+			
+				buttonCancel.setSize(buttonCancel.getWidth(),buttonCancel.getHeight());
+				buttonOK.setSize(buttonOK.getWidth(),buttonOK.getHeight());
+				
+			dialog.button(buttonOK);
+			dialog.button(buttonCancel);
+
+			dialog.pack();
+			dialog.setPosition(stage.getWidth()/2f-dialog.getWidth()/2, stage.getHeight()/2f-dialog.getHeight()/2);
+		//	dialog.debug();
+			stage.addActor(dialog);
+
+			
 			
 			
 			
@@ -136,13 +172,40 @@ public class Options extends GameState{
 			
 		});
 		
-		ByttonBack.addListener(new ClickListener(){
+		buttonBack.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				dataMenager.save(data);
 				gsm.setState(GameStateManager.MENU);
 			}
 		});
+		buttonOK.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// TODO Auto-generated method stub
+				super.clicked(event, x, y);
+				dataMenager.newData(data);
+				dialog.remove();
+				if(buttonDiagMovement.getText().toString().equals("DiagMovement OFF")){
+				data.setAllowDiagMovement(false);
+				}
+			}
+		});
+		buttonCancel.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// TODO Auto-generated method stub
+				super.clicked(event, x, y);
+				dialog.remove();
+				
+				
+				
+			}
+		});
+			
+			
+
 
 		
 	}
@@ -167,13 +230,16 @@ public class Options extends GameState{
 	@Override
 	public void update(float dt) {
 		handleInput();
+		if(dialog!=null){
+			//dialog.setPosition(stage.getWidth()/2f-dialog.getWidth()/2, stage.getHeight()/2f-dialog.getHeight()/2);
+		}
 		staticCamera.update();
 		table.setWidth(staticCamera.viewportWidth);
 		table.setHeight(staticCamera.viewportHeight);
 		table.padTop(AdultGame.G_HEIGHT/12);
 		background.setBounds(0, 0, staticCamera.viewportWidth, staticCamera.viewportHeight);
 		 stage.getViewport().update(AdultGame.G_WIDTH, AdultGame.G_HEIGHT, true);
-		 
+
 		
 	}
 
@@ -182,6 +248,7 @@ public class Options extends GameState{
 	stage.draw();
 		
 	}
+	
 
 	@Override
 	public void dispose() {

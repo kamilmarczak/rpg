@@ -58,7 +58,7 @@ public class SmallCoyote extends Creature {
 		setHealth(smallCoyoteHp);
 		death= new Death(this,world,data);
 		
-		em = new EnemyMover(map);
+		em = new EnemyMover(map, data);
 
 		final Face<Vector2> faceSB = new Face<Vector2>(this, this.getTarget()) //
 				.setTimeToTarget(0.0003f) //
@@ -229,8 +229,12 @@ public class SmallCoyote extends Creature {
 					player.getPlayerPositionY(), 0);
 
 			setAnimationRow(2);
-			player.setHealth(
-			player.getHealth() - getHitPower());
+			
+			data.setPlayerHp(data.getPlayerHp()-getHitPower());
+
+			
+			
+			
 			atackTimer.start();
 		} else if (!inCombat && isVisible()) {
 			setAnimationRow(0);

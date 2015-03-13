@@ -12,6 +12,7 @@ public class Data {
 	private  int bulletsInInventory;
 	private  int cashAmount;
 	private float playerX,playerY;
+	private boolean allowDiagMovement;
 	private transient Array<Creature> Player = new Array<Creature>();
 	private transient Array<Creature> ENEMIES = new Array<Creature>();
 	private  transient Array<Coin> Coins = new Array<Coin>();
@@ -62,6 +63,12 @@ public class Data {
 	}
 	public void setPlayerY(float playerY) {
 		this.playerY = playerY;
+	}
+	public boolean isAllowDiagMovement() {
+		return allowDiagMovement;
+	}
+	public void setAllowDiagMovement(boolean allowDiagMovement) {
+		this.allowDiagMovement = allowDiagMovement;
 	}
 
 
