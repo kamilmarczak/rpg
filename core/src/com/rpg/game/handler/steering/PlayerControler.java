@@ -75,7 +75,7 @@ public class PlayerControler {
 				 
 			 bm = new BodyMover(playerX, playerY,
 					 path.getStep(iterator).getX()*B2DVars.MTT+B2DVars.MTT/2,
-					 path.getStep(iterator).getY()*B2DVars.MTT+B2DVars.MTT/2,2);
+					 path.getStep(iterator).getY()*B2DVars.MTT+B2DVars.MTT/2,4);
 
 			 		
 			if(bm.atDestynation())

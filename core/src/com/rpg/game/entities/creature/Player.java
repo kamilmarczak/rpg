@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.GameMaps;
 import com.rpg.game.handler.MyTimer;
@@ -46,15 +47,13 @@ public class Player extends Creature {
 	public static void setAnimationRow(int animationRow) {Player.animationRow = animationRow;}
 
 	
-	public Player(float x, float y,World world,Data data,GameMaps map) {
+	public Player(float x, float y,World world,DataManager dataMenager,GameMaps map) {
 		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor,world);
 		sprite.playAnimation(animationRow, textureName);
 		playercontroler=new PlayerControler(map);
-		setHealth(data.getPlayerHp());
+		setHealth(dataMenager.getData().getPlayerHp());
 		setHitPower(50);
-		
 		atackTimer= new MyTimer(2);
-		
 		this.setMaxAngularAcceleration(100000);
 		this.setMaxAngularSpeed(10);
 		this.setIndependentFacing(true);
@@ -83,6 +82,7 @@ public class Player extends Creature {
 		return type;
 	}
 
+	
 	@Override
 	public void update(float dt) {
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.B2DSprite;
 import com.rpg.game.handler.B2DVars;
@@ -19,7 +20,7 @@ public class Coin extends Entity {
 	private int animationRow=0;
 	private World world;
 	private Player player;
-	private Data data;
+	private DataManager dataManager;
 
 	
 	
@@ -28,11 +29,11 @@ public class Coin extends Entity {
 			B2DVars.BIT_PLAYER;
 	
 
-	public Coin(float x, float y,World world,Player player,Data data) {
+	public Coin(float x, float y,World world,Player player,DataManager dataManager) {
 		super(x, y);
 		this.world=world;
 		this.player=player;
-		this.data= data;
+		this.dataManager= dataManager;
 	
 		
 		body= new BodyCreator( x,  y, bodyTAG , sensorTAG,  categoryBit,  maskBits,  isSensor, world).getBody();
@@ -54,10 +55,10 @@ public class Coin extends Entity {
 	}
 	private void checkDistToPlayer(){
 		if(player.getPosition().dst2(body.getPosition())<.6f){
-			data.getCoins().removeValue(this, false);
+			dataManager.getData().getCoins().removeValue(this, false);
 			world.destroyBody(body);
 	
-			data.addCashAmount(1);
+			dataManager.getData().addCashAmount(1);
 			
 			
 		}

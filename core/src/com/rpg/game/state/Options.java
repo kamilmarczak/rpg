@@ -29,7 +29,7 @@ import com.rpg.game.handler.GameStateManager;
 
 public class Options extends GameState{
 	
-	private B2DSprite sprite;
+
 	private Stage stage;
 	private TextButton buttonDiagMovement,buttonReset, buttonBack,buttonOK,buttonCancel;
 	private TextButtonStyle textButtonStyle;
@@ -39,8 +39,7 @@ public class Options extends GameState{
 	private Table table;
 	private Image background;
 	private Texture texture;
-	private Data data;
-	private DataManager dataMenager;
+	private DataManager dataManager;
 	private Dialog dialog;
 	private WindowStyle windowStyle;
 	private LabelStyle labelStyle;
@@ -49,18 +48,17 @@ public class Options extends GameState{
 
 	public Options(GameStateManager gsm) {
 		super(gsm);
-	this.gsm=gsm;
+		this.gsm=gsm;
 		stage= new Stage(new ScreenViewport(staticCamera));
 		Gdx.input.setInputProcessor(stage);
 		texture= AdultGame.res.getTexture("mainmenu");
 		background = new Image(texture);
 		background.setBounds(0, 0, staticCamera.viewportWidth, staticCamera.viewportHeight);
 		stage.addActor(background);
-		data= new Data();
-		dataMenager= new DataManager(data);
-		data=dataMenager.load();
-		buttonCreator();
 
+		dataManager= new DataManager();
+       dataManager.load();
+		buttonCreator();
 		menuLayout();
 		buttonSetter();
 
@@ -84,7 +82,7 @@ public class Options extends GameState{
         textButtonStyle.down = skin.getDrawable("buttonDOWN");
         //////////////////
         
-        if(data.isAllowDiagMovement()){
+        if(dataManager.getData().isAllowDiagMovement()){
         buttonDiagMovement = new TextButton("DiagMovement ON ", textButtonStyle);
         }else {
         	 buttonDiagMovement = new TextButton("DiagMovement OFF", textButtonStyle);}
@@ -123,10 +121,10 @@ public class Options extends GameState{
 
 				if(buttonDiagMovement.getText().toString().equals("DiagMovement OFF")){
 				buttonDiagMovement.setText("DiagMovement  ON");
-				data.setAllowDiagMovement(true);
+				dataManager.getData().setAllowDiagMovement(true);
 				}else {
 					buttonDiagMovement.setText("DiagMovement OFF");
-					data.setAllowDiagMovement(false);
+					dataManager.getData().setAllowDiagMovement(false);
 				}
 
 				
@@ -141,10 +139,12 @@ public class Options extends GameState{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				
 				skin= new Skin(buttonAtlas);
 				windowStyle= new WindowStyle();
 				windowStyle.background = skin.getDrawable("buttonUP");
 				windowStyle.titleFont= new BitmapFont();
+				
 				dialog =new Dialog("", windowStyle);
 				labelStyle= new  LabelStyle();
 				BitmapFont  font = new BitmapFont();
@@ -152,6 +152,7 @@ public class Options extends GameState{
 				labelStyle.font= font;
 			//	dialog.align(Align.center);
 				dialog.text(new Label("Delete all saved data?", labelStyle));
+			
 			
 				buttonCancel.setSize(buttonCancel.getWidth(),buttonCancel.getHeight());
 				buttonOK.setSize(buttonOK.getWidth(),buttonOK.getHeight());
@@ -176,7 +177,7 @@ public class Options extends GameState{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				dataMenager.save(data);
+				dataManager.save();
 				gsm.setState(GameStateManager.MENU);
 			}
 		});
@@ -185,10 +186,10 @@ public class Options extends GameState{
 			public void clicked(InputEvent event, float x, float y) {
 				// TODO Auto-generated method stub
 				super.clicked(event, x, y);
-				dataMenager.newData(data);
+				dataManager.newData();
 				dialog.remove();
 				if(buttonDiagMovement.getText().toString().equals("DiagMovement OFF")){
-				data.setAllowDiagMovement(false);
+				dataManager.getData().setAllowDiagMovement(false);
 				}
 			}
 		});

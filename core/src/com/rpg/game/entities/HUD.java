@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.rpg.game.AdultGame;
 import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.entities.creature.Player;
 import com.rpg.game.handler.B2DVars;
 
@@ -39,15 +40,15 @@ private Stage stage;
 	private ButtonStyle buttonStyleGun, buttonStyleKnife;
 	private Table table;
 	private Slider healthSlider;
-	private Data data;
+	private DataManager dataManager;
 	
 	
 	
-	public HUD(Player player,Stage stage,Data data) {
+	public HUD(Player player,Stage stage,DataManager dataMenager) {
 		this.stage= stage;
 		hp= new HealthBar();
 		this.player = player;
-		this.data = data;
+		this.dataManager = dataMenager;
 		
 		group= new Group();
 		group.setSize(110*B2DVars.INTERFACESCALE, 15*B2DVars.INTERFACESCALE);
@@ -168,7 +169,7 @@ private Stage stage;
 	
 	
 	public void render(SpriteBatch sb) {
-	 healthSlider.setValue(data.getPlayerHp());
+	 healthSlider.setValue(dataManager.getData().getPlayerHp());
 		sb.begin();
 		healthSlider.draw(sb, 1);
 		
@@ -181,7 +182,7 @@ private Stage stage;
 		//drawString(sb, player.getCOINS() + " / " + player.getTotalCrystals(), 132, 211);
 		group.clear();
 		group.addActor(coinImage);
-		drawString(sb, " "+data.getCashAmount()+" " , stage.getWidth()-stage.getWidth()/10, stage.getHeight()-stage.getHeight()/18);
+		drawString(sb, " "+dataManager.getData().getCashAmount()+" " , stage.getWidth()-stage.getWidth()/10, stage.getHeight()-stage.getHeight()/18);
 		sb.end();
 	
 		

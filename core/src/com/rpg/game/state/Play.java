@@ -4,13 +4,9 @@ import static com.rpg.game.handler.B2DVars.PPM;
 
 import java.util.Random;
 
-import javafx.scene.text.Font;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -27,20 +23,19 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.rpg.game.AdultGame;
-import com.rpg.game.data.Data;
 import com.rpg.game.data.DataManager;
+import com.rpg.game.enemyManager.EnemyManager;
 import com.rpg.game.entities.Bullets;
 import com.rpg.game.entities.Door;
 import com.rpg.game.entities.HUD;
 import com.rpg.game.entities.Teleport;
 import com.rpg.game.entities.creature.Npc;
 import com.rpg.game.entities.creature.Player;
-import com.rpg.game.entities.creature.SmallCoyote;
+import com.rpg.game.entities.creature.Enemy;
+import com.rpg.game.entities.creature.npc.NpcManager;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BuildingHandler;
 import com.rpg.game.handler.GameMaps;
@@ -51,6 +46,8 @@ import com.rpg.game.handler.actions.Attack;
 import com.rpg.game.handler.actions.Fallow;
 import com.rpg.game.handler.input.MyInputHandler;
 import com.rpg.game.handler.steering.PlayerControler;
+import com.rpg.game.quests.QuestManager;
+
 
 
 
@@ -70,13 +67,14 @@ public class Play extends GameState  {
 	private Fallow fallow;
 	private Attack attack;
 	private Stage stage;
-	private Npc npc;
+
 	//private Death death;
 	private BuildingHandler roofRemover;
 	private static boolean  visibleRoof= true;
-	
-	private Data data;
-	private DataManager dataMenager;
+	private DataManager dataManager;
+	private QuestManager questManager;
+	private NpcManager npcManager;
+	private EnemyManager enemyManager;
 
 	
 	////
@@ -84,12 +82,8 @@ public class Play extends GameState  {
 
 
 
-	public static boolean isVisibleRoof() {
-		return visibleRoof;
-	}
-	public static void setVisibleRoof(boolean visibleRoof) {
-		Play.visibleRoof = visibleRoof;
-	}
+	public static boolean isVisibleRoof() {return visibleRoof;}
+	public static void setVisibleRoof(boolean visibleRoof) {Play.visibleRoof = visibleRoof;	}
 	public static HUD getHud() {return hud;}
 
 
@@ -97,7 +91,7 @@ public class Play extends GameState  {
 	private static HUD hud;
 
 	private GameMaps gameMap;
-	private int enemyIerator=50;
+	//private int enemyIerator=0;
 	private MyTimer myTimerSmallEnemy= new MyTimer(1);
 	// pathfinding
 
@@ -128,18 +122,17 @@ public class Play extends GameState  {
 		//gameMap.createMap();
 		cam.setBounds(0, gameMap.getWidthInTiles() * GameMaps.getTileSize(), 0,	gameMap.getHeightInTiles() * GameMaps.getTileSize());
 		
-		data= new Data();
-		dataMenager= new DataManager(data);
+		dataManager= new DataManager();
 		//dataMenager.newData(data);
 	//	dataMenager.save(data);
 	//	dataMenager.load(data);
 		
-		data=dataMenager.load();
+		dataManager.load();
 		// create player
 		createPlayer();
+		questManager= new QuestManager(dataManager, world, player, gameMap);
 		
-		//createNpc();
-		// create portal
+
 	
 		creatPortal();
 		cl = new MyContactListener(player);
@@ -156,13 +149,15 @@ public class Play extends GameState  {
 		myImputHandler= new MyInputHandler();
 		// Set up HUD
 		stage = new Stage(new ScreenViewport(hudCam));
-		hud = new HUD(player,stage, data);
-		attack= new Attack(world, player, data);
+		hud = new HUD(player,stage, dataManager);
+		attack= new Attack(world, player, dataManager);
 		InputMultiplexer im = new InputMultiplexer(stage,myImputHandler);
 		Gdx.input.setInputProcessor(im);
 		fallow= new Fallow();
-	//	death= new Death();
+
 		roofRemover= new BuildingHandler(world);
+		npcManager= new NpcManager(world, player,questManager, dataManager, stage);
+		enemyManager= new EnemyManager(dataManager, world, gameMap, player);
 		
 	
 	}
@@ -172,41 +167,12 @@ public class Play extends GameState  {
 	
 	private void createPlayer() {
 		
-		player = new Player(data.getPlayerX(), data.getPlayerY(), world, data, gameMap);
-		data.getPlayer().add(player);
+		player = new Player(dataManager.getData().getPlayerX(), dataManager.getData().getPlayerY(), world, dataManager, gameMap);
+		dataManager.getData().getPlayer().add(player);
 		
 	}
-	private  void createNpc(){
-		npc= new Npc(1, 1, world,player);
-		
-	}
+
 	
-	
-	
-	private void createEnemy(int iletenmy) {
-
-		if(iletenmy>data.getENEMIES().size)
-		{
-			int x =randInt(0, 60);
-			int y =randInt(0,60);
-			
-	
-			SmallCoyote smalCoy = new SmallCoyote(x,y, world,player, data, gameMap );
-			data.getENEMIES().add(smalCoy);
-			smalCoy.getBody().setUserData(smalCoy);
-			
-
-			if(myTimerSmallEnemy.hasCompleted()){
-				myTimerSmallEnemy.start();
-
-
-			}
-			
-			
-			
-		}
-
-	}
 
 	
 
@@ -241,7 +207,7 @@ public class Play extends GameState  {
 		attack.atackAvalibleChek(player);
 //		coinColector();
 		hud.update();
-	//	npc.update(dt);
+		npcManager.update(dt);
 		attack.update();
 		
 		
@@ -256,19 +222,23 @@ public class Play extends GameState  {
 		
 		
 		
-		for (int i = 0; i < data.getBulestsList().size; i++) {data.getBulestsList().get(i).update(dt);}
+		for (int i = 0; i < dataManager.getData().getBulestsList().size; i++) {dataManager.getData().getBulestsList().get(i).update(dt);}
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).update(dt);}
 		for (int i = 0; i < doors.size; i++) {doors.get(i).update(dt);}
-		for (int i = 0; i <data.getENEMIES().size; i++) {
-			data.getENEMIES().get(i).update(dt);}
+		for (int i = 0; i <dataManager.getData().getENEMIES().size; i++) {
+			dataManager.getData().getENEMIES().get(i).update(dt);}
 	
 		//create enemy
-		createEnemy(enemyIerator);
+	//	createEnemy(enemyIerator);
 		
 		  
-		for (int i = 0; i <data.getCoins().size; i++) {
-			data.getCoins().get(i).update(dt);}
+		for (int i = 0; i <dataManager.getData().getCoins().size; i++) {
+			dataManager.getData().getCoins().get(i).update(dt);}
 		
+		
+		enemyManager.spawn();
+	//	createEnemy(3);
+	
 	}
 	  
 	
@@ -329,7 +299,7 @@ public class Play extends GameState  {
 		}
 
 //npc		
-	//	npc.render(sb);
+		npcManager.render(sb);
 		// draw portal
 		for (int i = 0; i < teleports.size; i++) {teleports.get(i).render(sb);}
 		for (int j = 0; j < doors.size; j++) {doors.get(j).render(sb);}
@@ -339,7 +309,7 @@ public class Play extends GameState  {
 		if(!debug){
 
 		
-		for (int j = 0; j < data.getENEMIES().size; j++) {data.getENEMIES().get(j).render(sb);}
+		for (int j = 0; j < dataManager.getData().getENEMIES().size; j++) {dataManager.getData().getENEMIES().get(j).render(sb);}
 		}
 
 		//draw HUD
@@ -350,39 +320,16 @@ public class Play extends GameState  {
 		
 //draw bulets
 		sb.setProjectionMatrix(cam.combined);
-		for (int i = 0; i < data.getBulestsList().size; i++) {data.getBulestsList().get(i).render(sb);}
+		for (int i = 0; i < dataManager.getData().getBulestsList().size; i++) {dataManager.getData().getBulestsList().get(i).render(sb);}
 		// draw player
 		sb.setProjectionMatrix(cam.combined);
 		player.render(sb);
 //draw coins
-		for (int i = 0; i <data.getCoins().size; i++) {
-			data.getCoins().get(i).render(sb);}
+		for (int i = 0; i <dataManager.getData().getCoins().size; i++) {
+			dataManager.getData().getCoins().get(i).render(sb);}
 		}
 
 
-	
-//TODO move this shit form here
-	
-	
-/*	private void coinColector(){
-		Array<Body> coinList = cl.getCoins();
-		for (int i = 0; i < coinList.size; i++) {
-			Body bo = coinList.get(i);
-			//moving coins
-			bm= new BodyMover(bo.getPosition().x, bo.getPosition().y, 8000, 8000, 10);
-				((Coin)bo.getUserData()).getBody().setLinearVelocity((float) bm.getMovementX(), (float) bm.getMovementY());
-			//	coinsArray.removeValue((Coin) bo.getUserData(), true);
-				//	world.destroyBody(bo);
-					
-		}
-		///counting coins
-		if(coinList.size>0){
-			Player.setCOINS(Player.getCOINS()+1);
-			coinList.size--;
-			
-		}
-		
-	}*/
 	
 
 	public void dispose() {
@@ -501,7 +448,7 @@ public class Play extends GameState  {
 	@Override
 	public void handleInput() {
 	
-		myImputHandler.handleInput(cam, player, data, gsm, dataMenager);
+		myImputHandler.handleInput(cam, player,  gsm, dataManager);
 	
 	if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 		
@@ -513,7 +460,7 @@ public class Play extends GameState  {
 		}
 	if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 		
-		dataMenager.save(data);
+		dataManager.save();
 		gsm.pushState(GameStateManager.MENU);
 		
 	}

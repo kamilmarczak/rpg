@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.entities.Bullets;
 import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.entities.creature.Player;
@@ -21,13 +22,13 @@ public class Attack {
 	private World world;
 	private Player player;
 	private MyTimer  timer;
-	private Data data;
+	private DataManager dataManager;
 
 	
-	public Attack(World world,Player player,Data data) {
+	public Attack(World world,Player player,DataManager dataManager) {
 		this.world=world;
 		this.player= player;
-		this.data= data;
+		this.dataManager= dataManager;
 		atackAvalibleChek(player);
 		buttonsSetter();
 		timer= new MyTimer(1);
@@ -123,7 +124,7 @@ public class Attack {
 					player.getBody().getPosition().x/B2DVars.MTT+player.getBody().getWorldVector(new Vector2(0.30f,0.55f)).x/B2DVars.MTT, 
 					player.getBody().getPosition().y/B2DVars.MTT+player.getBody().getWorldVector(new Vector2(0.30f,0.55f)).y/B2DVars.MTT,
 					Play.getMyInputHandler().getTagHolder().getBody().getPosition().x/B2DVars.MTT,
-					Play.getMyInputHandler().getTagHolder().getBody().getPosition().y/B2DVars.MTT, world, data);
+					Play.getMyInputHandler().getTagHolder().getBody().getPosition().y/B2DVars.MTT, world, dataManager);
 
 
 

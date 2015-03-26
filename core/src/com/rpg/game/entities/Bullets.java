@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.handler.B2DSprite;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.BodyCreator;
@@ -29,7 +30,7 @@ public class Bullets extends Entity {
 	private String textureName = "bullet";
 	private B2DSprite sprite;
 	private World world;
-	private Data data;
+	private DataManager dataManager;
 	
 	
 
@@ -39,11 +40,11 @@ public class Bullets extends Entity {
 	
 
 
-	public Bullets(float startX, float startY, float targetX,float TargetY,World world,Data data) {
+	public Bullets(float startX, float startY, float targetX,float TargetY,World world,DataManager dataManager) {
 		super(startX, startY);
 	this.world= world;
 		body =new BodyCreator(startX, startY, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor,world).getBody();
-	 this.data= data;
+	 this.dataManager= dataManager;
 		sprite= new B2DSprite(body);
 		sprite.imageDraw(textureName);
 		bm= new BodyMover(startX, startY, targetX, TargetY, bulletSpeed);
@@ -51,7 +52,7 @@ public class Bullets extends Entity {
 		body.setUserData(this);
 		bulletTime= new MyTimer(2);
 		bulletTime.start();
-		data.getBulestsList().add(this);
+		dataManager.getData().getBulestsList().add(this);
 	
 	}
 
@@ -82,7 +83,7 @@ public class Bullets extends Entity {
 
 	public void  destroyBullet(){
 		world.destroyBody(body);
-		data.getBulestsList().removeValue(this, false);	
+		dataManager.getData().getBulestsList().removeValue(this, false);	
 		
 	}
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.entities.Coin;
 import com.rpg.game.entities.HealthBar;
 import com.rpg.game.entities.Mark;
@@ -18,14 +19,14 @@ import com.rpg.game.handler.actions.Death;
 import com.rpg.game.handler.steering.EnemyMover;
 import com.rpg.game.state.Play;
 
-public class SmallCoyote extends Creature {
+public class Enemy extends Creature {
 	
 	
 	
 	
 	private Player player;
 	private int smallCoyoteHp = 100;
-	private String textureName = "enemySmall";
+	private String textureName;
 	private static String bodyTAG = "enemy";
 	static boolean isSensor = false;
 	private static String sensorTAG = "sensorEnemy";
@@ -38,7 +39,7 @@ public class SmallCoyote extends Creature {
 	private int animationRow = 0;
 	private Coin  coins;
 	private World world;
-	private Data data;
+	private DataManager dataManager;
 	private static short categoryBit = B2DVars.BIT_ENEMY;
 	private static int maskBits = B2DVars.BIT_ENEMY | B2DVars.BIT_PLAYER
 			| B2DVars.BIT_BULET | B2DVars.BIT_ROOF;
@@ -47,18 +48,19 @@ public class SmallCoyote extends Creature {
 	
 	
 	
-	public SmallCoyote(float x, float y,World world,Player player,Data data,GameMaps map) {
+	public Enemy(float x, float y,World world,Player player,DataManager dataManager,GameMaps map, String textureName) {
 		super(x, y, bodyTAG, sensorTAG, categoryBit, maskBits, isSensor,world);
-		this.data= data;
+		this.dataManager= dataManager;
+		this.textureName=textureName;
 		sprite.playAnimation(animationRow, textureName);
 		healthBar = new HealthBar();
 		mark = new Mark(this.getBody());
 		atackTimer = new MyTimer(2);
  		setHitPower(1);
 		setHealth(smallCoyoteHp);
-		death= new Death(this,world,data);
+		death= new Death(this,world,dataManager);
 		
-		em = new EnemyMover(map, data);
+		em = new EnemyMover(map, dataManager);
 
 		final Face<Vector2> faceSB = new Face<Vector2>(this, this.getTarget()) //
 				.setTimeToTarget(0.0003f) //
@@ -167,12 +169,11 @@ public class SmallCoyote extends Creature {
 		} else {
 			// NOT RANDOM set on player position
 
-			if (((Creature) body.getUserData()).getBody().getPosition()
-					.dst2(player.getPosition()) < .6f) {
-				((Creature) body.getUserData()).getBody()
-						.setAngularDamping(.2f);
-				em.pathStarter((Creature) body.getUserData(), getBody()
-						.getPosition().x, getBody().getPosition().y);
+			if (((Creature) body.getUserData()).getBody().getPosition().dst2(player.getPosition()) < .6f) {
+				((Creature) body.getUserData()).getBody().setAngularDamping(.2f);
+				
+				
+				em.pathStarter((Creature) body.getUserData(), getBody().getPosition().x, getBody().getPosition().y);
 
 			} else {
 				if (em.getPath() != null) {
@@ -230,7 +231,7 @@ public class SmallCoyote extends Creature {
 
 			setAnimationRow(2);
 			
-			data.setPlayerHp(data.getPlayerHp()-getHitPower());
+			dataManager.getData().setPlayerHp(dataManager.getData().getPlayerHp()-getHitPower());
 
 			
 			
@@ -245,17 +246,13 @@ public class SmallCoyote extends Creature {
 @Override
 public void drop() {
 
-	System.out.println("test2");
-	coins= 	new Coin(body.getPosition().x/B2DVars.MTT, body.getPosition().y/B2DVars.MTT, world, player,data);
-	data.getCoins().add(coins);
+	
+	coins= 	new Coin(body.getPosition().x/B2DVars.MTT, body.getPosition().y/B2DVars.MTT, world, player,dataManager);
+	dataManager.getData().getCoins().add(coins);
 }
 
-	
-	
-	
-	
-	
-	
+
+
 	
 	
 	

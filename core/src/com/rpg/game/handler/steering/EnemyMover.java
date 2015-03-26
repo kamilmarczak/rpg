@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.utils.Array;
 import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.entities.creature.Creature;
 import com.rpg.game.handler.B2DVars;
 import com.rpg.game.handler.GameMaps;
@@ -28,9 +29,10 @@ public class EnemyMover {
 	
 	
 
-	public EnemyMover(GameMaps map,Data data) {
+	
+	public EnemyMover(GameMaps map,DataManager dataManager) {
 		this.map= map;
-		finder = new AStarPathFinder(map, 20, data.isAllowDiagMovement());
+		finder = new AStarPathFinder(map, 20, dataManager.getData().isAllowDiagMovement());
 
 		
 

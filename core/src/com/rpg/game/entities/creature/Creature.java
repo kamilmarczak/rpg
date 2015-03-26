@@ -61,7 +61,6 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	public Creature(float x,float y, String bodyTAG,String sensorTAG, short categoryBit ,int maskBits, boolean isSensor,World world) {
 		super(x, y);
 		this.world= world;
-
 		body= new BodyCreator( x,  y, bodyTAG , sensorTAG,  categoryBit,  maskBits,  isSensor,world).getBody();
 		createTarget(x, y);
 		sprite= new B2DSprite(body);
@@ -234,6 +233,31 @@ public abstract class Creature extends Entity implements Mover, Steerable<Vector
 	
 	@Override
 	public void setMaxAngularAcceleration (float maxAngularAcceleration) {this.maxAngularAcceleration = maxAngularAcceleration;	}
+
+
+
+
+
+
+
+
+	public void removeOne() {
+		
+	}
+
+
+
+
+
+
+
+
+	public void killedForQuest(int i) {
+		
+	}
+	
+	
+	
 	}
 
 

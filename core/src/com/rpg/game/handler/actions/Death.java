@@ -2,21 +2,23 @@ package com.rpg.game.handler.actions;
 
 import com.badlogic.gdx.physics.box2d.World;
 import com.rpg.game.data.Data;
+import com.rpg.game.data.DataManager;
 import com.rpg.game.entities.creature.Creature;
+import com.rpg.game.quests.QuestChecker;
 import com.rpg.game.state.Play;
 
 public class Death {
 	private Creature creatureToKill;
 private Creature creature;
 private World world;
-private Data data;
+private DataManager dataManager;
 
 
 
-	public Death(Creature creature,World  world, Data data ) {
+	public Death(Creature creature,World  world, DataManager dataManager ) {
 	this.creature= creature;
 	this.world= world;
-	this.data = data;
+	this.dataManager = dataManager;
 
 	}
 	
@@ -30,12 +32,15 @@ private Data data;
 	private void hpChecker(Creature creature){
 		
 		if(	creature.getHealth()<=0){
+			new QuestChecker(creature.getType(),dataManager,creature);
+			
 			creature.getHealthBar().getSkinAtlas().dispose();
 			creature.setInCombat(false);
-			data.getENEMIES().removeValue(creature, false);
+			dataManager.getData().getENEMIES().removeValue(creature, false);
 
 			creature.drop();
 			creature.setInCombat(false);
+			creature.removeOne();
 			Play.getCl().getFallow().removeValue(creature.getBody(), false);
 			world.destroyBody(creature.getBody());
 			world.destroyBody(creature.getTarget().getBody());
@@ -44,6 +49,7 @@ private Data data;
 				Play.getMyInputHandler().setTagHolder(null);
 				
 			}
+			
 
 			
 
